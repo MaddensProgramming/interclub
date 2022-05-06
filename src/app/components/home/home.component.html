@@ -1,0 +1,11 @@
+<ng-container *ngIf ="dataLoaded|async else loading" >
+<button *ngFor="let club of clubs " (click)="navigateToClub(club.id)"> {{club.id}}</button>
+</ng-container>
+<ng-template #loading>
+  LOADING
+</ng-template>
+
+
+
+
+
