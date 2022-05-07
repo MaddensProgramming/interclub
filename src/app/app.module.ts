@@ -10,6 +10,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PlayerComponent } from './components/player/player.component';
+import { ResultPipe } from './pipes/result.pipe';
 
 
 
@@ -20,6 +21,7 @@ import { PlayerComponent } from './components/player/player.component';
     HomeComponent,
     PageNotFoundComponent,
     PlayerComponent,
+    ResultPipe,
   ],
   imports: [
     BrowserModule,
