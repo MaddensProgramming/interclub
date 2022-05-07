@@ -11,6 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PlayerComponent } from './components/player/player.component';
 import { ResultPipe } from './pipes/result.pipe';
+import { UploadComponent } from './components/upload/upload.component';
 
 
 
@@ -22,6 +23,7 @@ import { ResultPipe } from './pipes/result.pipe';
     PageNotFoundComponent,
     PlayerComponent,
     ResultPipe,
+    UploadComponent,
   ],
   imports: [
     BrowserModule,
