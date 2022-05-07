@@ -1,12 +1,6 @@
 import { Injectable } from '@angular/core';
 import { initializeApp } from 'firebase/app';
-import {
-  doc,
-  Firestore,
-  getDoc,
-  getFirestore,
-  setDoc,
-} from 'firebase/firestore';
+import { doc, Firestore, getDoc, getFirestore } from 'firebase/firestore';
 import { from, map, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Club, ClubOverview } from '../models/club';
