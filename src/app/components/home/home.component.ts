@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
-import { Club } from 'src/app/models/club';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { Club, ClubOverview } from 'src/app/models/club';
 import { DataBaseService } from '../../services/database.service';
 
 @Component({
@@ -11,15 +11,14 @@ import { DataBaseService } from '../../services/database.service';
 })
 export class HomeComponent implements OnInit {
 
-  public clubs: Club[];
-  public dataLoaded: BehaviorSubject<boolean>;
+  public clubs: Observable<ClubOverview>;
+
 
 
   constructor(private router: Router, private service: DataBaseService) { }
 
   ngOnInit(): void {
-    this.dataLoaded = this.service.dataLoaded;
-    this.dataLoaded.subscribe(res =>{ if(res) this.clubs = this.service.getClubs();} )
+    this.clubs= this.service.getOverview();
   }
 
   navigateToClub(id: number): void {

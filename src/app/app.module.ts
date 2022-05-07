@@ -8,11 +8,13 @@ import { HomeComponent } from './components/home/home.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatInputModule } from '@angular/material/input';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatCardModule } from '@angular/material/card';
 import { PlayerComponent } from './components/player/player.component';
 import { ResultPipe } from './pipes/result.pipe';
 import { UploadComponent } from './components/upload/upload.component';
-import {MatTableModule} from '@angular/material/table';
+import { MatTableModule } from '@angular/material/table';
+import { MatTabsModule } from '@angular/material/tabs';
+import { ProvincePipe } from './pipes/province.pipe';
 
 
 
@@ -26,13 +28,16 @@ import {MatTableModule} from '@angular/material/table';
     PlayerComponent,
     ResultPipe,
     UploadComponent,
+    ProvincePipe,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     MatInputModule,
-    MatTableModule
+    MatTableModule,
+    MatTabsModule,
+    MatCardModule
   ],
   providers: [],
   bootstrap: [AppComponent]
