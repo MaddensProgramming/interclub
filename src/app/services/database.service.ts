@@ -5,7 +5,6 @@ import { BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Club } from '../models/club';
 import { Player } from '../models/player';
-import clubs from 'src/assets/games.json'
 
 @Injectable({
     providedIn: 'root',
@@ -37,31 +36,26 @@ export class DataBaseService {
     return this.players.find(player => player.id === id);
   }
   getData(): void {
-    this.clubs = clubs
-    this.clubs.sort((club,club2) => club.id - club2.id);
+      const db = collection(this.store,'clubs');
 
-    this.players = this.clubs.reduce((acc:Player[], val:Club) => acc.concat(val.players), []);
-    this.dataLoaded.next(true);
-
-    // const db = collection(this.store,'club');
-    // getDocsFromServer(db).then((res)=> {
-    //   const clubs = res.docs.map(item => item.data());
-    //   this.clubs = clubs as Club[];
-    //   this.players = this.clubs.reduce((acc:Player[], val:Club) => acc.concat(val.players), []);
-    //   this.dataLoaded.next(true);
-    // });
+      getDocsFromServer(db).then((res)=> {
+      const clubs = res.docs.map(item => item.data());
+      this.clubs = clubs as Club[];
+      this.clubs.sort((club,club2) => club.id - club2.id);
+      this.players = this.clubs.reduce((acc:Player[], val:Club) => acc.concat(val.players), []);
+      this.dataLoaded.next(true);
+    });
   }
 
-  sendData(clubs:Club[]) : void {
-    const db = collection(this.store,'club');
+  sendData() : void {
+    const db = collection(this.store,'clubs');
 
-    addDoc(db,clubs)
+    this.clubs.forEach(club =>{
+    addDoc(db,club)
     .then( ()=> console.log("succes"))
-    .catch((err)=> console.error(err.message));
+    .catch((err)=> console.error(err.message));}
+    );
+
   }
-
-
-
-
 
 }

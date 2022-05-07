@@ -11,8 +11,7 @@ export class UploadComponent implements OnInit {
   constructor(private dataBaseService: DataBaseService) { }
 
   upload(): void {
-    this.dataBaseService.sendData([]);
-
+    this.dataBaseService.sendData();
   }
 
   ngOnInit(): void {
