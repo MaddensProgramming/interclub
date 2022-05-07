@@ -1,6 +1,12 @@
-<h1>{{player.name}}</h1>
-<ul>
-  <li *ngFor="let game of player.games">
-    {{game.white.name}} - {{game.black.name}} : {{game.result|result}}
-  </li>
-</ul>
+<ng-container *ngIf="player$ | async as player; else loading">
+  <h1>{{ player.name }}</h1>
+  <ul>
+    <li *ngFor="let game of player.games">
+      {{ game.white.name }} - {{ game.black.name }} : {{ game.result | result }}
+    </li>
+  </ul>
+</ng-container>
+
+<ng-template #loading>
+  <mat-spinner></mat-spinner>
+</ng-template>

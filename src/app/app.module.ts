@@ -15,9 +15,7 @@ import { UploadComponent } from './components/upload/upload.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ProvincePipe } from './pipes/province.pipe';
-
-
-
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -37,9 +35,10 @@ import { ProvincePipe } from './pipes/province.pipe';
     MatInputModule,
     MatTableModule,
     MatTabsModule,
-    MatCardModule
+    MatCardModule,
+    MatProgressSpinnerModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
