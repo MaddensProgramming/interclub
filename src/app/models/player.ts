@@ -5,5 +5,7 @@ export interface Player {
   firstName: string;
   lastName: string;
   rating: string;
+  clubId?: number;
+  clubName?: string;
   games?: Game[];
 }
