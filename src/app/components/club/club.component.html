@@ -1,31 +1,45 @@
-<h1>{{club.name}}: {{club.id}}</h1>
-<table mat-table [dataSource]="club.players" [width]="800" class="mat-elevation-z8">
+<ng-container *ngIf="club$ | async as club; else loading">
+  <h1>{{ club.name }}: {{ club.id }}</h1>
+  <table
+    mat-table
+    [dataSource]="club.players"
+    [width]="800"
+    class="mat-elevation-z8"
+  >
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef>Stamnummer</th>
+      <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+    </ng-container>
 
-  <ng-container matColumnDef="id">
-    <th mat-header-cell *matHeaderCellDef> Stamnummer </th>
-    <td mat-cell *matCellDef="let element"> {{ element.id}} </td>
-  </ng-container>
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Naam</th>
+      <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+    </ng-container>
 
-  <ng-container matColumnDef="name">
-    <th mat-header-cell *matHeaderCellDef> Naam </th>
-    <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-  </ng-container>
+    <ng-container matColumnDef="rating">
+      <th mat-header-cell *matHeaderCellDef>Rating</th>
+      <td mat-cell *matCellDef="let element">{{ element.rating }}</td>
+    </ng-container>
 
-  <ng-container matColumnDef="rating">
-    <th mat-header-cell *matHeaderCellDef> Rating </th>
-    <td mat-cell *matCellDef="let element"> {{element.rating}} </td>
-  </ng-container>
+    <ng-container matColumnDef="score">
+      <th mat-header-cell *matHeaderCellDef>Score</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.score }}/{{ element.numberOfGames }}
+      </td>
+    </ng-container>
 
-  <ng-container matColumnDef="score">
-    <th mat-header-cell *matHeaderCellDef> Score </th>
-    <td mat-cell *matCellDef="let element"> {{element.score}}/{{element.numberOfGames}} </td>
-  </ng-container>
+    <ng-container matColumnDef="tpr">
+      <th mat-header-cell *matHeaderCellDef>TPR</th>
+      <td mat-cell *matCellDef="let element">{{ element.tpr }}</td>
+    </ng-container>
 
-  <ng-container matColumnDef="tpr">
-    <th mat-header-cell *matHeaderCellDef> TPR </th>
-    <td mat-cell *matCellDef="let element"> {{element.tpr}} </td>
-  </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr
+      mat-row
+      *matRowDef="let row; columns: displayedColumns"
+      (click)="showPlayer(row.id)"
+    ></tr>
+  </table>
+</ng-container>
 
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click) ="showPlayer(row.id)"></tr>
-</table>
+<ng-template #loading> LOADING </ng-template>

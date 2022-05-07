@@ -7,22 +7,18 @@ import { DataBaseService } from '../../services/database.service';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
+  public clubOverview$: Observable<ClubOverview>;
 
-  public clubs: Observable<ClubOverview>;
-
-
-
-  constructor(private router: Router, private service: DataBaseService) { }
+  constructor(private router: Router, private service: DataBaseService) {}
 
   ngOnInit(): void {
-    this.clubs= this.service.getOverview();
+    this.clubOverview$ = this.service.getOverview();
   }
 
   navigateToClub(id: number): void {
-    this.router.navigate([`club/${id}`])
+    this.router.navigate([`club/${id}`]);
   }
-
 }

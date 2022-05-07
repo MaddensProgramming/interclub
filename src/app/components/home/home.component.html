@@ -1,19 +1,20 @@
-<ng-container *ngIf ="clubs|async as cluboverview; else loading" >
+<ng-container *ngIf="clubOverview$ | async as clubOverview; else loading">
   <mat-tab-group animationDuration="0ms">
-    <mat-tab *ngFor="let province of cluboverview.provinces" label= {{province.id|province}}>
+    <mat-tab
+      *ngFor="let province of clubOverview.provinces"
+      label="{{ province.id | province }}"
+    >
       <div class="d-flex">
-        <mat-card class="card" *ngFor="let club of province.clubs" (click) ="navigateToClub(club.id)" >
-          <p>{{club.id}}</p><p>{{club.name}}</p>
+        <mat-card
+          class="card"
+          *ngFor="let club of province.clubs"
+          (click)="navigateToClub(club.id)"
+        >
+          <p>{{ club.id }}</p>
+          <p>{{ club.name }}</p>
         </mat-card>
       </div>
     </mat-tab>
   </mat-tab-group>
 </ng-container>
-<ng-template #loading>
-  LOADING
-</ng-template>
-
-
-
-
-
+<ng-template #loading> LOADING </ng-template>

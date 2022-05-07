@@ -1,30 +1,38 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { map, Observable, switchMap } from 'rxjs';
 import { Club } from 'src/app/models/club';
-import { Player } from 'src/app/models/player';
 import { DataBaseService } from 'src/app/services/database.service';
 
 @Component({
   selector: 'app-club',
   templateUrl: './club.component.html',
-  styleUrls: ['./club.component.scss']
+  styleUrls: ['./club.component.scss'],
 })
 export class ClubComponent implements OnInit {
+  displayedColumns: string[] = ['id', 'name', 'rating', 'score', 'tpr'];
 
-  displayedColumns: string[] = ['id', 'name', 'rating', 'score','tpr'];
+  public club$: Observable<Club>;
 
-  public club: Club;
-
-  constructor(private route: ActivatedRoute, private databaseService: DataBaseService, private router: Router) { }
+  constructor(
+    private route: ActivatedRoute,
+    private databaseService: DataBaseService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
-   this.route.paramMap.subscribe((params:ParamMap) => {
-     this.club = this.databaseService.getClub(+params.get('id'));});
-
-  this.club.players = this.club.players.sort((a,b)=> b.tpr - a.tpr);
+    this.club$ = this.route.paramMap.pipe(
+      switchMap((params: ParamMap) =>
+        this.databaseService.getClub(+params.get('id'))
+      ),
+      map((club) => {
+        club.players.sort((a, b) => b.tpr - a.tpr);
+        return club;
+      })
+    );
   }
 
   showPlayer(id: number) {
-    this. router.navigate([`player/${id}`]);
+    this.router.navigate([`player/${id}`]);
   }
 }
