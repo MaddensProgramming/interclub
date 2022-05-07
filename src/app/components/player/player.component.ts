@@ -36,4 +36,8 @@ export class PlayerComponent implements OnInit {
   showPlayer(id: number) {
     this.router.navigate([`player/${id}`]);
   }
+
+  showClub(id: number) {
+    this.router.navigate([`club/${id}`]);
+  }
 }

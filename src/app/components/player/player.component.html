@@ -9,7 +9,7 @@
         <label class="vet">Elo: </label>
         <span>{{ player.rating }}</span>
       </div>
-      <div>
+      <div (click)="showClub(player.clubId)">
         <label class="vet">Club: </label>
         <span> {{ player.clubName }} ({{ player.clubId }})</span>
       </div>
