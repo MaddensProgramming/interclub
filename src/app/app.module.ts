@@ -25,7 +25,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     PageNotFoundComponent,
     PlayerComponent,
     ResultPipe,
-    UploadComponent,
+    //UploadComponent,
     ProvincePipe,
   ],
   imports: [
