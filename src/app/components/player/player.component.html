@@ -1,6 +1,6 @@
-<h1>{{player.firstName}}, {{player.lastName}}</h1>
+<h1>{{player.name}}</h1>
 <ul>
   <li *ngFor="let game of player.games">
-    {{game.white.firstName}} - {{game.black.lastName}} : {{game.result|result}}
+    {{game.white.name}} - {{game.black.name}} : {{game.result|result}}
   </li>
 </ul>

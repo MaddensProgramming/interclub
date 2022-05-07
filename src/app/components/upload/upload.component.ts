@@ -9,6 +9,10 @@ export class UploadComponent implements OnInit {
 
   constructor() { }
 
+  upload(): void {
+    console.log("uploaded");
+  }
+
   ngOnInit(): void {
   }
 
