@@ -26,7 +26,7 @@ export class ClubComponent implements OnInit {
         this.databaseService.getClub(+params.get('id'))
       ),
       map((club) => {
-        club.players.sort((a, b) => b.tpr - a.tpr);
+        club.players.sort((a, b) => b.rating - a.rating);
         return club;
       })
     );

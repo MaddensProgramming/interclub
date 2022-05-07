@@ -1,24 +1,43 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { ColorEnum } from '../models/color.enum';
 import { ResultEnum } from '../models/result.enum';
 
-
 @Pipe({
-  name: 'result'
+  name: 'result',
 })
 export class ResultPipe implements PipeTransform {
-
   transform(value: ResultEnum): string {
-    switch(value) {
+    switch (value) {
       case ResultEnum.WhiteWins:
-        return "1-0";
+        return '1-0';
       case ResultEnum.Draw:
-        return "1/2-1/2";
+        return '1/2-1/2';
       case ResultEnum.BlackWins:
-        return "0-1";
+        return '0-1';
       case ResultEnum.WhiteFF:
-        return "1-0F";
+        return '1-0F';
       case ResultEnum.BlackFF:
-        return "0-1F";
+        return '0-1F';
+    }
+  }
+}
+
+@Pipe({
+  name: 'ownResult',
+})
+export class OwnResultPipe implements PipeTransform {
+  transform(value: ResultEnum, color: ColorEnum): string {
+    switch (value) {
+      case ResultEnum.WhiteWins:
+        return color === ColorEnum.Wit ? '1' : '0';
+      case ResultEnum.Draw:
+        return '1/2';
+      case ResultEnum.BlackWins:
+        return color === ColorEnum.Wit ? '0' : '1';
+      case ResultEnum.WhiteFF:
+        return color === ColorEnum.Wit ? '1F' : '0F';
+      case ResultEnum.BlackFF:
+        return color === ColorEnum.Wit ? '0F' : '1F';
     }
   }
 }
