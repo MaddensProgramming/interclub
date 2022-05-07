@@ -3,9 +3,6 @@
   <button *ngFor="let club of clubs " (click)="navigateToClub(club.id)"> {{club.name}}: {{club.id}}</button>
 </ng-container>
 
-<h2 [routerLink]="'upload'">UPLOAD NIEUWE GAMES HIER</h2>
-
-
 <ng-template #loading>
   LOADING
 </ng-template>

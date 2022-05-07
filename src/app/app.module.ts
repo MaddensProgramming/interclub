@@ -12,6 +12,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PlayerComponent } from './components/player/player.component';
 import { ResultPipe } from './pipes/result.pipe';
 import { UploadComponent } from './components/upload/upload.component';
+import {MatTableModule} from '@angular/material/table';
+
 
 
 
@@ -30,8 +32,7 @@ import { UploadComponent } from './components/upload/upload.component';
     AppRoutingModule,
     BrowserAnimationsModule,
     MatInputModule,
-    FormsModule,
-    ReactiveFormsModule
+    MatTableModule
   ],
   providers: [],
   bootstrap: [AppComponent]

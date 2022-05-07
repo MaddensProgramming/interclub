@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { DataBaseService } from 'src/app/services/database.service';
 
 @Component({
   selector: 'app-upload',
@@ -7,10 +8,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class UploadComponent implements OnInit {
 
-  constructor() { }
+  constructor(private dataBaseService: DataBaseService) { }
 
   upload(): void {
-    console.log("uploaded");
+    this.dataBaseService.sendData([]);
+
   }
 
   ngOnInit(): void {
