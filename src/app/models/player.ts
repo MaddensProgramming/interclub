@@ -1,4 +1,4 @@
-import { Game } from "./game";
+import { Game } from './game';
 
 export interface Player {
   id: number;
@@ -10,4 +10,5 @@ export interface Player {
   clubId?: number;
   clubName?: string;
   games?: Game[];
+  fat?: boolean;
 }
