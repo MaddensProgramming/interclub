@@ -1,14 +1,17 @@
 {
+  "projects": {
+    "default": "interclub-668f3"
+  },
   "targets": {
     "interclub-668f3": {
       "hosting": {
-        "interclub": [
+        "test": [
           "interclub-668f3"
+        ],
+        "prod": [
+          "interclub"
         ]
       }
     }
-  },
-  "projects": {
-    "default": "interclub-668f3"
   }
 }
