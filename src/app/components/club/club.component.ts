@@ -13,25 +13,34 @@ import { DataBaseService } from 'src/app/services/database.service';
   styleUrls: ['./club.component.scss'],
 })
 export class ClubComponent implements OnInit {
-  displayedColumnsPlayer: string[] = ['id', 'name', 'rating', 'score', 'tpr'];
-  displayedColumnsRound: string[] = ['board', 'white', 'black', 'result'];
-
   public club$: Observable<ClubView>;
+
+  firstTime: Date;
+  downloadRequest: number;
+  processRequest: number;
 
   constructor(
     private route: ActivatedRoute,
-    private databaseService: DataBaseService,
-    private router: Router
+    private databaseService: DataBaseService
   ) {}
 
   ngOnInit(): void {
     this.club$ = this.route.paramMap.pipe(
-      switchMap((params: ParamMap) =>
-        this.databaseService.getClub(+params.get('id'))
-      ),
+      switchMap((params: ParamMap) => {
+        this.firstTime = new Date();
+        return this.databaseService.getClub(+params.get('id'));
+      }),
+      map((club) => {
+        this.downloadRequest = new Date().valueOf() - this.firstTime.valueOf();
+        return club;
+      }),
       map((club) => this.mapIntoTabs(club)),
       map((club) => this.recalculatePlayerResult(club)),
-      map((club) => this.sort(club))
+      map((club) => this.sort(club)),
+      map((club) => {
+        this.processRequest = new Date().valueOf() - this.firstTime.valueOf();
+        return club;
+      })
     );
   }
 
@@ -42,10 +51,8 @@ export class ClubComponent implements OnInit {
       team.rounds.forEach((round) =>
         round.games.sort((a, b) => a.board - b.board)
       );
-      team.players.sort((a, b) => b.rating - a.rating);
+      team.players.sort((a, b) => b.numberOfGames - a.numberOfGames);
     });
-    console.log(clubView);
-
     return clubView;
   }
 
@@ -117,13 +124,12 @@ export class ClubComponent implements OnInit {
         : game.teamBlack.teamNumber;
     const division = `${game.teamWhite.class}${game.teamWhite.division}`;
 
-    if (game.black.id === player.id) game.black.fat = true;
-    else game.white.fat = true;
-
     let team = clubView.teams.find((team) => team.id === teamNumber);
     if (!team) {
       team = {
         id: teamNumber,
+        clubId: clubView.id,
+        clubName: clubView.name,
         division: division,
         rounds: [],
         players: [],
@@ -148,9 +154,5 @@ export class ClubComponent implements OnInit {
       newplayer.score = 0;
       team.players.push(newplayer);
     }
-  }
-
-  showPlayer(id: number) {
-    this.router.navigate([`player/${id}`]);
   }
 }

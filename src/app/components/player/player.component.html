@@ -1,10 +1,10 @@
 <ng-container *ngIf="player$ | async as player; else loading">
-  <mat-card>
+  <mat-card class="card mat-elevation-z8">
     <mat-card-header>
       <mat-card-title>{{ player.name }}</mat-card-title>
       <mat-card-subtitle>{{ player.id }}</mat-card-subtitle>
     </mat-card-header>
-    <mat-card-content clas="main">
+    <mat-card-content>
       <div>
         <label class="vet">Elo: </label>
         <span>{{ player.rating }}</span>
@@ -21,54 +21,53 @@
         <label class="vet">Tpr: </label>
         <span>{{ player.tpr }}</span>
       </div>
-      <table
-        mat-table
-        [dataSource]="player.games | ownGame: player.id"
-        style="width: 100%"
-        class="mat-elevation-z8"
-      >
-        <ng-container matColumnDef="round">
-          <th mat-header-cell *matHeaderCellDef>Ronde</th>
-          <td mat-cell *matCellDef="let element">{{ element.round }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="color">
-          <th mat-header-cell *matHeaderCellDef>Kleur</th>
-          <td mat-cell *matCellDef="let element">
-            {{ element.color | color }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="opponent">
-          <th mat-header-cell *matHeaderCellDef>Tegenstander</th>
-          <td
-            mat-cell
-            *matCellDef="let element"
-            (click)="showPlayer(element.opponent.id)"
-          >
-            {{ element.opponent.name }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="rating">
-          <th mat-header-cell *matHeaderCellDef>Rating</th>
-          <td mat-cell *matCellDef="let element">
-            {{ element.opponent.rating }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="score">
-          <th mat-header-cell *matHeaderCellDef>Resultaat</th>
-          <td mat-cell *matCellDef="let element">
-            {{ element.result | ownResult: element.color }}
-          </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-      </table>
     </mat-card-content>
   </mat-card>
+  <table
+    mat-table
+    [dataSource]="player.games | ownGame: player.id"
+    class="mat-elevation-z8 bigTable"
+  >
+    <ng-container matColumnDef="round">
+      <th mat-header-cell *matHeaderCellDef>Ronde</th>
+      <td mat-cell *matCellDef="let element">{{ element.round }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="color">
+      <th mat-header-cell *matHeaderCellDef>Kleur</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.color | color }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="opponent">
+      <th mat-header-cell *matHeaderCellDef>Tegenstander</th>
+      <td
+        mat-cell
+        *matCellDef="let element"
+        (click)="showPlayer(element.opponent.id)"
+      >
+        {{ element.opponent.name }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="rating">
+      <th mat-header-cell *matHeaderCellDef>Rating</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.opponent.rating }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="score">
+      <th mat-header-cell *matHeaderCellDef>Resultaat</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.result | ownResult: element.color }}
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
 </ng-container>
 
 <ng-template #loading>

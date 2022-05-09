@@ -10,5 +10,4 @@ export interface Player {
   clubId?: number;
   clubName?: string;
   games?: Game[];
-  fat?: boolean;
 }

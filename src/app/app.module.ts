@@ -18,6 +18,10 @@ import { ProvincePipe } from './pipes/province.pipe';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { OwnGamePipe } from './pipes/own-game.pipe';
 import { ColorPipe } from './pipes/color.pipe';
+import { PlayerListComponent } from './components/player-list/player-list.component';
+
+import { RoundViewComponent } from './components/round-view/round-view.component';
+import { TeamViewComponent } from './components/team-view/team-view.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +36,9 @@ import { ColorPipe } from './pipes/color.pipe';
     ProvincePipe,
     OwnGamePipe,
     ColorPipe,
+    PlayerListComponent,
+    TeamViewComponent,
+    RoundViewComponent,
   ],
   imports: [
     BrowserModule,

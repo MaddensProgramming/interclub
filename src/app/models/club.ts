@@ -27,12 +27,14 @@ export interface ClubView {
 
 export interface TeamView {
   id: number;
+  clubName: string;
+  clubId: number;
   players: Player[]; //edited scores
   division: string;
-  rounds: RoundTeam[];
+  rounds: Round[];
 }
 
-export interface RoundTeam {
+export interface Round {
   id: number;
   scoreHome: number;
   games: Game[];
