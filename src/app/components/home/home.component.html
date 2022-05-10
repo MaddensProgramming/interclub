@@ -1,5 +1,5 @@
 <ng-container *ngIf="clubOverview$ | async as clubOverview; else loading">
-  <mat-tab-group animationDuration="0ms">
+  <mat-tab-group animationDuration="200ms">
     <mat-tab
       *ngFor="let province of clubOverview.provinces"
       label="{{ province.id | province }}"
