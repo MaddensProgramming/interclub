@@ -19,3 +19,17 @@
   width: 0.76rem;
   height: 0.76rem;
 }
+
+.details {
+  display: grid;
+  grid-template-columns: auto auto;
+  margin: auto;
+  max-width: 15rem;
+  padding: 1rem 0rem;
+}
+
+.center {
+ padding-top: 1rem;
+ justify-content: center;
+ text-align: center;
+}

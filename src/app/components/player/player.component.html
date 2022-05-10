@@ -1,23 +1,17 @@
 <ng-container *ngIf="player$ | async as player; else loading">
   <mat-card class="card mat-elevation-z8">
-    <mat-card-header>
+    <mat-card-header class="center">
       <mat-card-title>{{ player.name }}</mat-card-title>
       <mat-card-subtitle>{{ player.id }}</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
-      <div>
+      <div class="details">
         <label class="vet">Elo: </label>
         <span>{{ player.rating }}</span>
-      </div>
-      <div (click)="showClub(player.clubId)">
         <label class="vet">Club: </label>
-        <span> {{ player.clubName }} ({{ player.clubId }})</span>
-      </div>
-      <div>
+        <span (click)="showClub(player.clubId)"> {{ player.clubName }} ({{ player.clubId }})</span>
         <label class="vet">Score: </label>
         <span>{{ player.score }} / {{ player.numberOfGames }}</span>
-      </div>
-      <div>
         <label class="vet">Tpr: </label>
         <span>{{ player.tpr }}</span>
       </div>
