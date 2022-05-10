@@ -1,0 +1,29 @@
+.magenta {
+  color: magenta;
+}
+.narrow-section {
+  max-width: 873px;
+  margin: 5rem auto 0 auto;
+  padding: 0 60px 0 60px;
+  box-sizing: border-box;
+  display: block;
+  font-weight: 300;
+  text-align: center;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: subpixel-antialiased;
+  color: #5e5c5c;
+}
+p {
+  font-size: 16px;
+  letter-spacing: normal;
+  line-height: 35px;
+  margin: 40px 0;
+}
+a {
+  color: #0090d0;
+  cursor: pointer;
+}
+a:hover {
+  color: #23527c;
+  text-decoration: underline;
+}
