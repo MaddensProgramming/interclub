@@ -11,15 +11,12 @@ export class PlayerListComponent implements OnInit {
   @Input() public showTpr: boolean;
   @Input() public showId: boolean;
 
-
-  displayedColumnsPlayer: string[] = [ 'name', 'rating', 'score'];
+  displayedColumnsPlayer: string[] = ['name', 'rating', 'score'];
 
   constructor() {}
 
   ngOnInit(): void {
-    if(this.showTpr)
-    this.displayedColumnsPlayer.push('tpr');
-    if(this.showId)
-    this.displayedColumnsPlayer.unshift('id');
+    if (this.showTpr) this.displayedColumnsPlayer.push('tpr');
+    if (this.showId) this.displayedColumnsPlayer.unshift('id');
   }
 }

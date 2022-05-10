@@ -15,7 +15,6 @@ import { DataBaseService } from 'src/app/services/database.service';
 export class ClubComponent implements OnInit {
   public club$: Observable<ClubView>;
 
-
   firstTime: Date;
   downloadRequest: number;
   processRequest: number;
@@ -24,8 +23,6 @@ export class ClubComponent implements OnInit {
     private route: ActivatedRoute,
     private databaseService: DataBaseService
   ) {}
-
-
 
   ngOnInit(): void {
     this.club$ = this.route.paramMap.pipe(
@@ -40,7 +37,10 @@ export class ClubComponent implements OnInit {
       map((club) => this.mapIntoTabs(club)),
       map((club) => this.sort(club)),
       map((club) => {
-        this.processRequest = new Date().valueOf() - this.firstTime.valueOf() - this.downloadRequest;
+        this.processRequest =
+          new Date().valueOf() -
+          this.firstTime.valueOf() -
+          this.downloadRequest;
         return club;
       })
     );
@@ -58,15 +58,19 @@ export class ClubComponent implements OnInit {
   }
 
   mapIntoTabs(club: Club): ClubView {
-    const clubView: ClubView = { id: club.id, name: club.name, teams: [], players:[]};
+    const clubView: ClubView = {
+      id: club.id,
+      name: club.name,
+      teams: [],
+      players: [],
+    };
 
-    club.players.forEach((player) =>{
-      player.games.forEach((game) => this.addGame(clubView, game, player))
-      const playerWithoutGames = {...player};
-      playerWithoutGames.games= [];
+    club.players.forEach((player) => {
+      player.games.forEach((game) => this.addGame(clubView, game, player));
+      const playerWithoutGames = { ...player };
+      playerWithoutGames.games = [];
       clubView.players.push(playerWithoutGames);
-    }
-    );
+    });
     return clubView;
   }
 
@@ -100,9 +104,7 @@ export class ClubComponent implements OnInit {
       game.board % 2 === 1
         ? this.checkWhiteScore(game.result)
         : this.checkBlackScore(game.result);
-
   }
-
 
   checkBlackScore(result: ResultEnum): number {
     switch (result) {

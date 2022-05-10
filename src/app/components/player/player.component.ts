@@ -21,7 +21,7 @@ export class PlayerComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private databaseService: DataBaseService,
+    private databaseService: DataBaseService
   ) {}
 
   ngOnInit(): void {
@@ -31,5 +31,4 @@ export class PlayerComponent implements OnInit {
       )
     );
   }
-
 }

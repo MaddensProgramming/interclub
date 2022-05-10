@@ -1,18 +1,20 @@
 <div class="result-card">
   <div class="team">
-  <span class="team-name">
-    {{ round.games[0].teamWhite.clubName }}
-    {{ round.games[0].teamWhite.teamNumber }}
-  </span>
-  <span class="rating">{{averageEloHome}}</span>
-</div>
-  <span  class="result">
+    <span class="team-name">
+      {{ round.games[0].teamWhite.clubName }}
+      {{ round.games[0].teamWhite.teamNumber }}
+    </span>
+    <span class="rating">{{ averageEloHome }}</span>
+  </div>
+  <span class="result">
     {{ round.scoreHome }} - {{ round.games.length - round.scoreHome }}
   </span>
   <div class="team">
-  <span  class="team-name">   {{ round.games[0].teamBlack.clubName }}
-    {{ round.games[0].teamBlack.teamNumber }}</span>
-    <span class="rating">{{averageEloAway}}</span>
+    <span class="team-name">
+      {{ round.games[0].teamBlack.clubName }}
+      {{ round.games[0].teamBlack.teamNumber }}</span
+    >
+    <span class="rating">{{ averageEloAway }}</span>
   </div>
 </div>
 

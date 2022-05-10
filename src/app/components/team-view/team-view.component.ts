@@ -13,49 +13,82 @@ import { ResultEnum } from 'src/app/models/result.enum';
 export class TeamViewComponent implements OnInit {
   @Input() team: TeamView;
 
-
-
   constructor() {}
 
-  ngOnInit(): void {this.showRes([])}
+  ngOnInit(): void {
+    this.showRes([]);
+  }
 
   boardArray(boardCount: number): number[] {
     const result = [];
     for (let index = 0; index < boardCount; index++) {
-      result.push(index+1);    }
+      result.push(index + 1);
+    }
     return result;
   }
 
-  showRes(event:string[]): void {
-    const newplayerList: Player[]= [];
-    this.team.rounds.forEach(round => round.games.forEach(game=> {
-      if(event.length===0||event.includes(game.board.toString())){
-        if(game.white.clubId===this.team.clubId)this.addGameAsWhite(game.white,game.result, newplayerList);
-        if(game.black.clubId===this.team.clubId)this.addGameAsBlack(game.black,game.result, newplayerList);
-      }
-    }))
+  showRes(event: string[]): void {
+    const newplayerList: Player[] = [];
+    this.team.rounds.forEach((round) =>
+      round.games.forEach((game) => {
+        if (event.length === 0 || event.includes(game.board.toString())) {
+          if (game.white.clubId === this.team.clubId)
+            this.addGameAsWhite(game.white, game.result, newplayerList);
+          if (game.black.clubId === this.team.clubId)
+            this.addGameAsBlack(game.black, game.result, newplayerList);
+        }
+      })
+    );
     let totalRating = 0;
     let totalScore = 0;
-    let totalGames=0;
-    newplayerList.forEach(player =>{totalGames+=player.numberOfGames; totalScore+=player.score; totalRating+= player.rating*player.numberOfGames});
-    newplayerList.push({name:"Totaal",id:0,rating:Math.round(totalRating/totalGames), numberOfGames: totalGames, score:totalScore, tpr:0})
+    let totalGames = 0;
+    newplayerList.forEach((player) => {
+      totalGames += player.numberOfGames;
+      totalScore += player.score;
+      totalRating += player.rating * player.numberOfGames;
+    });
+    newplayerList.push({
+      name: 'Totaal',
+      id: 0,
+      rating: Math.round(totalRating / totalGames),
+      numberOfGames: totalGames,
+      score: totalScore,
+      tpr: 0,
+    });
     this.team.players = newplayerList;
   }
 
-  addGameAsWhite(player: Player,result:ResultEnum, playerList: Player[]): void {
-   let playerToAdd =  playerList.find(playerArr=> playerArr.id ===  player.id );
-   if(!playerToAdd) {playerToAdd={...player,numberOfGames:0, score:0};  playerList.push(playerToAdd)}
-   playerToAdd.numberOfGames++;
-   playerToAdd.score+=this.checkWhiteScore(result);
+  addGameAsWhite(
+    player: Player,
+    result: ResultEnum,
+    playerList: Player[]
+  ): void {
+    let playerToAdd = playerList.find(
+      (playerArr) => playerArr.id === player.id
+    );
+    if (!playerToAdd) {
+      playerToAdd = { ...player, numberOfGames: 0, score: 0 };
+      playerList.push(playerToAdd);
+    }
+    playerToAdd.numberOfGames++;
+    playerToAdd.score += this.checkWhiteScore(result);
   }
 
-  addGameAsBlack(player: Player,result:ResultEnum, playerList: Player[]): void {
-    let playerToAdd =  playerList.find(playerArr=> playerArr.id ===  player.id );
-    if(!playerToAdd) {playerToAdd={...player,numberOfGames:0, score:0}; playerList.push(playerToAdd)}
+  addGameAsBlack(
+    player: Player,
+    result: ResultEnum,
+    playerList: Player[]
+  ): void {
+    let playerToAdd = playerList.find(
+      (playerArr) => playerArr.id === player.id
+    );
+    if (!playerToAdd) {
+      playerToAdd = { ...player, numberOfGames: 0, score: 0 };
+      playerList.push(playerToAdd);
+    }
     playerToAdd.numberOfGames++;
-    playerToAdd.score+=this.checkBlackScore(result);
-   }
-
+    playerToAdd.score += this.checkBlackScore(result);
+  }
 
   checkBlackScore(result: ResultEnum): number {
     switch (result) {

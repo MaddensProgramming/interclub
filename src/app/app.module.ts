@@ -19,12 +19,11 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { OwnGamePipe } from './pipes/own-game.pipe';
 import { ColorPipe } from './pipes/color.pipe';
 import { PlayerListComponent } from './components/player-list/player-list.component';
-import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 import { RoundViewComponent } from './components/round-view/round-view.component';
 import { TeamViewComponent } from './components/team-view/team-view.component';
 import { NumberOfPlayersPipe } from './pipes/number-of-players.pipe';
-
 
 @NgModule({
   declarations: [
@@ -53,7 +52,7 @@ import { NumberOfPlayersPipe } from './pipes/number-of-players.pipe';
     MatTabsModule,
     MatCardModule,
     MatProgressSpinnerModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

@@ -1,4 +1,3 @@
-
 export interface Team {
   clubId: number;
   clubName: string;

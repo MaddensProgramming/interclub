@@ -7,17 +7,16 @@
   text-align: center;
   display: flex;
   flex-direction: column;
-  cursor:pointer;
+  cursor: pointer;
 }
 
 .card:hover {
   background-color: rgba(137, 43, 226, 0.5);
 }
 
-.card> *{
+.card > * {
   cursor: pointer;
 }
-
 
 .d-flex {
   display: flex;

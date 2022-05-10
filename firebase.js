@@ -13,9 +13,10 @@ const firebaseConfig = {
   storageBucket: "interclub-668f3.appspot.com",
   messagingSenderId: "783417294563",
   appId: "1:783417294563:web:4d861cff2a7b2d1a990fd6",
-  measurementId: "G-HR0R37BTQB"
+  measurementId: "G-HR0R37BTQB",
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);s
+const app = initializeApp(firebaseConfig);
+s;
 const analytics = getAnalytics(app);

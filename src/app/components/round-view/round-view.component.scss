@@ -1,37 +1,33 @@
 .result-card {
   width: 95%;
   box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2),
-              0px 8px 10px 1px rgba(0, 0, 0, 0.14),
-              0px 3px 14px 2px rgba(0, 0, 0, 0.12);
+    0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12);
 
   display: flex;
   justify-content: space-around;
   max-width: 40rem;
   margin: auto;
   margin-top: 3rem;
-  }
+}
 
+.team {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  padding: 2rem 0;
+  text-align: center;
+  color: rgba(0, 0, 0, 0.7);
+}
 
-  .team{
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    padding: 2rem 0;
-    text-align: center;
-    color:rgba(0, 0, 0, 0.700)
-  }
+.team-name {
+  font-size: 1.5rem;
+  padding: 0.5rem;
+  font-weight: 700;
+  color: rgba(0, 0, 0, 0.85);
+}
 
-  .team-name{
-    font-size: 1.5rem;
-    padding: 0.5rem;
-    font-weight: 700;
-    color:rgba(0, 0, 0, 0.850) ;
-
-  }
-
-  .result {
-    font-size: 1.5rem;
-    font-weight: 800;
-    margin: auto 0;
-  }
-
+.result {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin: auto 0;
+}

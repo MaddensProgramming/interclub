@@ -6,13 +6,15 @@
     </mat-card-header>
     <mat-card-content>
       <div class="details">
-        <label >Elo: </label>
+        <label>Elo: </label>
         <span>{{ player.rating }}</span>
-        <label >Club: </label>
-        <span class="clickable-title" [routerLink]="['/club/' + player.clubId]"> {{ player.clubName }} ({{ player.clubId }})</span>
-        <label >Score: </label>
+        <label>Club: </label>
+        <span class="clickable-title" [routerLink]="['/club/' + player.clubId]">
+          {{ player.clubName }} ({{ player.clubId }})</span
+        >
+        <label>Score: </label>
         <span>{{ player.score }} / {{ player.numberOfGames }}</span>
-        <label >Tpr: </label>
+        <label>Tpr: </label>
         <span>{{ player.tpr }}</span>
       </div>
     </mat-card-content>
@@ -30,7 +32,7 @@
     <ng-container matColumnDef="color">
       <th mat-header-cell *matHeaderCellDef>Kleur</th>
       <td mat-cell *matCellDef="let element">
-       <div [ngClass]=" element.color===1?'white':'black'"></div>
+        <div [ngClass]="element.color === 1 ? 'white' : 'black'"></div>
       </td>
     </ng-container>
 

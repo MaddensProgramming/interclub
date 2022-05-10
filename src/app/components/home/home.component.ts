@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import {  ClubOverview } from 'src/app/models/club';
+import { ClubOverview } from 'src/app/models/club';
 import { DataBaseService } from '../../services/database.service';
 
 @Component({
@@ -11,7 +11,7 @@ import { DataBaseService } from '../../services/database.service';
 export class HomeComponent implements OnInit {
   public clubOverview$: Observable<ClubOverview>;
 
-  constructor( private service: DataBaseService) {}
+  constructor(private service: DataBaseService) {}
 
   ngOnInit(): void {
     this.clubOverview$ = this.service.getOverview();

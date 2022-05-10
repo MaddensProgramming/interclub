@@ -4,18 +4,22 @@
   </h1>
   <h2>({{ clubView.id }})</h2>
   <mat-tab-group animationDuration="200ms">
-    <mat-tab label ="Alles">
-      <app-player-list [players]="clubView.players" [showTpr] = "true"></app-player-list>
+    <mat-tab label="Alles">
+      <app-player-list
+        [players]="clubView.players"
+        [showTpr]="true"
+      ></app-player-list>
     </mat-tab>
     <mat-tab
       *ngFor="let team of clubView.teams"
-      label="Team {{ team.id }} ({{team.class}}{{ team.division }})"
+      label="Team {{ team.id }} ({{ team.class }}{{ team.division }})"
     >
       <app-team-view [team]="team"></app-team-view>
     </mat-tab>
   </mat-tab-group>
-  <footer>Download:
-    {{ downloadRequest }}ms Verwerking: {{ processRequest }}ms </footer>
+  <footer>
+    Download: {{ downloadRequest }}ms Verwerking: {{ processRequest }}ms
+  </footer>
 </ng-container>
 <ng-template #loading>
   <mat-spinner></mat-spinner>
