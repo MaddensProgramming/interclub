@@ -1,5 +1,11 @@
 <mat-tab-group animationDuration="200ms">
-  <mat-tab label="Spelers">
+  <mat-tab label="Spelers" class="center">
+    <div class ="card">
+      <label class="m-1 lighter">Bord: </label>
+      <mat-button-toggle-group class="m-1 stand-out" name="board" (valueChange)="showRes($event)" multiple>
+        <mat-button-toggle *ngFor="let board of boardArray(team.class|numberOfPlayers)" value={{board}}>{{board}}</mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
     <app-player-list [players]="team.players"></app-player-list>
   </mat-tab>
   <mat-tab *ngFor="let round of team.rounds" label="{{ round.id }}">

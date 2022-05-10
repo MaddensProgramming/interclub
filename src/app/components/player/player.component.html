@@ -9,7 +9,7 @@
         <label >Elo: </label>
         <span>{{ player.rating }}</span>
         <label >Club: </label>
-        <span (click)="showClub(player.clubId)"> {{ player.clubName }} ({{ player.clubId }})</span>
+        <span class="clickable-title" [routerLink]="['/club/' + player.clubId]"> {{ player.clubName }} ({{ player.clubId }})</span>
         <label >Score: </label>
         <span>{{ player.score }} / {{ player.numberOfGames }}</span>
         <label >Tpr: </label>
@@ -20,7 +20,7 @@
   <table
     mat-table
     [dataSource]="player.games | ownGame: player.id"
-    class="mat-elevation-z8 bigTable"
+    class="mat-elevation-z8 big-table"
   >
     <ng-container matColumnDef="round">
       <th mat-header-cell *matHeaderCellDef>Ronde</th>
@@ -39,7 +39,8 @@
       <td
         mat-cell
         *matCellDef="let element"
-        (click)="showPlayer(element.opponent.id)"
+        [routerLink]="['/player/' + element.opponent.id]"
+        class="clickable-title"
       >
         {{ element.opponent.name }}
       </td>

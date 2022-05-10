@@ -15,6 +15,7 @@ import { DataBaseService } from 'src/app/services/database.service';
 export class ClubComponent implements OnInit {
   public club$: Observable<ClubView>;
 
+
   firstTime: Date;
   downloadRequest: number;
   processRequest: number;
@@ -23,6 +24,8 @@ export class ClubComponent implements OnInit {
     private route: ActivatedRoute,
     private databaseService: DataBaseService
   ) {}
+
+
 
   ngOnInit(): void {
     this.club$ = this.route.paramMap.pipe(
@@ -35,7 +38,6 @@ export class ClubComponent implements OnInit {
         return club;
       }),
       map((club) => this.mapIntoTabs(club)),
-      map((club) => this.recalculatePlayerResult(club)),
       map((club) => this.sort(club)),
       map((club) => {
         this.processRequest = new Date().valueOf() - this.firstTime.valueOf() - this.downloadRequest;
@@ -43,7 +45,6 @@ export class ClubComponent implements OnInit {
       })
     );
   }
-
   sort(clubView: ClubView): ClubView {
     clubView.teams.sort((a, b) => a.id - b.id);
     clubView.teams.forEach((team) => team.rounds.sort((a, b) => a.id - b.id));
@@ -56,27 +57,52 @@ export class ClubComponent implements OnInit {
     return clubView;
   }
 
-  recalculatePlayerResult(clubView: ClubView): ClubView {
-    clubView.teams.forEach((team) =>
-      team.players.forEach((player) => {
-        team.rounds.forEach((round) => {
-          const game = round.games.find((game) => game.white.id === player.id);
-          if (game) {
-            player.numberOfGames++;
-            player.score += this.checkWhiteScore(game.result);
-          }
-        });
-        team.rounds.forEach((round) => {
-          const game = round.games.find((game) => game.black.id === player.id);
-          if (game) {
-            player.numberOfGames++;
-            player.score += this.checkBlackScore(game.result);
-          }
-        });
-      })
+  mapIntoTabs(club: Club): ClubView {
+    const clubView: ClubView = { id: club.id, name: club.name, teams: [], players:[]};
+
+    club.players.forEach((player) =>{
+      player.games.forEach((game) => this.addGame(clubView, game, player))
+      const playerWithoutGames = {...player};
+      playerWithoutGames.games= [];
+      clubView.players.push(playerWithoutGames);
+    }
     );
     return clubView;
   }
+
+  addGame(clubView: ClubView, game: Game, player: Player): void {
+    const teamNumber =
+      player.id === game.white.id
+        ? game.teamWhite.teamNumber
+        : game.teamBlack.teamNumber;
+
+    let team = clubView.teams.find((team) => team.id === teamNumber);
+    if (!team) {
+      team = {
+        id: teamNumber,
+        clubId: clubView.id,
+        clubName: clubView.name,
+        division: game.teamWhite.division,
+        class: game.teamWhite.class,
+        rounds: [],
+        players: [],
+      };
+      clubView.teams.push(team);
+    }
+
+    let round = team.rounds.find((round) => round.id === game.round);
+    if (!round) {
+      round = { id: game.round, scoreHome: 0, games: [] };
+      team.rounds.push(round);
+    }
+    round.games.push(game);
+    round.scoreHome +=
+      game.board % 2 === 1
+        ? this.checkWhiteScore(game.result)
+        : this.checkBlackScore(game.result);
+
+  }
+
 
   checkBlackScore(result: ResultEnum): number {
     switch (result) {
@@ -105,58 +131,6 @@ export class ClubComponent implements OnInit {
         return 0;
       default:
         return 0;
-    }
-  }
-
-  mapIntoTabs(club: Club): ClubView {
-    const clubView: ClubView = { id: club.id, name: club.name, teams: [], players:[]};
-
-    club.players.forEach((player) =>{
-      player.games.forEach((game) => this.addGame(clubView, game, player))
-      const playerWithoutGames = {...player};
-      playerWithoutGames.games= [];
-      clubView.players.push(playerWithoutGames);
-    }
-    );
-    return clubView;
-  }
-
-  addGame(clubView: ClubView, game: Game, player: Player): void {
-    const teamNumber =
-      player.id === game.white.id
-        ? game.teamWhite.teamNumber
-        : game.teamBlack.teamNumber;
-    const division = `${game.teamWhite.class}${game.teamWhite.division}`;
-
-    let team = clubView.teams.find((team) => team.id === teamNumber);
-    if (!team) {
-      team = {
-        id: teamNumber,
-        clubId: clubView.id,
-        clubName: clubView.name,
-        division: division,
-        rounds: [],
-        players: [],
-      };
-      clubView.teams.push(team);
-    }
-
-    let round = team.rounds.find((round) => round.id === game.round);
-    if (!round) {
-      round = { id: game.round, scoreHome: 0, games: [] };
-      team.rounds.push(round);
-    }
-    round.games.push(game);
-    round.scoreHome +=
-      game.board % 2 === 1
-        ? this.checkWhiteScore(game.result)
-        : this.checkBlackScore(game.result);
-
-    if (!team.players.find((playerarr) => playerarr.id === player.id)) {
-      const newplayer = { ...player };
-      newplayer.numberOfGames = 0;
-      newplayer.score = 0;
-      team.players.push(newplayer);
     }
   }
 }

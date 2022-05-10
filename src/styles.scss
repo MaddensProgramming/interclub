@@ -9,9 +9,32 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
-.bigTable {
+.big-table {
   width: 95%;
   max-width: 60rem;
   margin: auto;
   margin-top: 3rem;
+}
+
+.clickable-title {
+  cursor:pointer;
+}
+
+.clickable-title:hover{
+  text-decoration: underline;
+}
+
+label {
+  font-weight: bold;
+  margin-right: 0.5rem;
+  vertical-align: middle;
+}
+
+.center {
+  justify-content: center;
+  text-align: center;
+ }
+
+ .m-1{
+  margin: 1rem;
 }

@@ -31,6 +31,7 @@ export interface TeamView {
   clubName: string;
   clubId: number;
   players: Player[]; //edited scores
+  class: number;
   division: string;
   rounds: Round[];
 }

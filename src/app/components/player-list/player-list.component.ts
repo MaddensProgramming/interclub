@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { Player } from '../../models/player';
 
 @Component({
@@ -12,20 +11,15 @@ export class PlayerListComponent implements OnInit {
   @Input() public showTpr: boolean;
   @Input() public showId: boolean;
 
+
   displayedColumnsPlayer: string[] = [ 'name', 'rating', 'score'];
 
-  constructor(private router: Router) {
-
-  }
+  constructor() {}
 
   ngOnInit(): void {
     if(this.showTpr)
     this.displayedColumnsPlayer.push('tpr');
     if(this.showId)
     this.displayedColumnsPlayer.unshift('id');
-  }
-
-  showPlayer(id: number) {
-    this.router.navigate([`player/${id}`]);
   }
 }

@@ -8,10 +8,10 @@
         <mat-card
           class="card"
           *ngFor="let club of province.clubs"
-          (click)="navigateToClub(club.id)"
+          [routerLink]="['/club/'+ club.id]"
         >
-          <p>{{ club.id }}</p>
-          <p>{{ club.name }}</p>
+          <label>{{ club.id }}</label>
+          <label>{{ club.name }}</label>
         </mat-card>
       </div>
     </mat-tab>

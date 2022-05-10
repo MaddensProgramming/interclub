@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { Round } from 'src/app/models/club';
 
 @Component({
@@ -12,11 +11,9 @@ export class RoundViewComponent implements OnInit {
   @Input() clubId: number;
 
   displayedColumnsRound: string[] = ['board', 'white', 'black', 'result'];
-  constructor(private router: Router) {}
+  constructor() {}
 
   ngOnInit(): void {}
 
-  showPlayer(id: number) {
-    this.router.navigate([`player/${id}`]);
-  }
+
 }

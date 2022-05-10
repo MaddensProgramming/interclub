@@ -9,7 +9,7 @@
     </mat-tab>
     <mat-tab
       *ngFor="let team of clubView.teams"
-      label="Team {{ team.id }} ({{ team.division }})"
+      label="Team {{ team.id }} ({{team.class}}{{ team.division }})"
     >
       <app-team-view [team]="team"></app-team-view>
     </mat-tab>

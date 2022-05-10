@@ -10,7 +10,7 @@
     {{ round.games[0].teamBlack.teamNumber }}</span>
 </div>
 
-<table mat-table [dataSource]="round.games" class="mat-elevation-z8 bigTable">
+<table mat-table [dataSource]="round.games" class="mat-elevation-z8 big-table">
   <ng-container matColumnDef="board">
     <th mat-header-cell *matHeaderCellDef>Bord</th>
     <td mat-cell *matCellDef="let element">
@@ -23,7 +23,8 @@
     <td
       mat-cell
       *matCellDef="let element"
-      (click)="showPlayer(element.white.id)"
+      [routerLink]="['/player/' + element.white.id]"
+      class="clickable-title"
       [ngClass]="element.white.clubId === clubId ? 'fat' : ''"
     >
       <div>{{ element.white.name }} ({{ element.white.rating }})</div>
@@ -35,7 +36,8 @@
     <td
       mat-cell
       *matCellDef="let element"
-      (click)="showPlayer(element.black.id)"
+      [routerLink]="['/player/' + element.black.id]"
+      class="clickable-title"
       [ngClass]="element.black.clubId === clubId ? 'fat' : ''"
     >
       {{ element.black.name }}({{ element.black.rating }})
