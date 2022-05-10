@@ -1,9 +1,16 @@
-import { Component, EventEmitter, Input, OnInit } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Round, TeamView } from 'src/app/models/club';
 import { Player } from 'src/app/models/player';
 import { ResultEnum } from 'src/app/models/result.enum';
+import { PlayerListComponent } from '../player-list/player-list.component';
 
 @Component({
   selector: 'app-team-view',
@@ -12,6 +19,10 @@ import { ResultEnum } from 'src/app/models/result.enum';
 })
 export class TeamViewComponent implements OnInit {
   @Input() team: TeamView;
+
+  @ViewChild(PlayerListComponent) teamPlayers: PlayerListComponent;
+
+  totaal: Player;
 
   constructor() {}
 
@@ -47,15 +58,16 @@ export class TeamViewComponent implements OnInit {
       totalScore += player.score;
       totalRating += player.rating * player.numberOfGames;
     });
-    newplayerList.push({
+    this.totaal = {
       name: 'Totaal',
       id: 0,
       rating: Math.round(totalRating / totalGames),
       numberOfGames: totalGames,
       score: totalScore,
       tpr: 0,
-    });
+    };
     this.team.players = newplayerList;
+    if (this.teamPlayers) this.teamPlayers.updateTable(newplayerList);
   }
 
   addGameAsWhite(

@@ -20,6 +20,7 @@ import { OwnGamePipe } from './pipes/own-game.pipe';
 import { ColorPipe } from './pipes/color.pipe';
 import { PlayerListComponent } from './components/player-list/player-list.component';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatSortModule } from '@angular/material/sort';
 
 import { RoundViewComponent } from './components/round-view/round-view.component';
 import { TeamViewComponent } from './components/team-view/team-view.component';
@@ -53,6 +54,7 @@ import { NumberOfPlayersPipe } from './pipes/number-of-players.pipe';
     MatCardModule,
     MatProgressSpinnerModule,
     MatButtonToggleModule,
+    MatSortModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
