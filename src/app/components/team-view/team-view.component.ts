@@ -13,6 +13,8 @@ import { ResultEnum } from 'src/app/models/result.enum';
 export class TeamViewComponent implements OnInit {
   @Input() team: TeamView;
 
+
+
   constructor() {}
 
   ngOnInit(): void {this.showRes([])}
@@ -32,6 +34,11 @@ export class TeamViewComponent implements OnInit {
         if(game.black.clubId===this.team.clubId)this.addGameAsBlack(game.black,game.result, newplayerList);
       }
     }))
+    let totalRating = 0;
+    let totalScore = 0;
+    let totalGames=0;
+    newplayerList.forEach(player =>{totalGames+=player.numberOfGames; totalScore+=player.score; totalRating+= player.rating*player.numberOfGames});
+    newplayerList.push({name:"Totaal",id:0,rating:Math.round(totalRating/totalGames), numberOfGames: totalGames, score:totalScore, tpr:0})
     this.team.players = newplayerList;
   }
 

@@ -1,13 +1,19 @@
 <div class="result-card">
-  <span class="team">
+  <div class="team">
+  <span class="team-name">
     {{ round.games[0].teamWhite.clubName }}
     {{ round.games[0].teamWhite.teamNumber }}
   </span>
+  <span class="rating">{{averageEloHome}}</span>
+</div>
   <span  class="result">
     {{ round.scoreHome }} - {{ round.games.length - round.scoreHome }}
   </span>
-  <span  class="team">   {{ round.games[0].teamBlack.clubName }}
+  <div class="team">
+  <span  class="team-name">   {{ round.games[0].teamBlack.clubName }}
     {{ round.games[0].teamBlack.teamNumber }}</span>
+    <span class="rating">{{averageEloAway}}</span>
+  </div>
 </div>
 
 <table mat-table [dataSource]="round.games" class="mat-elevation-z8 big-table">
