@@ -36,7 +36,7 @@
     <ng-container matColumnDef="color">
       <th mat-header-cell *matHeaderCellDef>Kleur</th>
       <td mat-cell *matCellDef="let element">
-        {{ element.color | color }}
+       <div [ngClass]=" element.color===1?'white':'black'"></div>
       </td>
     </ng-container>
 

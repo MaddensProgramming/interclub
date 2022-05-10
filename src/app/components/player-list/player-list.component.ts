@@ -9,12 +9,21 @@ import { Player } from '../../models/player';
 })
 export class PlayerListComponent implements OnInit {
   @Input() public players: Player[];
+  @Input() public showTpr: boolean;
+  @Input() public showId: boolean;
 
-  displayedColumnsPlayer: string[] = ['id', 'name', 'rating', 'score', 'tpr'];
+  displayedColumnsPlayer: string[] = [ 'name', 'rating', 'score'];
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) {
 
-  ngOnInit(): void {}
+  }
+
+  ngOnInit(): void {
+    if(this.showTpr)
+    this.displayedColumnsPlayer.push('tpr');
+    if(this.showId)
+    this.displayedColumnsPlayer.unshift('id');
+  }
 
   showPlayer(id: number) {
     this.router.navigate([`player/${id}`]);

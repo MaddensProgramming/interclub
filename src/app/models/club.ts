@@ -23,6 +23,7 @@ export interface ClubView {
   id: number;
   name: string;
   teams: TeamView[];
+  players: Player[];
 }
 
 export interface TeamView {

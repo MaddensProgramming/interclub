@@ -38,7 +38,7 @@ export class ClubComponent implements OnInit {
       map((club) => this.recalculatePlayerResult(club)),
       map((club) => this.sort(club)),
       map((club) => {
-        this.processRequest = new Date().valueOf() - this.firstTime.valueOf();
+        this.processRequest = new Date().valueOf() - this.firstTime.valueOf() - this.downloadRequest;
         return club;
       })
     );
@@ -109,10 +109,14 @@ export class ClubComponent implements OnInit {
   }
 
   mapIntoTabs(club: Club): ClubView {
-    const clubView: ClubView = { id: club.id, name: club.name, teams: [] };
+    const clubView: ClubView = { id: club.id, name: club.name, teams: [], players:[]};
 
-    club.players.forEach((player) =>
+    club.players.forEach((player) =>{
       player.games.forEach((game) => this.addGame(clubView, game, player))
+      const playerWithoutGames = {...player};
+      playerWithoutGames.games= [];
+      clubView.players.push(playerWithoutGames);
+    }
     );
     return clubView;
   }
