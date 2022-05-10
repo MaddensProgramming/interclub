@@ -1,5 +1,6 @@
-.vet {
+label {
   font-weight: bold;
+  margin-right: 0.5rem;
 }
 
 .card {
@@ -23,8 +24,7 @@
 .details {
   display: grid;
   grid-template-columns: auto auto;
-  margin: auto;
-  max-width: 15rem;
+  justify-content: center;
   padding: 1rem 0rem;
 }
 
