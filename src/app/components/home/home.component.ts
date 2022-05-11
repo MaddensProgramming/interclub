@@ -16,9 +16,9 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.clubOverview$ = this.service.getOverview().pipe(
-      filter((club) => {
-        if (!club) this.router.navigate(['404']);
-        return !!club;
+      filter((cluboverview) => {
+        if (!cluboverview) this.router.navigate(['404']);
+        return !!cluboverview;
       })
     );
   }
