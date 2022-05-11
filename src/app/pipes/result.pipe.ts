@@ -18,6 +18,10 @@ export class ResultPipe implements PipeTransform {
         return '1-0F';
       case ResultEnum.BlackFF:
         return '0-1F';
+      case ResultEnum.BothFF:
+        return '0F-0F';
+      default:
+        return '?';
     }
   }
 }
@@ -38,6 +42,10 @@ export class OwnResultPipe implements PipeTransform {
         return color === ColorEnum.Wit ? '1F' : '0F';
       case ResultEnum.BlackFF:
         return color === ColorEnum.Wit ? '0F' : '1F';
+      case ResultEnum.BothFF:
+        return '0F';
+      default:
+        return '?';
     }
   }
 }

@@ -39,5 +39,6 @@ export interface TeamView {
 export interface Round {
   id: number;
   scoreHome: number;
+  scoreAway: number;
   games: Game[];
 }

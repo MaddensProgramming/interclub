@@ -6,9 +6,7 @@
     </span>
     <span class="rating">{{ averageEloHome }}</span>
   </div>
-  <span class="result">
-    {{ round.scoreHome }} - {{ round.games.length - round.scoreHome }}
-  </span>
+  <span class="result"> {{ round.scoreHome }} - {{ round.scoreAway }} </span>
   <div class="team">
     <span class="team-name">
       {{ round.games[0].teamBlack.clubName }}

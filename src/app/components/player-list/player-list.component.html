@@ -43,9 +43,7 @@
 
   <ng-container matColumnDef="numberOfGames">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>Partijen</th>
-    <td mat-cell *matCellDef="let element">
-      {{ element.numberOfGames }}
-    </td>
+    <td mat-cell *matCellDef="let element">{{ element.numberOfGames }}</td>
     <td mat-footer-cell *matFooterCellDef>{{ totaal?.numberOfGames }}</td>
   </ng-container>
 
@@ -58,11 +56,6 @@
   <tr mat-header-row *matHeaderRowDef="displayedColumnsPlayer"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumnsPlayer"></tr>
   <ng-container *ngIf="totaal">
-    <tr
-      mat-footer-row
-      class="fat"
-      *matFooterRowDef="displayedColumnsPlayer"
-      style="position: sticky"
-    ></tr>
+    <tr mat-footer-row  class="fat" *matFooterRowDef="displayedColumnsPlayer"></tr>
   </ng-container>
 </table>

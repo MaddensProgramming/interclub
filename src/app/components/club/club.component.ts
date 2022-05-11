@@ -96,12 +96,17 @@ export class ClubComponent implements OnInit {
 
     let round = team.rounds.find((round) => round.id === game.round);
     if (!round) {
-      round = { id: game.round, scoreHome: 0, games: [] };
+      round = { id: game.round, scoreHome: 0, scoreAway: 0, games: [] };
       team.rounds.push(round);
     }
     round.games.push(game);
     round.scoreHome +=
       game.board % 2 === 1
+        ? this.checkWhiteScore(game.result)
+        : this.checkBlackScore(game.result);
+
+    round.scoreAway +=
+      game.board % 2 === 0
         ? this.checkWhiteScore(game.result)
         : this.checkBlackScore(game.result);
   }
@@ -115,6 +120,7 @@ export class ClubComponent implements OnInit {
         return 0.5;
       case ResultEnum.WhiteWins:
       case ResultEnum.WhiteFF:
+      case ResultEnum.BothFF:
         return 0;
       default:
         return 0;
@@ -130,6 +136,7 @@ export class ClubComponent implements OnInit {
         return 0.5;
       case ResultEnum.BlackWins:
       case ResultEnum.BlackFF:
+      case ResultEnum.BothFF:
         return 0;
       default:
         return 0;
