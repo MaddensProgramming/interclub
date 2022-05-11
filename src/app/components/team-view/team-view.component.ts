@@ -43,9 +43,15 @@ export class TeamViewComponent implements OnInit {
     this.team.rounds.forEach((round) =>
       round.games.forEach((game) => {
         if (event.length === 0 || event.includes(game.board.toString())) {
-          if (game.white.clubId === this.team.clubId)
+          if (
+            game.teamWhite.clubId === this.team.clubId &&
+            game.teamWhite.teamNumber === this.team.id
+          )
             this.addGameAsWhite(game.white, game.result, newplayerList);
-          if (game.black.clubId === this.team.clubId)
+          if (
+            game.teamBlack.clubId === this.team.clubId &&
+            game.teamBlack.teamNumber === this.team.id
+          )
             this.addGameAsBlack(game.black, game.result, newplayerList);
         }
       })
