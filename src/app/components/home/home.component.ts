@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
+import { filter, Observable } from 'rxjs';
 import { ClubOverview } from 'src/app/models/club';
 import { DataBaseService } from '../../services/database.service';
 
@@ -11,9 +12,14 @@ import { DataBaseService } from '../../services/database.service';
 export class HomeComponent implements OnInit {
   public clubOverview$: Observable<ClubOverview>;
 
-  constructor(private service: DataBaseService) {}
+  constructor(private service: DataBaseService, private router: Router) {}
 
   ngOnInit(): void {
-    this.clubOverview$ = this.service.getOverview();
+    this.clubOverview$ = this.service.getOverview().pipe(
+      filter((club) => {
+        if (!club) this.router.navigate(['404']);
+        return !!club;
+      })
+    );
   }
 }

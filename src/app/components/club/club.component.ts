@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { map, Observable, switchMap } from 'rxjs';
+import { filter, map, Observable, switchMap } from 'rxjs';
 import { Club, ClubView } from 'src/app/models/club';
 import { Game } from 'src/app/models/game';
 import { Player } from 'src/app/models/player';
@@ -21,7 +21,8 @@ export class ClubComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private databaseService: DataBaseService
+    private databaseService: DataBaseService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -29,6 +30,10 @@ export class ClubComponent implements OnInit {
       switchMap((params: ParamMap) => {
         this.firstTime = new Date();
         return this.databaseService.getClub(+params.get('id'));
+      }),
+      filter((club) => {
+        if (!club) this.router.navigate(['404']);
+        return !!club;
       }),
       map((club) => {
         this.downloadRequest = new Date().valueOf() - this.firstTime.valueOf();
