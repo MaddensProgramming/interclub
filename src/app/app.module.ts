@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ClubComponent } from './components/club/club.component';
@@ -21,10 +20,11 @@ import { ColorPipe } from './pipes/color.pipe';
 import { PlayerListComponent } from './components/player-list/player-list.component';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatSortModule } from '@angular/material/sort';
-
 import { RoundViewComponent } from './components/round-view/round-view.component';
 import { TeamViewComponent } from './components/team-view/team-view.component';
 import { NumberOfPlayersPipe } from './pipes/number-of-players.pipe';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [
@@ -55,6 +55,8 @@ import { NumberOfPlayersPipe } from './pipes/number-of-players.pipe';
     MatProgressSpinnerModule,
     MatButtonToggleModule,
     MatSortModule,
+    MatToolbarModule,
+    MatIconModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

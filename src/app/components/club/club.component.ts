@@ -15,10 +15,6 @@ import { DataBaseService } from 'src/app/services/database.service';
 export class ClubComponent implements OnInit {
   public club$: Observable<ClubView>;
 
-  firstTime: Date;
-  downloadRequest: number;
-  processRequest: number;
-
   constructor(
     private route: ActivatedRoute,
     private databaseService: DataBaseService,
@@ -28,26 +24,14 @@ export class ClubComponent implements OnInit {
   ngOnInit(): void {
     this.club$ = this.route.paramMap.pipe(
       switchMap((params: ParamMap) => {
-        this.firstTime = new Date();
         return this.databaseService.getClub(+params.get('id'));
       }),
       filter((club) => {
         if (!club) this.router.navigate(['404']);
         return !!club;
       }),
-      map((club) => {
-        this.downloadRequest = new Date().valueOf() - this.firstTime.valueOf();
-        return club;
-      }),
       map((club) => this.mapIntoTabs(club)),
-      map((club) => this.sort(club)),
-      map((club) => {
-        this.processRequest =
-          new Date().valueOf() -
-          this.firstTime.valueOf() -
-          this.downloadRequest;
-        return club;
-      })
+      map((club) => this.sort(club))
     );
   }
   sort(clubView: ClubView): ClubView {
