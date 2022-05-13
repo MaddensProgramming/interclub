@@ -31,3 +31,15 @@
   font-weight: 800;
   margin: auto 0;
 }
+
+@media screen and (max-width: 600px) {
+  .mat-cell {
+    font-size: 0.8rem;
+  }
+  .result {
+    font-size: 1rem;
+  }
+  .team-name {
+    font-size: 1rem;
+  }
+}

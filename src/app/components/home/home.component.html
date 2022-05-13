@@ -18,10 +18,11 @@
               {{
                 treeControl.isExpanded(node) ? "expand_more" : "chevron_right"
               }}
-            </mat-icon></button
-          ><span class="province">
-            {{ node.id | province }}
-          </span>
+            </mat-icon>
+            <span class="province">
+              {{ node.id | province }}
+            </span>
+          </button>
         </div>
         <div
           [class.tree-invisible]="!treeControl.isExpanded(node)"
