@@ -1,24 +1,56 @@
-.card {
-  margin: 1rem;
-  width: 7rem;
-  height: 4rem;
-  font-size: medium;
-  font-weight: bold;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  cursor: pointer;
+.tree-invisible {
+  width: 0;
+  height: 0;
+  visibility: collapse;
 }
 
-.card:hover {
-  background-color: rgba(137, 43, 226, 0.5);
+.tree ul,
+.tree li {
+  margin-top: 0;
+  margin-bottom: 0;
+  list-style-type: none;
 }
 
-.card > * {
-  cursor: pointer;
+.province {
+  color: #673ab7;
+  font-weight: 500;
+  font-size: 17px;
 }
 
-.d-flex {
+/*
+ * This padding sets alignment of the nested nodes.
+ */
+.tree .mat-nested-tree-node div[role="group"] {
   display: flex;
   flex-wrap: wrap;
+  flex-grow: 0;
+}
+
+/*
+ * Padding for leaf nodes.
+ * Leaf nodes need to have padding so as to align with other non-leaf nodes
+ * under the same parent.
+ */
+.tree div[role="group"] > .mat-tree-node {
+  font-weight: 500;
+  white-space: nowrap;
+  padding: 0.3rem;
+  margin: 0.3rem;
+  min-height: 0;
+  flex: 0;
+  background-color: #dddddd;
+}
+
+.tree div[role="group"] > .mat-tree-node:hover {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  width: 90%;
+  margin: 2rem auto;
+}
+.tree {
+  width: 100%;
 }

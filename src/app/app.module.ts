@@ -25,6 +25,8 @@ import { TeamViewComponent } from './components/team-view/team-view.component';
 import { NumberOfPlayersPipe } from './pipes/number-of-players.pipe';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTreeModule } from '@angular/material/tree';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [
@@ -57,6 +59,8 @@ import { MatIconModule } from '@angular/material/icon';
     MatSortModule,
     MatToolbarModule,
     MatIconModule,
+    MatTreeModule,
+    MatButtonModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
