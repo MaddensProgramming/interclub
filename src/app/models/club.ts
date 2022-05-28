@@ -1,9 +1,15 @@
 import { Game } from './game';
 import { Player } from './player';
 
+export interface Year {
+  id: string;
+  clubView: ClubView[];
+}
+
 export interface ClubView {
   id: number;
   name: string;
+  numberOfTeams?: number;
   teams: TeamView[];
   players: Player[];
 }

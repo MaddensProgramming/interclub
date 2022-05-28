@@ -7,9 +7,8 @@ import {
   setDoc,
   doc,
 } from 'firebase/firestore';
-import clubs from 'src/assets/games.json';
 import { environment } from 'src/environments/environment';
-import { ClubView, ClubOverview, ProvinceOverview } from '../models/club';
+import { ClubView, ClubOverview, ProvinceOverview, Year } from '../models/club';
 import { Player } from '../models/player';
 
 @Injectable({
@@ -23,73 +22,143 @@ export class GenerateService {
   constructor() {
     initializeApp(environment.firebase);
     this.store = getFirestore();
-    this.getDataFromJson();
+    // this.getDataFromJson();
   }
 
-  sendData(): void {
-    this.generatePlayerDocs();
-  }
+  sendData(): void {}
 
-  private generatePlayerDocs(): void {
-    const db = collection(this.store, 'players');
-    let count: number = 0;
-    this.players = this.players.slice(2000, this.players.length - 1);
-    this.players.forEach((player) => {
-      setDoc(doc(db, player.id.toString()), player)
-        .then(() => {
-          count++;
-          if (count % 50 === 0) console.log(count);
-        })
-        .catch((err) => console.error(err.message));
-    });
-  }
+  // private setYears(): void {
+  //   let year: Year = { id: '2020', clubView: [] };
 
-  private getDataFromJson(): void {
-    this.clubs = clubs;
-    this.clubs = this.clubs.filter((club) => club.id !== 0);
-    this.clubs.sort((club, club2) => club.id - club2.id);
+  //   const db = collection(this.store, 'years');
 
-    this.players = this.clubs.reduce(
-      (acc: Player[], val: ClubView) => acc.concat(val.players),
-      []
-    );
-  }
+  //   setDoc(doc(db, '2020'), year)
+  //     .then(() => console.log('done'))
+  //     .catch((err) => console.error(err.message));
+  // }
 
-  private generateClubDocs(): void {
-    const db = collection(this.store, 'clubs');
+  // private generatePlayerDocs(): void {
+  //   let failed: Player[] = [];
 
-    this.clubs.forEach((club) =>
-      setDoc(doc(db, club.id.toString()), club)
-        .then(() => console.log(club.name))
-        .catch((err) => console.error(err.message))
-    );
-  }
+  //   console.log(this.players.length);
 
-  private setOverview(): void {
-    const db = collection(this.store, 'clubOverview');
+  //   let count: number = 0;
 
-    setDoc(doc(db, 'overview'), this.generateOverview())
-      .then(() => console.log('succes'))
-      .catch((err) => console.error(err.message));
-  }
+  //   this.players.forEach((player) => {
+  //     setDoc(
+  //       doc(this.store, 'years', '2020', 'players', player.id.toString()),
+  //       player
+  //     )
+  //       .then(() => {
+  //         console.log(count++);
+  //       })
+  //       .catch((err) => {
+  //         console.error(err.message);
+  //         failed.push(player);
+  //       });
+  //   });
 
-  private generateOverview(): ClubOverview {
-    const overview: ClubOverview = { provinces: [] };
+  //   while (failed.length > 0) {
+  //     let newFailed: Player[] = [];
+  //     failed.forEach((player) => {
+  //       setDoc(
+  //         doc(this.store, 'years', '2020', 'players', player.id.toString()),
+  //         player
+  //       )
+  //         .then(() => {
+  //           console.log(count++);
+  //         })
+  //         .catch((err) => {
+  //           console.error(err.message);
+  //           newFailed.push(player);
+  //         });
+  //     });
+  //     failed = newFailed;
+  //   }
+  // }
 
-    this.clubs.forEach((club) => this.addToProvince(club, overview));
-    return overview;
-  }
+  // private generateTeams(): void {
+  //   this.clubs.forEach((club) =>
+  //     club.teams.forEach((team) =>
+  //       setDoc(
+  //         doc(
+  //           this.store,
+  //           'years',
+  //           '2021',
+  //           'club',
+  //           club.id.toString(),
+  //           'team',
+  //           team.id.toString()
+  //         ),
+  //         team
+  //       )
+  //         .then(() => console.log(club.name, team.id))
+  //         .catch((err) => console.log(err, club.name, team.id))
+  //     )
+  //   );
+  // }
 
-  private addToProvince(club: ClubView, overview: ClubOverview): void {
-    const provinceId = Math.floor(club.id / 100);
-    const province: ProvinceOverview = overview.provinces.find(
-      (prov) => prov.id === provinceId
-    );
-    if (!province)
-      overview.provinces.push({
-        id: provinceId,
-        clubs: [{ id: club.id, name: club.name }],
-      });
-    else province.clubs.push({ id: club.id, name: club.name });
-  }
+  // private getDataFromJson(): void {
+  //   this.clubs = clubs;
+  //   this.clubs = this.clubs.filter((club) => club.id !== 0);
+  //   this.clubs.sort((club, club2) => club.id - club2.id);
+
+  //   this.players = this.clubs.reduce(
+  //     (acc: Player[], val: ClubView) => acc.concat(val.players),
+  //     []
+  //   );
+  // }
+
+  // private generateClubDocs(): void {
+  //   this.clubs = this.clubs.map((club) => {
+  //     return {
+  //       id: club.id,
+  //       name: club.name,
+  //       numberOfTeams: club.teams.length,
+  //       players: club.players.map((player) => {
+  //         player.games = [];
+  //         return player;
+  //       }),
+  //       teams: club.teams.map((team) => {
+  //         team.players = [];
+  //         team.rounds = [];
+  //         return team;
+  //       }),
+  //     };
+  //   });
+
+  //   this.clubs.forEach((club) =>
+  //     setDoc(doc(this.store, 'years', '2021', 'club', club.id.toString()), club)
+  //       .then(() => console.log(club.name))
+  //       .catch((err) => console.error(err.message, club.name))
+  //   );
+  // }
+
+  // private setOverview(): void {
+  //   const db = collection(this.store, 'years', '2020', 'clubOverview');
+
+  //   setDoc(doc(db, 'overview'), this.generateOverview())
+  //     .then(() => console.log('succes'))
+  //     .catch((err) => console.error(err.message));
+  // }
+
+  // private generateOverview(): ClubOverview {
+  //   const overview: ClubOverview = { provinces: [] };
+
+  //   this.clubs.forEach((club) => this.addToProvince(club, overview));
+  //   return overview;
+  // }
+
+  // private addToProvince(club: ClubView, overview: ClubOverview): void {
+  //   const provinceId = Math.floor(club.id / 100);
+  //   const province: ProvinceOverview = overview.provinces.find(
+  //     (prov) => prov.id === provinceId
+  //   );
+  //   if (!province)
+  //     overview.provinces.push({
+  //       id: provinceId,
+  //       clubs: [{ id: club.id, name: club.name }],
+  //     });
+  //   else province.clubs.push({ id: club.id, name: club.name });
+  // }
 }

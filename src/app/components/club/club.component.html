@@ -14,7 +14,7 @@
       *ngFor="let team of clubView.teams"
       label="Team {{ team.id }} ({{ team.class }}{{ team.division }})"
     >
-      <app-team-view [team]="team"></app-team-view>
+      <app-team-view [clubId]="team.clubId" [id]="team.id"></app-team-view>
     </mat-tab>
   </mat-tab-group>
 </ng-container>

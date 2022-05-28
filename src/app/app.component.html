@@ -5,6 +5,14 @@
     color="primary"
   >
     <span routerLink="" class="clickable-button">Interclub</span>
+    <mat-select
+      [(value)]="year"
+      (valueChange)="changeYear()"
+      style="width: min-content; margin: 0 1rem"
+    >
+      <mat-option value="2020">2020</mat-option>
+      <mat-option value="2021">2021</mat-option>
+    </mat-select>
   </mat-toolbar>
   <div style="flex-grow: 1">
     <router-outlet></router-outlet>

@@ -1,27 +1,32 @@
-<mat-tab-group animationDuration="200ms">
-  <mat-tab label="Spelers" class="center">
-    <div class="card">
-      <label class="m-1 lighter">Bord: </label>
-      <mat-button-toggle-group
-        class="m-1 stand-out"
-        name="board"
-        (valueChange)="showRes($event)"
-        multiple
-      >
-        <mat-button-toggle
-          *ngFor="let board of boardArray(team.class | numberOfPlayers)"
-          value="{{ board }}"
-          >{{ board }}</mat-button-toggle
+<ng-container *ngIf="loaded; else loading">
+  <mat-tab-group animationDuration="200ms">
+    <mat-tab label="Spelers" class="center">
+      <div class="card">
+        <label class="m-1 lighter">Bord: </label>
+        <mat-button-toggle-group
+          class="m-1 stand-out"
+          name="board"
+          (valueChange)="showRes($event)"
+          multiple
         >
-      </mat-button-toggle-group>
-    </div>
-    <app-player-list
-      #teamPlayers
-      [players]="team.players"
-      [totaal]="totaal"
-    ></app-player-list>
-  </mat-tab>
-  <mat-tab *ngFor="let round of team.rounds" label="{{ round.id }}">
-    <app-round-view [round]="round" [clubId]="team.clubId"></app-round-view>
-  </mat-tab>
-</mat-tab-group>
+          <mat-button-toggle
+            *ngFor="let board of boardArray(team.class | numberOfPlayers)"
+            value="{{ board }}"
+            >{{ board }}</mat-button-toggle
+          >
+        </mat-button-toggle-group>
+      </div>
+      <app-player-list
+        #teamPlayers
+        [players]="team.players"
+        [totaal]="totaal"
+      ></app-player-list>
+    </mat-tab>
+    <mat-tab *ngFor="let round of team.rounds" label="{{ round.id }}">
+      <app-round-view [round]="round" [clubId]="team.clubId"></app-round-view>
+    </mat-tab>
+  </mat-tab-group>
+</ng-container>
+<ng-template #loading>
+  <mat-spinner></mat-spinner>
+</ng-template>

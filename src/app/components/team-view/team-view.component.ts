@@ -10,6 +10,7 @@ import { Observable } from 'rxjs';
 import { Round, TeamView } from 'src/app/models/club';
 import { Player } from 'src/app/models/player';
 import { ResultEnum } from 'src/app/models/result.enum';
+import { DataBaseService } from 'src/app/services/database.service';
 import { PlayerListComponent } from '../player-list/player-list.component';
 
 @Component({
@@ -18,16 +19,23 @@ import { PlayerListComponent } from '../player-list/player-list.component';
   styleUrls: ['./team-view.component.scss'],
 })
 export class TeamViewComponent implements OnInit {
-  @Input() team: TeamView;
+  @Input() clubId: number;
+  @Input() id: number;
+  team: TeamView;
+  loaded: boolean = false;
 
   @ViewChild(PlayerListComponent) teamPlayers: PlayerListComponent;
 
   totaal: Player;
 
-  constructor() {}
+  constructor(private db: DataBaseService) {}
 
   ngOnInit(): void {
-    this.showRes([]);
+    this.db.getTeam(this.id, this.clubId).subscribe((data) => {
+      this.team = data;
+      this.showRes([]);
+      this.loaded = true;
+    });
   }
 
   boardArray(boardCount: number): number[] {
