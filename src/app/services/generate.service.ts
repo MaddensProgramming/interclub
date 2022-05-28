@@ -7,6 +7,7 @@ import {
   setDoc,
   doc,
 } from 'firebase/firestore';
+import clubs from 'src/assets/2020.json';
 import { environment } from 'src/environments/environment';
 import { ClubView, ClubOverview, ProvinceOverview, Year } from '../models/club';
 import { Player } from '../models/player';
@@ -22,7 +23,7 @@ export class GenerateService {
   constructor() {
     initializeApp(environment.firebase);
     this.store = getFirestore();
-    // this.getDataFromJson();
+    //this.getDataFromJson();
   }
 
   sendData(): void {}
@@ -119,16 +120,18 @@ export class GenerateService {
   //         player.games = [];
   //         return player;
   //       }),
-  //       teams: club.teams.map((team) => {
-  //         team.players = [];
-  //         team.rounds = [];
-  //         return team;
-  //       }),
+  //       teams: club.teams
+  //         .map((team) => {
+  //           team.players = [];
+  //           team.rounds = [];
+  //           return team;
+  //         })
+  //         .sort((a, b) => a.id - b.id),
   //     };
   //   });
 
   //   this.clubs.forEach((club) =>
-  //     setDoc(doc(this.store, 'years', '2021', 'club', club.id.toString()), club)
+  //     setDoc(doc(this.store, 'years', '2020', 'club', club.id.toString()), club)
   //       .then(() => console.log(club.name))
   //       .catch((err) => console.error(err.message, club.name))
   //   );
