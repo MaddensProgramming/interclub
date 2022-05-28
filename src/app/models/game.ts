@@ -1,13 +1,12 @@
+import { TeamView } from './club';
 import { ColorEnum } from './color.enum';
 import { Player } from './player';
 import { ResultEnum } from './result.enum';
-import { Team } from './team';
-
 export interface Game {
   white: Player;
   black: Player;
-  teamWhite: Team;
-  teamBlack: Team;
+  teamWhite: TeamView;
+  teamBlack: TeamView;
   board: number;
   round: number;
   result: ResultEnum;
@@ -19,5 +18,5 @@ export interface OwnGame {
   result: ResultEnum;
   board: number;
   round: number;
-  opponentTeam: Team;
+  opponentTeam: TeamView;
 }

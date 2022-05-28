@@ -45,12 +45,12 @@ export class TeamViewComponent implements OnInit {
         if (event.length === 0 || event.includes(game.board.toString())) {
           if (
             game.teamWhite.clubId === this.team.clubId &&
-            game.teamWhite.teamNumber === this.team.id
+            game.teamWhite.id === this.team.id
           )
             this.addGameAsWhite(game.white, game.result, newplayerList);
           if (
             game.teamBlack.clubId === this.team.clubId &&
-            game.teamBlack.teamNumber === this.team.id
+            game.teamBlack.id === this.team.id
           )
             this.addGameAsBlack(game.black, game.result, newplayerList);
         }
@@ -66,6 +66,7 @@ export class TeamViewComponent implements OnInit {
     });
     this.totaal = {
       name: 'Totaal',
+      firstName: '',
       id: 0,
       rating: Math.round(totalRating / totalGames),
       numberOfGames: totalGames,

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { filter, map, Observable, switchMap } from 'rxjs';
-import { Club, ClubView } from 'src/app/models/club';
+import { ClubView } from 'src/app/models/club';
 import { Game } from 'src/app/models/game';
 import { Player } from 'src/app/models/player';
 import { ResultEnum } from 'src/app/models/result.enum';
@@ -46,7 +46,7 @@ export class ClubComponent implements OnInit {
     return clubView;
   }
 
-  mapIntoTabs(club: Club): ClubView {
+  mapIntoTabs(club: ClubView): ClubView {
     const clubView: ClubView = {
       id: club.id,
       name: club.name,
@@ -54,7 +54,7 @@ export class ClubComponent implements OnInit {
       players: [],
     };
 
-    club.players.forEach((player) => {
+    club.players.forEach((player: Player) => {
       player.games.forEach((game) => this.addGame(clubView, game, player));
       const playerWithoutGames = { ...player };
       playerWithoutGames.games = [];
@@ -65,9 +65,7 @@ export class ClubComponent implements OnInit {
 
   addGame(clubView: ClubView, game: Game, player: Player): void {
     const teamNumber =
-      player.id === game.white.id
-        ? game.teamWhite.teamNumber
-        : game.teamBlack.teamNumber;
+      player.id === game.white.id ? game.teamWhite.id : game.teamBlack.id;
 
     let team = clubView.teams.find((team) => team.id === teamNumber);
     if (!team) {
@@ -85,7 +83,14 @@ export class ClubComponent implements OnInit {
 
     let round = team.rounds.find((round) => round.id === game.round);
     if (!round) {
-      round = { id: game.round, scoreHome: 0, scoreAway: 0, games: [] };
+      round = {
+        id: game.round,
+        teamHome: game.board % 2 === 1 ? game.teamWhite : game.teamBlack,
+        teamAway: game.board % 2 === 1 ? game.teamBlack : game.teamWhite,
+        scoreHome: 0,
+        scoreAway: 0,
+        games: [],
+      };
       team.rounds.push(round);
     }
     round.games.push(game);

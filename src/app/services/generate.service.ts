@@ -9,7 +9,7 @@ import {
 } from 'firebase/firestore';
 import clubs from 'src/assets/games.json';
 import { environment } from 'src/environments/environment';
-import { Club, ClubOverview, ProvinceOverview } from '../models/club';
+import { ClubView, ClubOverview, ProvinceOverview } from '../models/club';
 import { Player } from '../models/player';
 
 @Injectable({
@@ -18,7 +18,7 @@ import { Player } from '../models/player';
 export class GenerateService {
   public store: Firestore;
   private players: Player[];
-  private clubs: Club[];
+  private clubs: ClubView[];
 
   constructor() {
     initializeApp(environment.firebase);
@@ -50,7 +50,7 @@ export class GenerateService {
     this.clubs.sort((club, club2) => club.id - club2.id);
 
     this.players = this.clubs.reduce(
-      (acc: Player[], val: Club) => acc.concat(val.players),
+      (acc: Player[], val: ClubView) => acc.concat(val.players),
       []
     );
   }
@@ -80,7 +80,7 @@ export class GenerateService {
     return overview;
   }
 
-  private addToProvince(club: Club, overview: ClubOverview): void {
+  private addToProvince(club: ClubView, overview: ClubOverview): void {
     const provinceId = Math.floor(club.id / 100);
     const province: ProvinceOverview = overview.provinces.find(
       (prov) => prov.id === provinceId

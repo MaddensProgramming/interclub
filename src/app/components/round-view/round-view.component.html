@@ -2,7 +2,7 @@
   <div class="team">
     <span class="team-name">
       {{ round.games[0].teamWhite.clubName }}
-      {{ round.games[0].teamWhite.teamNumber }}
+      {{ round.games[0].teamWhite.id }}
     </span>
     <span class="rating">{{ averageEloHome }}</span>
   </div>
@@ -10,7 +10,7 @@
   <div class="team">
     <span class="team-name">
       {{ round.games[0].teamBlack.clubName }}
-      {{ round.games[0].teamBlack.teamNumber }}</span
+      {{ round.games[0].teamBlack.id }}</span
     >
     <span class="rating">{{ averageEloAway }}</span>
   </div>
@@ -33,7 +33,11 @@
       class="clickable-title"
       [ngClass]="element.white.clubId === clubId ? 'fat' : ''"
     >
-      <div>{{ element.white.name }} ({{ element.white.rating }})</div>
+      <div>
+        {{ element.white.firstName }} {{ element.white.name }} ({{
+          element.white.rating
+        }})
+      </div>
     </td>
   </ng-container>
 
@@ -46,7 +50,9 @@
       class="clickable-title"
       [ngClass]="element.black.clubId === clubId ? 'fat' : ''"
     >
-      {{ element.black.name }}({{ element.black.rating }})
+      {{ element.black.firstName }} {{ element.black.name }} ({{
+        element.black.rating
+      }})
     </td>
   </ng-container>
 

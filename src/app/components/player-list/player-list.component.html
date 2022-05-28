@@ -20,7 +20,7 @@
       [routerLink]="['/player/' + element.id]"
       class="clickable-title"
     >
-      {{ element.name }}
+      {{ element.firstName }} {{ element.name }}
     </td>
     <td mat-footer-cell *matFooterCellDef>Totaal</td>
   </ng-container>
@@ -56,6 +56,10 @@
   <tr mat-header-row *matHeaderRowDef="displayedColumnsPlayer"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumnsPlayer"></tr>
   <ng-container *ngIf="totaal">
-    <tr mat-footer-row  class="fat" *matFooterRowDef="displayedColumnsPlayer"></tr>
+    <tr
+      mat-footer-row
+      class="fat"
+      *matFooterRowDef="displayedColumnsPlayer"
+    ></tr>
   </ng-container>
 </table>

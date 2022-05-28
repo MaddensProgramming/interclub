@@ -1,7 +1,7 @@
 <ng-container *ngIf="player$ | async as player; else loading">
   <mat-card class="card mat-elevation-z8">
     <mat-card-header class="center">
-      <mat-card-title>{{ player.name }}</mat-card-title>
+      <mat-card-title>{{ player.firstName }} {{ player.name }}</mat-card-title>
       <mat-card-subtitle>{{ player.id }}</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
@@ -44,7 +44,7 @@
         [routerLink]="['/player/' + element.opponent.id]"
         class="clickable-title"
       >
-        {{ element.opponent.name }}
+        {{ element.opponent.firstName }} {{ element.opponent.name }}
       </td>
     </ng-container>
 
