@@ -28,6 +28,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTreeModule } from '@angular/material/tree';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
+import { HalloffameComponent } from './components/halloffame/halloffame.component';
 
 @NgModule({
   declarations: [
@@ -46,6 +47,7 @@ import { MatSelectModule } from '@angular/material/select';
     TeamViewComponent,
     RoundViewComponent,
     NumberOfPlayersPipe,
+    HalloffameComponent,
   ],
   imports: [
     BrowserModule,

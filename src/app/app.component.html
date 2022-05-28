@@ -1,10 +1,13 @@
 <div class="container">
   <mat-toolbar
     style="min-height: 64px"
-    class="mat-elevation-z6"
+    class="mat-elevation-z6 toolbar"
     color="primary"
   >
-    <span routerLink="" class="clickable-button">Interclub</span>
+    <div routerLink="" class="clickable-button middle">
+      <span class="material-icons m-05"> home </span>
+      <span>Interclub</span>
+    </div>
     <mat-select
       [(value)]="year"
       (valueChange)="changeYear()"
@@ -13,6 +16,11 @@
       <mat-option value="2020">2020</mat-option>
       <mat-option value="2021">2021</mat-option>
     </mat-select>
+
+    <div routerLink="halloffame" class="middle clickable-button">
+      <span class="material-icons m-05"> emoji_events </span>
+      <span>Hall of fame</span>
+    </div>
   </mat-toolbar>
   <div style="flex-grow: 1">
     <router-outlet></router-outlet>
