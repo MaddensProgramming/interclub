@@ -1,1 +1,62 @@
-<p>halloffame works!</p>
+<mat-form-field class="example-full-width" appearance="fill">
+  <mat-label>Minimum games</mat-label>
+  <input type="number" matInput value="7"/>
+</mat-form-field>
+
+<div class="mat-elevation-z8 big-table paginator">
+  <table
+    mat-table
+    [dataSource]="dataSource"
+    matSort
+    [matSortActive]="'tpr'"
+    [matSortDirection]="'desc'"
+  >
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Stamnummer</th>
+      <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Naam</th>
+      <td
+        mat-cell
+        *matCellDef="let element"
+        [routerLink]="['/player/' + element.id]"
+        class="clickable-title"
+      >
+        {{ element.firstName }} {{ element.name }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="rating">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Rating</th>
+      <td mat-cell *matCellDef="let element">{{ element.rating }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="score">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Score</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.score }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="numberOfGames">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Partijen</th>
+      <td mat-cell *matCellDef="let element">{{ element.numberOfGames }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="tpr">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>TPR</th>
+      <td mat-cell *matCellDef="let element">{{ element.tpr }}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumnsPlayer"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumnsPlayer"></tr>
+  </table>
+  <mat-paginator
+    [pageSizeOptions]="[10, 20, 50]"
+    [pageSize]="10"
+    showFirstLastButtons
+  >
+  </mat-paginator>
+</div>

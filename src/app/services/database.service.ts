@@ -119,4 +119,15 @@ export class DataBaseService {
       })
     );
   }
+
+  public getPlayerOverview(): Observable<Player[]> {
+    return this.year$.pipe(
+      switchMap((year) => {
+        return from(
+          getDoc(doc(this.store, 'years', year, 'playerOverview', 'tpr'))
+        );
+      }),
+      map((data: any) => data.data().players as Player[])
+    );
+  }
 }

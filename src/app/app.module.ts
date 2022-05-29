@@ -29,6 +29,7 @@ import { MatTreeModule } from '@angular/material/tree';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { HalloffameComponent } from './components/halloffame/halloffame.component';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
   declarations: [
@@ -65,6 +66,7 @@ import { HalloffameComponent } from './components/halloffame/halloffame.componen
     MatTreeModule,
     MatButtonModule,
     MatSelectModule,
+    MatPaginatorModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
