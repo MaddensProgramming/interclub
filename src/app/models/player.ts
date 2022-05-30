@@ -6,6 +6,7 @@ export interface Player {
   name: string;
   rating: number;
   tpr: number;
+  diff?: number;
   score: number;
   numberOfGames: number;
   clubId?: number;

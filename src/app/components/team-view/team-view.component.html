@@ -7,8 +7,7 @@
           class="m-1 stand-out"
           name="board"
           (valueChange)="showRes($event)"
-          multiple
-        >
+                 >
           <mat-button-toggle
             *ngFor="let board of boardArray(team.class | numberOfPlayers)"
             value="{{ board }}"
