@@ -1,8 +1,9 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource, MatTable } from '@angular/material/table';
-import { map } from 'rxjs';
+import { combineLatest, map, switchMap } from 'rxjs';
 import { Player } from 'src/app/models/player';
 import { DataBaseService } from 'src/app/services/database.service';
 
@@ -15,6 +16,9 @@ export class HalloffameComponent implements OnInit {
   players: Player[];
   dataloaded: boolean = false;
   dataSource: MatTableDataSource<Player> = new MatTableDataSource();
+  form: FormGroup = new FormGroup({
+    minGames: new FormControl(5)
+  });
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatTable) table: MatTable<MatTableDataSource<Player>>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -22,17 +26,18 @@ export class HalloffameComponent implements OnInit {
   constructor(private db: DataBaseService) {}
 
   ngOnInit(): void {
-    this.db
-      .getPlayerOverview()
-      .pipe(
-        map((data: Player[]) =>
-          data.filter((player) => player.numberOfGames > 2)
-        )
-      )
-      .subscribe((data) => {
-        this.players = data;
-        this.updateTable(this.players);
-      });
+    const mingamesObs =  this.form.get("minGames").valueChanges;
+    const playerOverviewObs = this.db.year$.pipe(switchMap( year => this.db.getPlayerOverview()));
+
+    combineLatest([mingamesObs,playerOverviewObs])
+    .pipe( map( ([mingames ,players]) => { return players.filter((player) => player.numberOfGames >= mingames)}))
+    .subscribe((data) => {
+      this.players = data;
+      this.updateTable(this.players);
+    });
+
+    this.form.get("minGames").setValue(7);
+
   }
 
   displayedColumnsPlayer: string[] = [

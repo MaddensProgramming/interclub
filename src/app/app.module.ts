@@ -30,6 +30,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { HalloffameComponent } from './components/halloffame/halloffame.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -54,6 +55,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    ReactiveFormsModule,
     MatInputModule,
     MatTableModule,
     MatTabsModule,
@@ -67,6 +69,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatButtonModule,
     MatSelectModule,
     MatPaginatorModule,
+
   ],
   providers: [],
   bootstrap: [AppComponent],

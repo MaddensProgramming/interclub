@@ -1,7 +1,10 @@
-<mat-form-field class="example-full-width" appearance="fill">
-  <mat-label>Minimum games</mat-label>
-  <input type="number" matInput value="7"/>
+<div class="container">
+  <form [formGroup]="form" class="formfield" >
+<mat-form-field appearance="fill">
+  <mat-label>Minimum partijen</mat-label>
+  <input type="number" formControlName="minGames" matInput/>
 </mat-form-field>
+</form>
 
 <div class="mat-elevation-z8 big-table paginator">
   <table
@@ -59,4 +62,5 @@
     showFirstLastButtons
   >
   </mat-paginator>
+</div>
 </div>
