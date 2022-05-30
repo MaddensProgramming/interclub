@@ -32,6 +32,7 @@ import { HalloffameComponent } from './components/halloffame/halloffame.componen
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { ReactiveFormsModule } from '@angular/forms';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import { ReactiveComponentModule } from '@ngrx/component';
 
 @NgModule({
   declarations: [
@@ -70,7 +71,8 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
     MatButtonModule,
     MatSelectModule,
     MatPaginatorModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    ReactiveComponentModule
 
   ],
   providers: [],
