@@ -31,6 +31,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { HalloffameComponent } from './components/halloffame/halloffame.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { ReactiveFormsModule } from '@angular/forms';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
 @NgModule({
   declarations: [
@@ -69,6 +70,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     MatButtonModule,
     MatSelectModule,
     MatPaginatorModule,
+    MatAutocompleteModule
 
   ],
   providers: [],

@@ -1,5 +1,21 @@
 <ng-container *ngIf="dataSource$ | async as dataSource; else loading">
   <div class="container">
+    <form>
+      <mat-form-field appearance="fill">
+        <mat-label>Club</mat-label>
+        <input
+              type="text"
+               placeholder="Kies een club"
+               [formControl]="form"
+               matInput
+               [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption [displayWith]="display">
+          <mat-option *ngFor="let club of filteredOptions|async" [value]="club" >
+            {{club.name}}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </form>
     <mat-tree
       [dataSource]="dataSource"
       [treeControl]="treeControl"

@@ -52,9 +52,11 @@ button {
 .container {
   display: flex;
   justify-content: center;
+  flex-direction: column;
   width: 90%;
   margin: 2rem auto;
 }
 .tree {
   width: 100%;
 }
+
