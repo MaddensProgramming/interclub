@@ -3,7 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource, MatTable } from '@angular/material/table';
-import { combineLatest, map, switchMap } from 'rxjs';
+import { combineLatest, map, Observable, switchMap, tap } from 'rxjs';
 import { Player } from 'src/app/models/player';
 import { DataBaseService } from 'src/app/services/database.service';
 
@@ -14,8 +14,7 @@ import { DataBaseService } from 'src/app/services/database.service';
 })
 export class HalloffameComponent implements OnInit {
   players: Player[];
-  dataloaded: boolean = false;
-  dataSource: MatTableDataSource<Player> = new MatTableDataSource();
+  dataSource$: Observable<MatTableDataSource<Player>>;
   form: FormGroup = new FormGroup({
     minGames: new FormControl(5)
   });
@@ -23,21 +22,17 @@ export class HalloffameComponent implements OnInit {
   @ViewChild(MatTable) table: MatTable<MatTableDataSource<Player>>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(private db: DataBaseService) {}
+  constructor(private db: DataBaseService) { }
+
 
   ngOnInit(): void {
-    const mingamesObs =  this.form.get("minGames").valueChanges;
-    const playerOverviewObs = this.db.year$.pipe(switchMap( year => this.db.getPlayerOverview()));
+    const mingamesObs = this.form.get("minGames").valueChanges;
+    const playerOverviewObs = this.db.year$.pipe(switchMap(year => this.db.getPlayerOverview()), tap(()=>this.form.get("minGames").setValue(7)));
 
-    combineLatest([mingamesObs,playerOverviewObs])
-    .pipe( map( ([mingames ,players]) => { return players.filter((player) => player.numberOfGames >= mingames)}))
-    .subscribe((data) => {
-      this.players = data;
-      this.updateTable(this.players);
-    });
-
-    this.form.get("minGames").setValue(7);
-
+    this.dataSource$ = combineLatest([mingamesObs, playerOverviewObs])
+      .pipe(
+        map(([mingames, players]) => { return players.filter((player) => player.numberOfGames >= mingames) }),
+        map(players => this.generateDataSource(players)));
   }
 
   displayedColumnsPlayer: string[] = [
@@ -48,10 +43,11 @@ export class HalloffameComponent implements OnInit {
     'numberOfGames',
   ];
 
-  public updateTable(players: Player[]): void {
-    this.dataSource = new MatTableDataSource(players);
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
-    this.table.renderRows();
+  generateDataSource(players: Player[]): MatTableDataSource<Player>{
+    const dataSource = new MatTableDataSource(players);
+          dataSource.sort = this.sort;
+          dataSource.paginator = this.paginator;
+          return dataSource;
   }
+
 }

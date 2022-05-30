@@ -1,3 +1,4 @@
+
 <div class="container">
   <form [formGroup]="form" class="formfield" >
 <mat-form-field appearance="fill">
@@ -5,8 +6,8 @@
   <input type="number" formControlName="minGames" matInput/>
 </mat-form-field>
 </form>
-
 <div class="mat-elevation-z8 big-table paginator">
+  <ng-container *ngIf="dataSource$ | async as dataSource; else loading">
   <table
     mat-table
     [dataSource]="dataSource"
@@ -56,11 +57,17 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumnsPlayer"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumnsPlayer"></tr>
   </table>
+</ng-container>
   <mat-paginator
-    [pageSizeOptions]="[10, 20, 50]"
-    [pageSize]="10"
-    showFirstLastButtons
-  >
-  </mat-paginator>
+[pageSizeOptions]="[10, 20, 50]"
+[pageSize]="10"
+showFirstLastButtons>
+</mat-paginator>
+
 </div>
 </div>
+
+<ng-template #loading>
+  <mat-spinner></mat-spinner>
+</ng-template>
+
