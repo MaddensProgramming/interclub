@@ -33,7 +33,7 @@ export class TeamViewComponent implements OnInit {
   ngOnInit(): void {
     this.db.getTeam(this.id, this.clubId).subscribe((data) => {
       this.team = data;
-      this.showRes([]);
+      this.showRes("");
       this.loaded = true;
     });
   }
@@ -46,11 +46,11 @@ export class TeamViewComponent implements OnInit {
     return result;
   }
 
-  showRes(event: string[]): void {
+  showRes(event: string): void {
     const newplayerList: Player[] = [];
     this.team.rounds.forEach((round) =>
       round.games.forEach((game) => {
-        if (event.length === 0 || event.includes(game.board.toString())) {
+        if (event=== "" || event===game.board.toString()) {
           if (
             game.teamWhite.clubId === this.team.clubId &&
             game.teamWhite.id === this.team.id
