@@ -36,8 +36,13 @@ img {
   margin: 0.2rem;
 }
 
-
-
 .toolbar {
   justify-content: space-between;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  margin: 0;
 }
