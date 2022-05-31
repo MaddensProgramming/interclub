@@ -1,18 +1,17 @@
 <div class="result-card">
   <div class="team">
-    <span class="team-name">
-      {{ round.games[0].teamWhite.clubName }}
-      {{ round.games[0].teamWhite.id }}
+    <span class="team-name clickable-title" [routerLink]="['//club/' +round.teamHome.clubId + '/' + round.teamHome.id]">
+      {{ round.teamHome.clubName }}
+      {{ round.teamHome.id }}
     </span>
-    <span class="rating">{{ averageEloHome }}</span>
+    <span class="rating">{{ round.averageRatingHome }}</span>
   </div>
   <span class="result"> {{ round.scoreHome }} - {{ round.scoreAway }} </span>
   <div class="team">
-    <span class="team-name">
-      {{ round.games[0].teamBlack.clubName }}
-      {{ round.games[0].teamBlack.id }}</span
-    >
-    <span class="rating">{{ averageEloAway }}</span>
+    <span  class="team-name clickable-title" [routerLink]="['//club/' +round.teamAway.clubId + '/' + round.teamAway.id]">
+      {{ round.teamAway.clubName }}
+      {{ round.teamAway.id }}</span>
+    <span class="rating">{{ round.averageRatingAway }}</span>
   </div>
 </div>
 
@@ -31,7 +30,7 @@
       *matCellDef="let element"
       [routerLink]="['/player/' + element.white.id]"
       class="clickable-title"
-      [ngClass]="element.white.clubId === clubId ? 'fat' : ''"
+      [ngClass]="sameTeam(element.teamWhite,this.team)? 'fat' : ''"
     >
       <div>
         {{ element.white.firstName }} {{ element.white.name }} ({{
@@ -48,7 +47,7 @@
       *matCellDef="let element"
       [routerLink]="['/player/' + element.black.id]"
       class="clickable-title"
-      [ngClass]="element.black.clubId === clubId ? 'fat' : ''"
+      [ngClass]="sameTeam(element.teamBlack,this.team)? 'fat' : ''"
     >
       {{ element.black.firstName }} {{ element.black.name }} ({{
         element.black.rating

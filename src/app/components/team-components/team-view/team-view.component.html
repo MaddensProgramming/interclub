@@ -18,10 +18,10 @@
           >
         </mat-button-toggle-group>
       </div>
-      <app-player-list [players]="players$" [totaal]="totaal"></app-player-list>
+      <app-player-list  [players]="players$" [showTotal]="true"></app-player-list>
     </mat-tab>
     <mat-tab *ngFor="let round of team.rounds" label="{{ round.id }}">
-      <app-round-view [round]="round" [clubId]="team.clubId"></app-round-view>
+      <app-round-view [round]="round" [team]="team"></app-round-view>
     </mat-tab>
   </mat-tab-group>
 </ng-container>

@@ -13,6 +13,15 @@ export class TeamresultsComponent implements OnInit {
 
   displayedColumnsRound: string[] = [
     'id',
+    'loc',
+    'ratingOwn',
+    'teamOpponent',
+    'ratingOpponent',
+    'scoreHome',
+  ];
+
+  displayedColumnsTotal: string[] = [
+    'id',
     'ratingOwn',
     'teamOpponent',
     'ratingOpponent',
@@ -20,20 +29,6 @@ export class TeamresultsComponent implements OnInit {
   ];
 
 
-
-  averageRatingOwn(round:Round):number{
-    return Math.round(round.games.reduce((totRating,round)=> {
-      if(this.sameTeam(this.team,round.teamWhite))totRating+=round.white.rating;
-      if(this.sameTeam(this.team,round.teamBlack))totRating+=round.black.rating;
-      return totRating },0)/round.games.length);
-  }
-
-  averageRatingOpponent(round:Round):number{
-    return Math.round(round.games.reduce((totRating,round)=> {
-      if(this.sameTeam(this.team,round.teamWhite))totRating+=round.black.rating;
-      if(this.sameTeam(this.team,round.teamBlack))totRating+=round.white.rating;
-      return totRating },0)/round.games.length);
-  }
 
   score(round:Round):number{
     if(this.sameTeam(this.team,round.teamHome))
@@ -43,13 +38,48 @@ export class TeamresultsComponent implements OnInit {
 
   locatie(round:Round):string{
     if(this.sameTeam(this.team,round.teamHome))
-    return "Thuis";
-    return "Uit";
+    return "home";
+    return "directions_car";
   }
 
   sameTeam(teamA: TeamView, teamB: TeamView):boolean{
     return teamA.clubId===teamB.clubId && teamA.id ===teamB.id;
   }
+
+  ratingOwn(round:Round){
+    if(this.sameTeam(this.team,round.teamHome))
+    return round.averageRatingHome
+    return round.averageRatingAway
+  }
+
+  ratingOpponent(round:Round){
+    if(this.sameTeam(this.team,round.teamHome))
+    return round.averageRatingAway
+    return round.averageRatingHome
+  }
+
+  averageRatingOwn(){
+   return Math.round(this.team.rounds.reduce((total,round)=>total+= this.ratingOwn(round) ,0)/this.team.rounds.length);
+  }
+
+  averageRatingOppenent(){
+    return Math.round(this.team.rounds.reduce((total,round)=>total+= this.ratingOpponent(round) ,0)/this.team.rounds.length);
+   }
+
+  matchPoints(){
+    return this.team.rounds.reduce((total,round)=> total+=this.checkResult(round) ,0);
+  }
+
+
+  checkResult(round: Round):number{
+    if(round.scoreAway===round.scoreHome) return 0.5;
+    if(round.scoreAway>round.scoreHome){
+      return this.sameTeam(this.team,round.teamAway)?1:0;
+    }
+    return this.sameTeam(this.team,round.teamHome)?1:0;
+
+  }
+
 
   constructor() { }
 
