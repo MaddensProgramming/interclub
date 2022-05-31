@@ -1,0 +1,57 @@
+<table
+  mat-table
+  [dataSource]="team.rounds"
+  class="mat-elevation-z8 big-table"
+>
+
+
+  <ng-container matColumnDef="id">
+    <th mat-header-cell *matHeaderCellDef >Ronde</th>
+    <td
+      mat-cell
+      *matCellDef="let element"
+    >
+      {{ element.id}} {{locatie(element)}}
+    </td>
+    <td mat-footer-cell *matFooterCellDef>Totaal</td>
+  </ng-container>
+
+  <ng-container matColumnDef="ratingOwn">
+    <th mat-header-cell *matHeaderCellDef >Rating</th>
+    <td mat-cell *matCellDef="let element">{{averageRatingOwn(element)}}</td>
+    <td mat-footer-cell *matFooterCellDef>Hier</td>
+  </ng-container>
+
+  <ng-container matColumnDef="teamOpponent">
+    <th mat-header-cell *matHeaderCellDef >Tegenstander</th>
+    <td mat-cell *matCellDef="let element" class="fat">{{ element.teamHome.clubName}} {{element.teamHome.id}}</td>
+    <td mat-footer-cell *matFooterCellDef>Hier</td>
+  </ng-container>
+
+  <ng-container matColumnDef="scoreHome">
+    <th mat-header-cell *matHeaderCellDef >Score</th>
+    <td mat-cell *matCellDef="let element">
+     {{score(element)}}
+    </td>
+    <td mat-footer-cell *matFooterCellDef>
+      KOMT
+    </td></ng-container  >
+
+    <ng-container matColumnDef="ratingOpponent">
+      <th mat-header-cell *matHeaderCellDef >Rating</th>
+      <td mat-cell *matCellDef="let element">{{averageRatingOpponent(element)}}</td>
+      <td mat-footer-cell *matFooterCellDef>Hier</td>
+    </ng-container>
+
+
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumnsRound"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumnsRound"></tr>
+  <ng-container>
+    <tr
+      mat-footer-row
+      class="fat"
+      *matFooterRowDef="displayedColumnsRound"
+    ></tr>
+  </ng-container>
+</table>

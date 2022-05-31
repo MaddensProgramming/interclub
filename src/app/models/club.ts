@@ -9,7 +9,6 @@ export interface Year {
 export interface ClubView {
   id: number;
   name: string;
-  numberOfTeams?: number;
   teams: TeamView[];
   players: Player[];
 }
@@ -18,17 +17,22 @@ export interface TeamView {
   id: number;
   clubName: string;
   clubId: number;
-  players?: Player[]; //edited scores
   class: number;
   division: string;
+  players?: Player[];
   rounds?: Round[];
 }
 export interface Round {
   id: number;
-  scoreHome: number;
-  scoreAway: number;
+
   teamHome: TeamView;
+  scoreHome: number;
+  averageRatingHome?: number;
+
   teamAway: TeamView;
+  scoreAway: number;
+  averageRatingAway?:number;
+
   games: Game[];
 }
 

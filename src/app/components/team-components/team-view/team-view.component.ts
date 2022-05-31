@@ -2,10 +2,8 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
-  EventEmitter,
   Input,
   OnInit,
-  ViewChild,
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -15,9 +13,8 @@ import {
   map,
   Observable,
   switchMap,
-  tap,
 } from 'rxjs';
-import { Round, TeamView } from 'src/app/models/club';
+import {  TeamView } from 'src/app/models/club';
 import { Player } from 'src/app/models/player';
 import { ResultEnum } from 'src/app/models/result.enum';
 import { DataBaseService } from 'src/app/services/database.service';

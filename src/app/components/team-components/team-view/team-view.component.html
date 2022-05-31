@@ -1,7 +1,7 @@
 <ng-container *ngIf="team$ | async as team; else loading">
   <mat-tab-group animationDuration="200ms">
     <mat-tab label="Resultaten">
-      <app-teamresults></app-teamresults>
+      <app-teamresults [team]="team"></app-teamresults>
     </mat-tab>
     <mat-tab label="Spelers" class="center">
       <div class="card">

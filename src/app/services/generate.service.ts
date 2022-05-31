@@ -124,7 +124,6 @@ export class GenerateService {
       return {
         id: club.id,
         name: club.name,
-        numberOfTeams: club.teams.length,
         players: club.players.map((player) => {
           player.games = [];
           return player;
