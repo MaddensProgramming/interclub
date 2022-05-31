@@ -12,7 +12,8 @@ import {
   MatTableDataSource,
   _MatTableDataSource,
 } from '@angular/material/table';
-import { Player } from '../../models/player';
+import { map, Observable, of, skip } from 'rxjs';
+import { Player } from '../../../models/player';
 
 @Component({
   selector: 'app-player-list',
@@ -20,15 +21,14 @@ import { Player } from '../../models/player';
   styleUrls: ['./player-list.component.scss'],
 })
 export class PlayerListComponent implements OnInit, AfterViewInit {
-  @Input() public players: Player[];
+  @Input() public players: Observable<Player[]>;
   @Input() public showTpr: boolean;
   @Input() public showId: boolean;
   @Input() public totaal: Player;
 
-  dataSource: MatTableDataSource<Player> = new MatTableDataSource();
+  dataSource$: Observable<MatTableDataSource<Player>>;
 
   @ViewChild(MatSort) sort: MatSort;
-  @ViewChild(MatTable) table: MatTable<MatTableDataSource<Player>>;
 
   displayedColumnsPlayer: string[] = [
     'name',
@@ -37,19 +37,21 @@ export class PlayerListComponent implements OnInit, AfterViewInit {
     'numberOfGames',
   ];
 
-  public updateTable(players: Player[]): void {
-    this.dataSource = new MatTableDataSource(players);
-    this.dataSource.sort = this.sort;
-    this.table.renderRows();
+  public getSource(players: Player[]): MatTableDataSource<Player> {
+    const dataSource = new MatTableDataSource(players);
+    dataSource.sort = this.sort;
+    return dataSource;
   }
 
   constructor() {}
   ngAfterViewInit(): void {
-    this.dataSource = new MatTableDataSource(this.players);
-    this.dataSource.sort = this.sort;
+    this.dataSource$ = this.players.pipe(
+      map((players) => this.getSource(players))
+    );
   }
 
   ngOnInit(): void {
+    this.dataSource$ = of(this.getSource([]));
     if (this.showTpr) this.displayedColumnsPlayer.push('tpr');
     if (this.showId) this.displayedColumnsPlayer.unshift('id');
   }

@@ -17,11 +17,11 @@ import { ProvincePipe } from './pipes/province.pipe';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { OwnGamePipe } from './pipes/own-game.pipe';
 import { ColorPipe } from './pipes/color.pipe';
-import { PlayerListComponent } from './components/player-list/player-list.component';
+import { PlayerListComponent } from './components/team-components/player-list/player-list.component';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatSortModule } from '@angular/material/sort';
-import { RoundViewComponent } from './components/round-view/round-view.component';
-import { TeamViewComponent } from './components/team-view/team-view.component';
+import { RoundViewComponent } from './components/team-components/round-view/round-view.component';
+import { TeamViewComponent } from './components/team-components/team-view/team-view.component';
 import { NumberOfPlayersPipe } from './pipes/number-of-players.pipe';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
@@ -31,8 +31,10 @@ import { MatSelectModule } from '@angular/material/select';
 import { HalloffameComponent } from './components/halloffame/halloffame.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { ReactiveFormsModule } from '@angular/forms';
-import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ReactiveComponentModule } from '@ngrx/component';
+import { PlayeroverviewclubComponent } from './components/playeroverviewclub/playeroverviewclub.component';
+import { TeamresultsComponent } from './components/team-components/teamresults/teamresults.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +54,8 @@ import { ReactiveComponentModule } from '@ngrx/component';
     RoundViewComponent,
     NumberOfPlayersPipe,
     HalloffameComponent,
+    PlayeroverviewclubComponent,
+    TeamresultsComponent,
   ],
   imports: [
     BrowserModule,
@@ -72,8 +76,7 @@ import { ReactiveComponentModule } from '@ngrx/component';
     MatSelectModule,
     MatPaginatorModule,
     MatAutocompleteModule,
-    ReactiveComponentModule
-
+    ReactiveComponentModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

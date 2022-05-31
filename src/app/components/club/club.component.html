@@ -3,20 +3,29 @@
     {{ clubView.name }}
   </h1>
   <h2>({{ clubView.id }})</h2>
-  <mat-tab-group animationDuration="200ms">
-    <mat-tab label="Alles">
-      <app-player-list
-        [players]="clubView.players"
-        [showTpr]="true"
-      ></app-player-list>
-    </mat-tab>
-    <mat-tab
-      *ngFor="let team of clubView.teams"
-      label="Team {{ team.id }} ({{ team.class }}{{ team.division }})"
+
+  <nav mat-tab-nav-bar [tabPanel]="tabPanel">
+    <a
+      mat-tab-link
+      (click)="activeLink = 'players'"
+      [active]="activeLink == 'players'"
+      [routerLink]="['players']"
     >
-      <app-team-view [clubId]="team.clubId" [id]="team.id"></app-team-view>
-    </mat-tab>
-  </mat-tab-group>
+      Spelers
+    </a>
+    <a
+      mat-tab-link
+      *ngFor="let team of clubView.teams"
+      (click)="activeLink = team.id.toString()"
+      [active]="activeLink == team.id.toString()"
+      [routerLink]="[team.id.toString()]"
+    >
+      Team {{ team.id }} ({{ team.class }}{{ team.division }})
+    </a>
+  </nav>
+  <mat-tab-nav-panel #tabPanel>
+    <router-outlet></router-outlet>
+  </mat-tab-nav-panel>
 </ng-container>
 <ng-template #loading>
   <mat-spinner></mat-spinner>

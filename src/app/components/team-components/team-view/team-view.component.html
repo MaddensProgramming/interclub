@@ -1,13 +1,16 @@
-<ng-container *ngIf="loaded; else loading">
+<ng-container *ngIf="team$ | async as team; else loading">
   <mat-tab-group animationDuration="200ms">
+    <mat-tab label="Resultaten">
+      <app-teamresults></app-teamresults>
+    </mat-tab>
     <mat-tab label="Spelers" class="center">
       <div class="card">
         <label class="m-1 lighter">Bord: </label>
         <mat-button-toggle-group
           class="m-1 stand-out"
           name="board"
-          (valueChange)="showRes($event)"
-                 >
+          [formControl]="board"
+        >
           <mat-button-toggle
             *ngFor="let board of boardArray(team.class | numberOfPlayers)"
             value="{{ board }}"
@@ -15,11 +18,7 @@
           >
         </mat-button-toggle-group>
       </div>
-      <app-player-list
-        #teamPlayers
-        [players]="team.players"
-        [totaal]="totaal"
-      ></app-player-list>
+      <app-player-list [players]="players$" [totaal]="totaal"></app-player-list>
     </mat-tab>
     <mat-tab *ngFor="let round of team.rounds" label="{{ round.id }}">
       <app-round-view [round]="round" [clubId]="team.clubId"></app-round-view>

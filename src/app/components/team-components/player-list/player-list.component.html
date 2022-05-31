@@ -1,3 +1,4 @@
+<ng-container *ngrxLet="dataSource$  as dataSource">
 <table
   mat-table
   [dataSource]="dataSource"
@@ -63,3 +64,7 @@
     ></tr>
   </ng-container>
 </table>
+
+<ng-template #loading>
+  <mat-spinner></mat-spinner>
+</ng-template>

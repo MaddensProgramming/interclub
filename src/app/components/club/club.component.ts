@@ -6,27 +6,25 @@ import { Game } from 'src/app/models/game';
 import { Player } from 'src/app/models/player';
 import { ResultEnum } from 'src/app/models/result.enum';
 import { DataBaseService } from 'src/app/services/database.service';
-import { PlayerListComponent } from '../player-list/player-list.component';
+import { PlayerListComponent } from '../team-components/player-list/player-list.component';
 
 @Component({
   selector: 'app-club',
   templateUrl: './club.component.html',
   styleUrls: ['./club.component.scss'],
 })
-export class ClubComponent implements OnInit, AfterViewInit {
+export class ClubComponent implements OnInit {
   public club$: Observable<ClubView>;
-  @ViewChild(PlayerListComponent) teamPlayers: PlayerListComponent;
+  public activeLink: string;
 
   constructor(
     private route: ActivatedRoute,
     private databaseService: DataBaseService,
     private router: Router
   ) {}
-  ngAfterViewInit(): void {
-    this.club$.subscribe((data) => this.teamPlayers.updateTable(data.players));
-  }
 
   ngOnInit(): void {
+    this.activeLink = this.route.snapshot.firstChild.params['id'] ?? 'players';
     this.club$ = this.route.paramMap.pipe(
       switchMap((params: ParamMap) => {
         return this.databaseService.getClub(+params.get('id'));

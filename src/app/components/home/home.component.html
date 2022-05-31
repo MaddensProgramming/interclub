@@ -4,14 +4,22 @@
       <mat-form-field appearance="fill">
         <mat-label>Club</mat-label>
         <input
-              type="text"
-               placeholder="Kies een club"
-               [formControl]="form"
-               matInput
-               [matAutocomplete]="auto">
-        <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption [displayWith]="display">
-          <mat-option *ngFor="let club of filteredOptions|async" [value]="club" >
-            {{club.name}}
+          type="text"
+          placeholder="Kies een club"
+          [formControl]="form"
+          matInput
+          [matAutocomplete]="auto"
+        />
+        <mat-autocomplete
+          #auto="matAutocomplete"
+          autoActiveFirstOption
+          [displayWith]="display"
+        >
+          <mat-option
+            *ngFor="let club of filteredOptions | async"
+            [value]="club"
+          >
+            {{ club.name }}
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>

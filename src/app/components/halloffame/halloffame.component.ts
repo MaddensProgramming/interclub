@@ -14,32 +14,37 @@ import { DataBaseService } from 'src/app/services/database.service';
 })
 export class HalloffameComponent implements OnInit, AfterViewInit {
   dataSource$: Observable<MatTableDataSource<Player>>;
-  dataloaded= false;
+  dataloaded = false;
   form: FormGroup = new FormGroup({
-    minGames: new FormControl(5)
+    minGames: new FormControl(5),
   });
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatTable) table: MatTable<MatTableDataSource<Player>>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(private db: DataBaseService) { }
+  constructor(private db: DataBaseService) {}
   ngAfterViewInit(): void {
-    const mingamesObs = this.form.get("minGames").valueChanges;
-    const playerOverviewObs = this.db.year$.pipe(switchMap(year => this.db.getPlayerOverview()),
-    map(players => this.addDiff(players)),
-    tap(()=>this.form.get("minGames").setValue(this.form.get("minGames").value)));
-    this.dataSource$ = combineLatest([mingamesObs, playerOverviewObs])
-      .pipe(
-        tap(()=>this.dataloaded=false),
-        map(([mingames, players]) => { return players.filter((player) => player.numberOfGames >= mingames) }),
-        map(players => this.generateDataSource(players)),
-        tap(()=>this.dataloaded=true))
+    const mingamesObs = this.form.get('minGames').valueChanges;
+    const playerOverviewObs = this.db.year$.pipe(
+      switchMap((year) => this.db.getPlayerOverview()),
+      map((players) => this.addDiff(players)),
+      tap(() =>
+        this.form.get('minGames').setValue(this.form.get('minGames').value)
+      )
+    );
+    this.dataSource$ = combineLatest([mingamesObs, playerOverviewObs]).pipe(
+      tap(() => (this.dataloaded = false)),
+      map(([mingames, players]) => {
+        return players.filter((player) => player.numberOfGames >= mingames);
+      }),
+      map((players) => this.generateDataSource(players)),
+      tap(() => (this.dataloaded = true))
+    );
   }
-
 
   ngOnInit(): void {
     this.dataSource$ = of(this.generateDataSource([]));
-    }
+  }
 
   displayedColumnsPlayer: string[] = [
     'name',
@@ -48,20 +53,17 @@ export class HalloffameComponent implements OnInit, AfterViewInit {
     'diff',
     'score',
     'numberOfGames',
-
   ];
 
-  addDiff(players:Player[]): Player[]{
-   players.forEach(player=> player.diff = player.tpr- player.rating);
-   return players;
+  addDiff(players: Player[]): Player[] {
+    players.forEach((player) => (player.diff = player.tpr - player.rating));
+    return players;
   }
 
-
-  generateDataSource(players: Player[]): MatTableDataSource<Player>{
+  generateDataSource(players: Player[]): MatTableDataSource<Player> {
     const dataSource = new MatTableDataSource(players);
-          dataSource.sort = this.sort;
-          dataSource.paginator = this.paginator;
-          return dataSource;
+    dataSource.sort = this.sort;
+    dataSource.paginator = this.paginator;
+    return dataSource;
   }
-
 }

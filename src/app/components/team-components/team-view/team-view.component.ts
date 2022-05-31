@@ -1,64 +1,89 @@
 import {
+  AfterViewInit,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { FormControl } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import {
+  BehaviorSubject,
+  combineLatest,
+  map,
+  Observable,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { Round, TeamView } from 'src/app/models/club';
 import { Player } from 'src/app/models/player';
 import { ResultEnum } from 'src/app/models/result.enum';
 import { DataBaseService } from 'src/app/services/database.service';
-import { PlayerListComponent } from '../player-list/player-list.component';
 
 @Component({
   selector: 'app-team-view',
   templateUrl: './team-view.component.html',
   styleUrls: ['./team-view.component.scss'],
 })
-export class TeamViewComponent implements OnInit {
+export class TeamViewComponent implements OnInit, AfterViewInit {
   @Input() clubId: number;
   @Input() id: number;
-  team: TeamView;
-  loaded: boolean = false;
 
-  @ViewChild(PlayerListComponent) teamPlayers: PlayerListComponent;
+  public team$: Observable<TeamView>;
+  public players$: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>(
+    []
+  );
 
+  board: FormControl = new FormControl('Alle');
   totaal: Player;
 
-  constructor(private db: DataBaseService) {}
+  constructor(
+    private db: DataBaseService,
+    private route: ActivatedRoute,
+    private cd: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
-    this.db.getTeam(this.id, this.clubId).subscribe((data) => {
-      this.team = data;
-      this.showRes("");
-      this.loaded = true;
-    });
+    const boardObs = this.board.valueChanges;
+    const teamObs = combineLatest([
+      this.route.params,
+      this.route.parent.params,
+    ]).pipe(
+      switchMap(([team, club]) => this.db.getTeam(team['id'], club['id']))
+    );
+    this.team$ = combineLatest([boardObs, teamObs]).pipe(
+      map(([board, team]) => this.showRes(board, team))
+    );
   }
 
-  boardArray(boardCount: number): number[] {
-    const result = [];
+  ngAfterViewInit(): void {
+    this.board.setValue('Alle');
+    this.cd.detectChanges();
+  }
+
+  boardArray(boardCount: number): string[] {
+    const result = ['Alle'];
     for (let index = 0; index < boardCount; index++) {
-      result.push(index + 1);
+      result.push((index + 1).toString());
     }
     return result;
   }
 
-  showRes(event: string): void {
+  showRes(board: string, team: TeamView): TeamView {
     const newplayerList: Player[] = [];
-    this.team.rounds.forEach((round) =>
+    team.rounds.forEach((round) =>
       round.games.forEach((game) => {
-        if (event=== "" || event===game.board.toString()) {
+        if (board === 'Alle' || board === game.board.toString()) {
           if (
-            game.teamWhite.clubId === this.team.clubId &&
-            game.teamWhite.id === this.team.id
+            game.teamWhite.clubId === team.clubId &&
+            game.teamWhite.id === team.id
           )
             this.addGameAsWhite(game.white, game.result, newplayerList);
           if (
-            game.teamBlack.clubId === this.team.clubId &&
-            game.teamBlack.id === this.team.id
+            game.teamBlack.clubId === team.clubId &&
+            game.teamBlack.id === team.id
           )
             this.addGameAsBlack(game.black, game.result, newplayerList);
         }
@@ -81,8 +106,8 @@ export class TeamViewComponent implements OnInit {
       score: totalScore,
       tpr: 0,
     };
-    this.team.players = newplayerList;
-    if (this.teamPlayers) this.teamPlayers.updateTable(newplayerList);
+    this.players$.next(newplayerList);
+    return team;
   }
 
   addGameAsWhite(
