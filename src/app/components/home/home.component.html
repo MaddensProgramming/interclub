@@ -30,7 +30,7 @@
       class="tree"
     >
       <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
-        <span [routerLink]="['club/' + node.id]"
+        <span class="clickable-title" [routerLink]="['club/' + node.id]"
           >{{ node.id }}: {{ node.name }}</span
         >
       </mat-tree-node>
