@@ -3,7 +3,6 @@ import { initializeApp } from 'firebase/app';
 import { doc, Firestore, getDoc, getFirestore } from 'firebase/firestore';
 import {
   BehaviorSubject,
-  combineLatest,
   from,
   map,
   Observable,
