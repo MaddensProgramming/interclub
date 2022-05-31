@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   OnDestroy,
   OnInit,
@@ -7,6 +8,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import {
+  BehaviorSubject,
   filter,
   map,
   Observable,
@@ -21,6 +23,7 @@ import { Game } from 'src/app/models/game';
 import { Player } from 'src/app/models/player';
 import { ResultEnum } from 'src/app/models/result.enum';
 import { DataBaseService } from 'src/app/services/database.service';
+import { TeamServiceService } from 'src/app/services/team-service.service';
 import { PlayerListComponent } from '../team-components/player-list/player-list.component';
 
 @Component({
@@ -28,30 +31,22 @@ import { PlayerListComponent } from '../team-components/player-list/player-list.
   templateUrl: './club.component.html',
   styleUrls: ['./club.component.scss'],
 })
-export class ClubComponent implements OnInit, OnDestroy {
+export class ClubComponent implements OnInit {
   public club$: Observable<ClubView>;
-  public activeLink: string;
-  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+  public activeLink: Observable<string>;
 
   constructor(
     private route: ActivatedRoute,
     private databaseService: DataBaseService,
-    private router: Router
+    private router: Router,
+    private teamService: TeamServiceService,
+    private cd: ChangeDetectorRef
   ) {}
-  ngOnDestroy(): void {
-    this.destroyed$.next(true);
-    this.destroyed$.complete();
-  }
 
   ngOnInit(): void {
-    //this breaks when another route is visited
-    this.route.firstChild.params
-      .pipe(
-        takeUntil(this.destroyed$),
-        tap((data) => console.log)
-      )
-      .subscribe((params) => (this.activeLink = params['id'] ?? 'players'));
-
+    this.activeLink = this.teamService.selectedTeamTab
+      .asObservable()
+      .pipe(tap(() => this.cd.detectChanges()));
     this.club$ = this.route.paramMap.pipe(
       switchMap((params: ParamMap) => {
         return this.databaseService.getClub(+params.get('id'));

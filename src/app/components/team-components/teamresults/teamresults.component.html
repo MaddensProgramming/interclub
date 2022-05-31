@@ -1,59 +1,58 @@
-<table
-  mat-table
-  [dataSource]="team.rounds"
-  class="mat-elevation-z8 big-table"
->
+<table mat-table [dataSource]="team.rounds" class="mat-elevation-z8 big-table">
   <ng-container matColumnDef="id">
-    <th mat-header-cell *matHeaderCellDef >Ronde</th>
-    <td
-      mat-cell
-      *matCellDef="let element"
-    >
-  {{ element.id}}
+    <th mat-header-cell *matHeaderCellDef>Ronde</th>
+    <td mat-cell *matCellDef="let element">
+      {{ element.id }}
     </td>
     <td mat-footer-cell colspan="2" *matFooterCellDef>Totaal</td>
   </ng-container>
 
   <ng-container matColumnDef="loc">
-    <th mat-header-cell *matHeaderCellDef >Locatie</th>
-    <td
-      mat-cell
-      *matCellDef="let element"
-    >
-  <span class="material-icons"> {{locatie(element)}}</span>
+    <th mat-header-cell *matHeaderCellDef>Locatie</th>
+    <td mat-cell *matCellDef="let element">
+      <span class="material-icons"> {{ locatie(element) }}</span>
     </td>
     <td mat-footer-cell *matFooterCellDef></td>
   </ng-container>
 
   <ng-container matColumnDef="ratingOwn">
-    <th mat-header-cell *matHeaderCellDef >Rating</th>
-    <td mat-cell *matCellDef="let element">{{ratingOwn(element)}}</td>
-    <td mat-footer-cell *matFooterCellDef>{{averageRatingOwn()}}</td>
+    <th mat-header-cell *matHeaderCellDef>Rating</th>
+    <td mat-cell *matCellDef="let element">{{ ratingOwn(element) }}</td>
+    <td mat-footer-cell *matFooterCellDef>{{ averageRatingOwn() }}</td>
   </ng-container>
 
   <ng-container matColumnDef="teamOpponent">
-    <th mat-header-cell *matHeaderCellDef >Tegenstander</th>
-    <td mat-cell *matCellDef="let element" class="clickable-title" [routerLink]="['//club/' +element.teamHome.clubId + '/' + element.teamHome.id]" >{{ element.teamHome.clubName}} {{element.teamHome.id}}</td>
+    <th mat-header-cell *matHeaderCellDef>Tegenstander</th>
+    <td
+      mat-cell
+      *matCellDef="let element"
+      class="clickable-title"
+      [routerLink]="[
+        '//club/' + opponent(element).clubId + '/' + opponent(element).id
+      ]"
+    >
+      {{ opponent(element).clubName }} {{ opponent(element).id }}
+    </td>
     <td mat-footer-cell *matFooterCellDef></td>
   </ng-container>
 
   <ng-container matColumnDef="ratingOpponent">
-    <th mat-header-cell *matHeaderCellDef >Rating</th>
-    <td mat-cell *matCellDef="let element">{{ratingOpponent(element)}}</td>
-    <td mat-footer-cell *matFooterCellDef>{{averageRatingOppenent()}}</td>
+    <th mat-header-cell *matHeaderCellDef>Rating</th>
+    <td mat-cell *matCellDef="let element">{{ ratingOpponent(element) }}</td>
+    <td mat-footer-cell *matFooterCellDef>{{ averageRatingOppenent() }}</td>
   </ng-container>
 
   <ng-container matColumnDef="scoreHome">
-    <th mat-header-cell *matHeaderCellDef >Score</th>
+    <th mat-header-cell *matHeaderCellDef>Score</th>
     <td mat-cell *matCellDef="let element">
-     {{score(element)}}
+      {{ score(element) }}
     </td>
     <td mat-footer-cell *matFooterCellDef>
-     {{matchPoints()}} / {{team.rounds.length}}
-    </td></ng-container  >
+      {{ matchPoints() }} / {{ team.rounds.length }}
+    </td></ng-container
+  >
 
   <tr mat-header-row *matHeaderRowDef="displayedColumnsRound"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumnsRound"></tr>
-  <tr    mat-footer-row      class="fat"      *matFooterRowDef="displayedColumnsTotal" ></tr>
-
+  <tr mat-footer-row class="fat" *matFooterRowDef="displayedColumnsTotal"></tr>
 </table>

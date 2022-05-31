@@ -7,8 +7,7 @@
   <nav mat-tab-nav-bar [tabPanel]="tabPanel">
     <a
       mat-tab-link
-      (click)="activeLink = 'players'"
-      [active]="activeLink == 'players'"
+      [active]="(activeLink | async) === 'players'"
       [routerLink]="['players']"
     >
       Spelers
@@ -16,8 +15,7 @@
     <a
       mat-tab-link
       *ngFor="let team of clubView.teams"
-      (click)="activeLink = team.id.toString()"
-      [active]="activeLink == team.id.toString()"
+      [active]="(activeLink | async) === team.id.toString()"
       [routerLink]="[team.id.toString()]"
     >
       Team {{ team.id }} ({{ team.class }}{{ team.division }})
