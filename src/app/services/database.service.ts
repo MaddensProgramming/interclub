@@ -15,6 +15,7 @@ import { ClubOverview, ClubView, TeamView, Year } from '../models/club';
 import { Player } from '../models/player';
 import clubs2020 from '../../assets/2020.json';
 import clubs2021 from '../../assets/2021.json';
+import { Message } from '../models/message';
 
 @Injectable({
   providedIn: 'root',
@@ -130,7 +131,7 @@ export class DataBaseService {
     );
   }
 
-  public sendMessage(message: any): Promise<void> {
+  public sendMessage(message: Message): Promise<void> {
 
   return setDoc(doc(collection(this.store, 'messages')),message);
 

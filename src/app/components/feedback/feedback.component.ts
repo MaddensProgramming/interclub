@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder,FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { DataBaseService } from 'src/app/services/database.service';
 
@@ -27,7 +27,7 @@ export class FeedbackComponent implements OnInit {
     if(this.form.get("message").value===""){
       this.toaster.warning("Uw bericht is leeg","Leeg bericht")
       return };
-    this.db.sendMessage(this.form.value)
+    this.db.sendMessage({...this.form.value, dateSent:new Date()})
     .then(()=> {this.toaster.success( "Bedankt voor uw feedback!","Bericht verzonden!");
     this.form = this.formbuilder.group({
       name: [''],
