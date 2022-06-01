@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { initializeApp } from 'firebase/app';
-import { doc, Firestore, getDoc, getFirestore } from 'firebase/firestore';
+import { collection, doc, Firestore, getDoc, getFirestore, setDoc } from 'firebase/firestore';
 import {
   BehaviorSubject,
   from,
@@ -129,4 +129,14 @@ export class DataBaseService {
       map((data: any) => data.data().players as Player[])
     );
   }
+
+  public sendMessage(message: any): Promise<void> {
+
+  return setDoc(doc(collection(this.store, 'messages')),message);
+
+
+  }
+
+
+
 }

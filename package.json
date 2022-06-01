@@ -26,6 +26,7 @@
     "@angular/router": "~13.3.0",
     "@ngrx/component": "^13.2.0",
     "firebase": "^9.7.0",
+    "ngx-toastr": "^14.3.0",
     "prettier": "^2.6.2",
     "rxjs": "~7.5.0",
     "source-map-explorer": "^2.5.2",

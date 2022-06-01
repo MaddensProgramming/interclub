@@ -35,6 +35,9 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ReactiveComponentModule } from '@ngrx/component';
 import { PlayeroverviewclubComponent } from './components/playeroverviewclub/playeroverviewclub.component';
 import { TeamresultsComponent } from './components/team-components/teamresults/teamresults.component';
+import { FeedbackComponent } from './components/feedback/feedback.component';
+import { ToastrModule } from 'ngx-toastr';
+
 
 @NgModule({
   declarations: [
@@ -56,6 +59,7 @@ import { TeamresultsComponent } from './components/team-components/teamresults/t
     HalloffameComponent,
     PlayeroverviewclubComponent,
     TeamresultsComponent,
+    FeedbackComponent,
   ],
   imports: [
     BrowserModule,
@@ -77,6 +81,8 @@ import { TeamresultsComponent } from './components/team-components/teamresults/t
     MatPaginatorModule,
     MatAutocompleteModule,
     ReactiveComponentModule,
+    ToastrModule.forRoot()
+
   ],
   providers: [],
   bootstrap: [AppComponent],

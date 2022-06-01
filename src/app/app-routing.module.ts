@@ -8,9 +8,11 @@ import { PlayerComponent } from './components/player/player.component';
 import { TeamViewComponent } from './components/team-components/team-view/team-view.component';
 import { UploadComponent } from './components/upload/upload.component';
 import { PlayeroverviewclubComponent } from './components/playeroverviewclub/playeroverviewclub.component';
+import { FeedbackComponent } from './components/feedback/feedback.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
+  { path:'feedback', component:FeedbackComponent},
   {
     path: 'club/:id',
     component: ClubComponent,
