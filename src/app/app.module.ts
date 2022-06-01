@@ -39,6 +39,7 @@ import { FeedbackComponent } from './components/feedback/feedback.component';
 import { ToastrModule } from 'ngx-toastr';
 import { ReviewsComponent } from './components/reviews/reviews.component';
 import { HttpClientModule } from '@angular/common/http';
+import { DivisionOverviewComponent } from './components/division-overview/division-overview.component';
 
 
 
@@ -64,6 +65,7 @@ import { HttpClientModule } from '@angular/common/http';
     TeamresultsComponent,
     FeedbackComponent,
     ReviewsComponent,
+    DivisionOverviewComponent,
   ],
   imports: [
     BrowserModule,

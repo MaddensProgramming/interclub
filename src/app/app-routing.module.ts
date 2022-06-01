@@ -10,11 +10,13 @@ import { UploadComponent } from './components/upload/upload.component';
 import { PlayeroverviewclubComponent } from './components/playeroverviewclub/playeroverviewclub.component';
 import { FeedbackComponent } from './components/feedback/feedback.component';
 import { ReviewsComponent } from './components/reviews/reviews.component';
+import { DivisionOverviewComponent } from './components/division-overview/division-overview.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
   { path:'feedback', component:FeedbackComponent},
-  {path:'reviews', component:ReviewsComponent},
+  { path:'reviews', component:ReviewsComponent},
+  { path: 'division/:name',component:DivisionOverviewComponent},
   {
     path: 'club/:id',
     component: ClubComponent,
