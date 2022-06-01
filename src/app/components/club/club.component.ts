@@ -50,10 +50,6 @@ export class ClubComponent implements OnInit {
     this.club$ = this.route.paramMap.pipe(
       switchMap((params: ParamMap) => {
         return this.databaseService.getClub(+params.get('id'));
-      }),
-      filter((club) => {
-        if (!club) this.router.navigate(['404']);
-        return !!club;
       })
     );
   }

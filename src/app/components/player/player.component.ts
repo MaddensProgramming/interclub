@@ -30,10 +30,6 @@ export class PlayerComponent implements OnInit {
       switchMap((params: ParamMap) =>
         this.databaseService.getPlayer(+params.get('id'))
       ),
-      filter((player) => {
-        if (!player) this.router.navigate(['404']);
-        return !!player;
-      })
     );
   }
 }

@@ -3,6 +3,7 @@ import { initializeApp } from 'firebase/app';
 import { collection, doc, Firestore, getDoc, getFirestore, setDoc } from 'firebase/firestore';
 import {
   BehaviorSubject,
+  filter,
   from,
   map,
   Observable,
@@ -16,6 +17,7 @@ import { Player } from '../models/player';
 import clubs2020 from '../../assets/2020.json';
 import clubs2021 from '../../assets/2021.json';
 import { Message } from '../models/message';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -35,7 +37,7 @@ export class DataBaseService {
   private clubs: ClubView[];
   private players: Player[];
 
-  constructor() {
+  constructor(private router: Router) {
     initializeApp(environment.firebase);
     this.store = getFirestore();
   }
@@ -44,6 +46,8 @@ export class DataBaseService {
     this.year = year;
     this.year$.next(year);
   }
+
+
 
   getClub(id: number): Observable<ClubView> {
     return this.year$.pipe(
@@ -56,6 +60,10 @@ export class DataBaseService {
           map((data) => data.data() as ClubView),
           tap((club) => (this.cacheClub[saveId] = club))
         );
+      }),
+      filter((data) => {
+        if (!data) this.router.navigate(['404']);
+        return !!data;
       })
     );
   }
@@ -82,6 +90,10 @@ export class DataBaseService {
           map((data) => data.data() as TeamView),
           tap((team) => (this.cacheTeam[saveId] = team))
         );
+      }),
+      filter((data) => {
+        if (!data) this.router.navigate(['404']);
+        return !!data;
       })
     );
   }
@@ -97,7 +109,12 @@ export class DataBaseService {
           map((data) => data.data() as Player),
           tap((player) => (this.cachePlayer[saveId] = player))
         );
+      }),
+      filter((data) => {
+        if (!data) this.router.navigate(['404']);
+        return !!data;
       })
+
     );
   }
 
@@ -114,7 +131,11 @@ export class DataBaseService {
           map((data) => data.data() as ClubOverview),
           tap(
             (clubOverview) => (this.cacheClubOverview[this.year] = clubOverview)
-          )
+          ),
+          filter((data) => {
+            if (!data) this.router.navigate(['404']);
+            return !!data;
+          })
         );
       })
     );
@@ -127,12 +148,11 @@ export class DataBaseService {
           getDoc(doc(this.store, 'years', year, 'playerOverview', 'tpr'))
         );
       }),
+      filter((data) => {
+        if (!data) this.router.navigate(['404']);
+        return !!data;
+      }),
       map((data: any) => data.data().players as Player[])
     );
   }
-
-
-
-
-
 }

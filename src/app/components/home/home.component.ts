@@ -35,10 +35,6 @@ export class HomeComponent implements OnInit {
     );
 
     this.dataSource$ = this.service.getOverview().pipe(
-      filter((cluboverview) => {
-        if (!cluboverview) this.router.navigate(['404']);
-        return !!cluboverview;
-      }),
       map((cluboverview) => {
         this.clubs = cluboverview.provinces.reduce((previous:ClubOverviewItem[],newvalue) => previous.concat(newvalue.clubs), [] );
 
