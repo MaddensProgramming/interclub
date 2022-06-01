@@ -131,12 +131,7 @@ export class DataBaseService {
     );
   }
 
-  public sendMessage(message: Message): Promise<void> {
 
-  return setDoc(doc(collection(this.store, 'messages')),message);
-
-
-  }
 
 
 

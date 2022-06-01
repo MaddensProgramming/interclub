@@ -1,0 +1,33 @@
+.container {
+  display: flex;
+  flex-direction: column;
+
+}
+
+.container > * {
+  width: 90%;
+}
+h1{
+  color:#673ab7;
+  font-weight: 700;
+  font-size: 2rem;
+}
+.title {
+ margin: 2rem auto;
+ padding-bottom: 0.5rem;
+ display: flex;
+ justify-content:space-between;
+ border-bottom: rgba(0, 0, 0, 0.425) solid 0.1rem;
+}
+
+.messages {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin: auto;
+}
+
+.mat-card {
+  width: 25rem;
+  margin: 1rem
+}

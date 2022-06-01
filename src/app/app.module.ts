@@ -37,6 +37,9 @@ import { PlayeroverviewclubComponent } from './components/playeroverviewclub/pla
 import { TeamresultsComponent } from './components/team-components/teamresults/teamresults.component';
 import { FeedbackComponent } from './components/feedback/feedback.component';
 import { ToastrModule } from 'ngx-toastr';
+import { ReviewsComponent } from './components/reviews/reviews.component';
+import { HttpClientModule } from '@angular/common/http';
+
 
 
 @NgModule({
@@ -60,6 +63,7 @@ import { ToastrModule } from 'ngx-toastr';
     PlayeroverviewclubComponent,
     TeamresultsComponent,
     FeedbackComponent,
+    ReviewsComponent,
   ],
   imports: [
     BrowserModule,
@@ -81,7 +85,8 @@ import { ToastrModule } from 'ngx-toastr';
     MatPaginatorModule,
     MatAutocompleteModule,
     ReactiveComponentModule,
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(),
+    HttpClientModule
 
   ],
   providers: [],

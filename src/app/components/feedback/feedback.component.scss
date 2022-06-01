@@ -10,11 +10,15 @@ form > * {
 }
 
 
-form>h1{
-  margin: 2rem auto;
+h1{
    color:#673ab7;
    font-weight: 700;
    font-size: 2rem;
+}
+form>div {
+  margin: 2rem auto;
+  display: flex;
+  justify-content:space-between;
 }
 
 form> p {
@@ -24,7 +28,7 @@ form> p {
 }
 
 button{
-  max-width: 6rem;
+  max-width: 8rem;
 }
 
 

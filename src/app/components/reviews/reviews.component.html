@@ -1,0 +1,19 @@
+<ng-container *ngIf= "messages$|async as messages; else loading">
+<div class="container">
+  <div class="title">
+    <h1>Reviews</h1>
+    <button mat-raised-button routerLink="/feedback">Schrijf zelf</button>
+  </div>
+  <div class ="messages">
+  <mat-card *ngFor="let message of messages">
+    <mat-card-title> {{message.name}}    </mat-card-title>
+    <mat-card-subtitle>{{message.dateSent.toLocaleString()}}</mat-card-subtitle>
+    <mat-card-content>{{message.message}}</mat-card-content>
+  </mat-card>
+</div>
+</div>
+</ng-container>
+
+<ng-template #loading>
+  <mat-spinner></mat-spinner>
+</ng-template>

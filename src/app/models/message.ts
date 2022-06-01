@@ -3,4 +3,5 @@ export interface Message{
   email: string;
   message:string;
   dateSent:Date;
+  ip:string;
 }

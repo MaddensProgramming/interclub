@@ -1,6 +1,9 @@
 <form [formGroup]="form" >
+<div>
   <h1>Feedback</h1>
-  <p>Heb je een bug gevonden, mis je ergens een feauture of wil je gewoon je mening geven? Alles kan je hier kwijt. Alvast bedankt!</p>
+  <button mat-raised-button routerLink="/reviews">Lees andere</button>
+</div>
+  <p>Heb je een bug gevonden, mis je ergens een feauture of wil je gewoon je mening geven? Alles kan je hier kwijt. Je naam en email zijn optioneel. Alvast bedankt!</p>
 
   <mat-form-field  appearance="fill">
     <mat-label>Naam</mat-label>
@@ -17,6 +20,4 @@
     <textarea rows="7" type="text" matInput formControlName="message"></textarea>
   </mat-form-field>
   <button (click)="submit()" mat-raised-button>Verzend</button>
-
-
 </form>

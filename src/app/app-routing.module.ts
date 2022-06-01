@@ -9,10 +9,12 @@ import { TeamViewComponent } from './components/team-components/team-view/team-v
 import { UploadComponent } from './components/upload/upload.component';
 import { PlayeroverviewclubComponent } from './components/playeroverviewclub/playeroverviewclub.component';
 import { FeedbackComponent } from './components/feedback/feedback.component';
+import { ReviewsComponent } from './components/reviews/reviews.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
   { path:'feedback', component:FeedbackComponent},
+  {path:'reviews', component:ReviewsComponent},
   {
     path: 'club/:id',
     component: ClubComponent,
@@ -25,7 +27,6 @@ const routes: Routes = [
   { path: 'player/:id', component: PlayerComponent },
   { path: 'upload', component: UploadComponent },
   { path: 'hallOfFame', component: HalloffameComponent },
-
   { path: '**', component: PageNotFoundComponent },
 ];
 
