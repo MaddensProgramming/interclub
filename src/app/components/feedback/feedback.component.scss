@@ -3,32 +3,30 @@ form {
   flex-direction: column;
 }
 
-
 form > * {
   width: 90%;
   margin: auto;
 }
 
-
-h1{
-   color:#673ab7;
-   font-weight: 700;
-   font-size: 2rem;
+.underline {
+  padding-bottom: 0.5rem;
+  border-bottom: rgba(0, 0, 0, 0.425) solid 0.1rem;
 }
-form>div {
+h1 {
+  color: #673ab7;
+  font-weight: 700;
+  font-size: 2rem;
+}
+form > div {
   margin: 2rem auto;
   display: flex;
-  justify-content:space-between;
+  justify-content: space-between;
 }
 
-form> p {
-
-  margin:  1rem auto;
-
+form > p {
+  margin: 1rem auto;
 }
 
-button{
+button {
   max-width: 8rem;
 }
-
-
