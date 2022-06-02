@@ -60,3 +60,18 @@ button {
   width: 100%;
 }
 
+.selection {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.margin {
+  margin: 0 1rem;
+}
+
+.stand {
+  height: 52px;
+  width: 180px;
+  font-weight: 600;
+  background-color: rgba(0, 0, 0, 0.04);
+}

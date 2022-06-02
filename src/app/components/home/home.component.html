@@ -1,7 +1,7 @@
 <ng-container *ngIf="dataSource$ | async as dataSource; else loading">
   <div class="container">
-    <form>
-      <mat-form-field appearance="fill">
+    <div class="selection">
+      <mat-form-field appearance="fill" class="margin">
         <mat-label>Club</mat-label>
         <input
           type="text"
@@ -23,7 +23,33 @@
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>
-    </form>
+
+      <mat-form-field appearance="fill" class="margin">
+        <mat-label>Speler</mat-label>
+        <input
+          type="text"
+          placeholder="Zoek een speler"
+          [formControl]="form"
+          matInput
+          [matAutocomplete]="auto"
+        />
+        <mat-autocomplete
+          #auto="matAutocomplete"
+          autoActiveFirstOption
+          [displayWith]="display"
+        >
+          <mat-option
+            *ngFor="let club of filteredOptions | async"
+            [value]="club"
+          >
+            {{ club.name }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+      <button mat-raised-button class="stand margin" routerLink="division">
+        Stand
+      </button>
+    </div>
     <mat-tree
       [dataSource]="dataSource"
       [treeControl]="treeControl"

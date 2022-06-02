@@ -1,6 +1,13 @@
 import { Injectable } from '@angular/core';
 import { initializeApp } from 'firebase/app';
-import { collection, doc, Firestore, getDoc, getFirestore, setDoc } from 'firebase/firestore';
+import {
+  collection,
+  doc,
+  Firestore,
+  getDoc,
+  getFirestore,
+  setDoc,
+} from 'firebase/firestore';
 import {
   BehaviorSubject,
   filter,
@@ -14,9 +21,6 @@ import {
 import { environment } from 'src/environments/environment';
 import { ClubOverview, ClubView, TeamView, Year } from '../models/club';
 import { Player } from '../models/player';
-import clubs2020 from '../../assets/2020.json';
-import clubs2021 from '../../assets/2021.json';
-import { Message } from '../models/message';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -46,8 +50,6 @@ export class DataBaseService {
     this.year = year;
     this.year$.next(year);
   }
-
-
 
   getClub(id: number): Observable<ClubView> {
     return this.year$.pipe(
@@ -114,7 +116,6 @@ export class DataBaseService {
         if (!data) this.router.navigate(['404']);
         return !!data;
       })
-
     );
   }
 

@@ -14,9 +14,9 @@ import { DivisionOverviewComponent } from './components/division-overview/divisi
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
-  { path:'feedback', component:FeedbackComponent},
-  { path:'reviews', component:ReviewsComponent},
-  { path: 'division/:name',component:DivisionOverviewComponent},
+  { path: 'feedback', component: FeedbackComponent },
+  { path: 'reviews', component: ReviewsComponent },
+  { path: 'division', component: DivisionOverviewComponent },
   {
     path: 'club/:id',
     component: ClubComponent,
