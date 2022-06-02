@@ -1,1 +1,12 @@
-<p>division-overview works!</p>
+<form [formGroup]="form">
+  <mat-button-toggle-group class="m-1 stand-out" formControlName="class">
+    <mat-button-toggle *ngFor="let class of classes" value="{{ class }}">{{
+      class
+    }}</mat-button-toggle>
+  </mat-button-toggle-group>
+  <mat-button-toggle-group class="m-1 stand-out" formControlName="division">
+    <mat-button-toggle *ngFor="let division of divisions">{{
+      division
+    }}</mat-button-toggle>
+  </mat-button-toggle-group>
+</form>
