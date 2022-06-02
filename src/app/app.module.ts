@@ -40,6 +40,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { ReviewsComponent } from './components/reviews/reviews.component';
 import { HttpClientModule } from '@angular/common/http';
 import { DivisionOverviewComponent } from './components/division-overview/division-overview.component';
+import { DivisionStandingsComponent } from './components/division-standings/division-standings.component';
 
 
 
@@ -66,6 +67,7 @@ import { DivisionOverviewComponent } from './components/division-overview/divisi
     FeedbackComponent,
     ReviewsComponent,
     DivisionOverviewComponent,
+    DivisionStandingsComponent,
   ],
   imports: [
     BrowserModule,

@@ -8,12 +8,12 @@ import { FormControl, FormGroup } from '@angular/forms';
 })
 export class DivisionOverviewComponent implements OnInit {
   form: FormGroup = new FormGroup({
-    class: new FormControl(1),
-    division: new FormControl(''),
+    class: new FormControl('1'),
+    division: new FormControl('A'),
   });
 
   classes: number[] = [1, 2, 3, 4, 5];
-  divisions: string[] = ['A'];
+  divisions: string[] = ['A', 'B'];
 
   constructor() {}
 
