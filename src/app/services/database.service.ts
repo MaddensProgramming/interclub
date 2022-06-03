@@ -184,7 +184,7 @@ export class DataBaseService {
   public getPlayerOverview(): Observable<Player[]> {
     return this.year$.pipe(
       switchMap((year) => {
-        if (this.cachePlayerOverview)
+        if (this.cachePlayerOverview[this.year])
           return of(this.cachePlayerOverview[this.year]);
         return from(
           getDoc(doc(this.store, 'years', year, 'overviews', 'players'))
