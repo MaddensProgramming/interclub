@@ -38,9 +38,6 @@ export class DataBaseService {
   private cacheClubOverview: { [key: string]: ClubOverview } = {};
   private cacheTeam: { [key: number]: TeamView } = {};
 
-  private clubs: ClubView[];
-  private players: Player[];
-
   constructor(private router: Router) {
     initializeApp(environment.firebase);
     this.store = getFirestore();
@@ -146,7 +143,7 @@ export class DataBaseService {
     return this.year$.pipe(
       switchMap((year) => {
         return from(
-          getDoc(doc(this.store, 'years', year, 'playerOverview', 'tpr'))
+          getDoc(doc(this.store, 'years', year, 'overviews', 'players'))
         );
       }),
       filter((data) => {

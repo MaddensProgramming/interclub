@@ -13,3 +13,11 @@ export interface Player {
   clubName?: string;
   games?: Game[];
 }
+
+export interface PlayerOverview {
+  players: SimplePlayer[];
+}
+export interface SimplePlayer {
+  id: number;
+  name: string;
+}

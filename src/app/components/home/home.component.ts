@@ -15,8 +15,8 @@ import { DataBaseService } from '../../services/database.service';
 })
 export class HomeComponent implements OnInit {
   public dataSource$ = new Observable<MatTreeNestedDataSource<TreeNode>>();
-  public clubs: ClubOverviewItem[] ;
-  form= new FormControl();
+  public clubs: ClubOverviewItem[];
+  form = new FormControl();
   filteredOptions: Observable<ClubOverviewItem[]>;
   treeControl = new NestedTreeControl<TreeNode>((node) => node.children);
   hasChild = (_: number, node: TreeNode) =>
@@ -24,19 +24,23 @@ export class HomeComponent implements OnInit {
 
   constructor(private service: DataBaseService, private router: Router) {}
 
-
   ngOnInit(): void {
-
     this.filteredOptions = this.form.valueChanges.pipe(
-      tap(value => {if(value?.id) this.router.navigate(['club/' + value.id])} ),
+      tap((value) => {
+        if (value?.id) this.router.navigate(['club/' + value.id]);
+      }),
       startWith(''),
-      map(value => (typeof value === 'string' ? value : value.name)),
-      map(name => (name ? this._filter(name) : this.clubs.slice())),
+      map((value) => (typeof value === 'string' ? value : value.name)),
+      map((name) => (name ? this._filter(name) : this.clubs.slice()))
     );
 
     this.dataSource$ = this.service.getOverview().pipe(
       map((cluboverview) => {
-        this.clubs = cluboverview.provinces.reduce((previous:ClubOverviewItem[],newvalue) => previous.concat(newvalue.clubs), [] );
+        this.clubs = cluboverview.provinces.reduce(
+          (previous: ClubOverviewItem[], newvalue) =>
+            previous.concat(newvalue.clubs),
+          []
+        );
 
         const treeNodes: TreeNode[] = [];
         const dataSource = new MatTreeNestedDataSource<TreeNode>();
@@ -59,10 +63,12 @@ export class HomeComponent implements OnInit {
   private _filter(name: string): ClubOverviewItem[] {
     const filterValue = name.toLowerCase();
 
-    return this.clubs.filter(option => option.name.toLowerCase().includes(filterValue));
+    return this.clubs.filter((option) =>
+      option.name.toLowerCase().includes(filterValue)
+    );
   }
 
-  display (club:ClubOverviewItem): string {
-   return club?.name;
+  display(club: ClubOverviewItem): string {
+    return club?.name;
   }
 }

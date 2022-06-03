@@ -3,7 +3,15 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource, MatTable } from '@angular/material/table';
-import { combineLatest, map, Observable, of, startWith, switchMap, tap } from 'rxjs';
+import {
+  combineLatest,
+  map,
+  Observable,
+  of,
+  startWith,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { Player } from 'src/app/models/player';
 import { DataBaseService } from 'src/app/services/database.service';
 
@@ -16,7 +24,7 @@ export class HalloffameComponent implements OnInit, AfterViewInit {
   dataSource$: Observable<MatTableDataSource<Player>>;
   dataloaded = false;
   form: FormGroup = new FormGroup({
-    minGames: new FormControl("5"),
+    minGames: new FormControl('5'),
   });
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatTable) table: MatTable<MatTableDataSource<Player>>;
@@ -24,10 +32,12 @@ export class HalloffameComponent implements OnInit, AfterViewInit {
 
   constructor(private db: DataBaseService) {}
   ngAfterViewInit(): void {
-    const mingamesObs = this.form.get('minGames').valueChanges.pipe(startWith("5"));
+    const mingamesObs = this.form
+      .get('minGames')
+      .valueChanges.pipe(startWith('5'));
     const playerOverviewObs = this.db.year$.pipe(
       switchMap((year) => this.db.getPlayerOverview()),
-      map((players) => this.addDiff(players)),
+      map((players) => this.addDiff(players))
     );
     this.dataSource$ = combineLatest([mingamesObs, playerOverviewObs]).pipe(
       tap(() => (this.dataloaded = false)),

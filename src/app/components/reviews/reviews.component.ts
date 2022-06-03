@@ -6,13 +6,12 @@ import { ReviewService } from 'src/app/services/review.service';
 @Component({
   selector: 'app-reviews',
   templateUrl: './reviews.component.html',
-  styleUrls: ['./reviews.component.scss']
+  styleUrls: ['./reviews.component.scss'],
 })
-export class ReviewsComponent implements OnInit,OnDestroy {
+export class ReviewsComponent implements OnInit, OnDestroy {
+  public messages$: Observable<Message[]>;
 
-  public messages$: Observable<Message[]>
-
-  constructor(private db: ReviewService) { }
+  constructor(private db: ReviewService) {}
   ngOnDestroy(): void {
     this.db.stopListening();
   }

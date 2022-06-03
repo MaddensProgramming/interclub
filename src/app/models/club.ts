@@ -19,6 +19,8 @@ export interface TeamView {
   clubId: number;
   class: number;
   division: string;
+  matchPoints?: number;
+  boardPoints?: number;
   players?: Player[];
   rounds?: Round[];
 }
@@ -31,7 +33,7 @@ export interface Round {
 
   teamAway: TeamView;
   scoreAway: number;
-  averageRatingAway?:number;
+  averageRatingAway?: number;
 
   games: Game[];
 }

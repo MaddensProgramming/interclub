@@ -9,8 +9,9 @@ import {
 } from 'firebase/firestore';
 import clubs from 'src/assets/2020.json';
 import { environment } from 'src/environments/environment';
-import { ClubView, ClubOverview, ProvinceOverview, Year } from '../models/club';
-import { Player } from '../models/player';
+import { ClubView, ClubOverview, ProvinceOverview, Year, TeamView } from '../models/club';
+import { ClassOverview, Division } from '../models/division';
+import { Player, PlayerOverview } from '../models/player';
 
 @Injectable({
   providedIn: 'root',
@@ -19,155 +20,237 @@ export class GenerateService {
   public store: Firestore;
   private players: Player[];
   private clubs: ClubView[];
+  private year: string = '2020';
 
   constructor() {
     initializeApp(environment.firebase);
     this.store = getFirestore();
-    //this.getDataFromJson();
+    this.getDataFromJson();
   }
 
-  sendData(): void {}
+  sendData(): void {
+    this.generateDivisionOverview(this.year);
+    this.generateDivisions(this.year);
+    this.generateSimplePlayers(this.year);
+    this.generatePlayerOverview(this.year);
+  }
 
-  // private getDataFromJson(): void {
-  //   this.clubs = clubs;
-  //   this.clubs = this.clubs.filter((club) => club.id !== 0);
-  //   this.clubs.sort((club, club2) => club.id - club2.id);
+  private getDataFromJson(): void {
+    this.clubs = clubs;
+    this.clubs = this.clubs.filter((club) => club.id !== 0);
+    this.clubs.sort((club, club2) => club.id - club2.id);
 
-  //   this.players = this.clubs.reduce(
-  //     (acc: Player[], val: ClubView) => acc.concat(val.players),
-  //     []
-  //   );
-  // }
-  // private writeEverything(year: string): void {
-  //   this.setYear(year);
-  //   this.generatePlayerOverview(year);
-  //   this.generatePlayerDocs(year);
-  //   this.generateClubDocs(year);
-  //   this.generateTeams(year);
-  //   this.setOverview(year);
-  // }
+    this.players = this.clubs.reduce(
+      (acc: Player[], val: ClubView) => acc.concat(val.players),
+      []
+    );
+  }
+  private writeEverything(year: string): void {
+    this.setYear(year);
+    this.generatePlayerOverview(year);
+    this.generatePlayerDocs(year);
+    this.generateClubDocs(year);
+    this.generateTeams(year);
+    this.setOverview(year);
+    this.generateDivisionOverview(year);
+    this.generateDivisions(year);
+    this.generateSimplePlayers(year);
+  }
+  generateSimplePlayers(year: string) {
+    const playerOverview: PlayerOverview = {
+      players: this.players.map((player) => {
+        return { name: player.firstName + ' ' + player.name, id: player.id };
+      }),
+    };
 
-  // private setYear(year: string): void {
-  //   let yearobj: Year = { id: year, clubView: [] };
+    setDoc(
+      doc(this.store, 'years', year, 'overviews', 'simplelayers'),
+      playerOverview
+    )
+      .then(() => {
+        console.log('done simplePlayers overview');
+      })
+      .catch((err) => {
+        console.error(err.message);
+      });
+  }
 
-  //   const db = collection(this.store, 'years');
+  private generateDivisionOverview(year: string): void {
+    const classesOverview: ClassOverview = { classes: [] };
+    this.clubs.forEach((club) =>
+      club.teams.forEach((team) =>
+        this.tryAddDivision(classesOverview, team.class, team.division)
+      )
+    );
+    classesOverview.classes.sort((a, b) => a.class - b.class);
+    classesOverview.classes.forEach((klass) => klass.divisions.sort());
 
-  //   setDoc(doc(db, year), yearobj)
-  //     .then(() => console.log('done'))
-  //     .catch((err) => console.error(err.message));
-  // }
+    setDoc(
+      doc(this.store, 'years', year, 'overviews', 'divisions'),
+      classesOverview
+    )
+      .then(() => {
+        console.log('done division overview');
+      })
+      .catch((err) => {
+        console.error(err.message);
+      });
+  }
 
-  // private generatePlayerOverview(year: string): void {
-  //   this.players = this.players.map((player) => {
-  //     player.games = [];
-  //     return player;
-  //   });
-  //   this.players.sort((a, b) => b.tpr - a.tpr);
+  tryAddDivision(
+    divisions: ClassOverview,
+    klasse: number,
+    division: string
+  ): void {
+    let toUpdate = divisions.classes.find((klass) => klass.class === klasse);
+    if (!toUpdate) {
+      toUpdate = { class: klasse, divisions: [] };
+      divisions.classes.push(toUpdate);
+    }
+    if (!toUpdate.divisions.find((div) => div === division))
+      toUpdate.divisions.push(division);
+  }
 
-  //   setDoc(doc(this.store, 'years', year, 'playerOverview', 'tpr'), {
-  //     players: this.players,
-  //   })
-  //     .then(() => {
-  //       console.log('done');
-  //     })
-  //     .catch((err) => {
-  //       console.error(err.message);
-  //     });
-  // }
+  private generateDivisions(year: string): void {
+   const divisions: Division[] = [];
 
-  // private generatePlayerDocs(year: string): void {
-  //   let failed: Player[] = [];
+   this.clubs.forEach(club => club.teams.forEach( team => ))
 
-  //   console.log(this.players.length);
 
-  //   let count: number = 0;
+  }
 
-  //   this.players.forEach((player) => {
-  //     setDoc(
-  //       doc(this.store, 'years', year, 'players', player.id.toString()),
-  //       player
-  //     )
-  //       .then(() => {
-  //         console.log(count++);
-  //       })
-  //       .catch((err) => {
-  //         console.error(err.message);
-  //       });
-  //   });
-  // }
+  addTeamToDivision(team: TeamView, divisions:  Division[]):void{
+    let division: Division = divisions.find(div => div.class===team.class && div.division===team.division );
+    if(!division){
+      division = {class:team.class, division:team.division, teams: []};
+      divisions.push(division);
+    }
 
-  // private generateTeams(year: string): void {
-  //   this.clubs.forEach((club) =>
-  //     club.teams.forEach((team) =>
-  //       setDoc(
-  //         doc(
-  //           this.store,
-  //           'years',
-  //           year,
-  //           'club',
-  //           club.id.toString(),
-  //           'team',
-  //           team.id.toString()
-  //         ),
-  //         team
-  //       )
-  //         .then(() => console.log(club.name, team.id))
-  //         .catch((err) => console.log(err, club.name, team.id))
-  //     )
-  //   );
-  // }
+    division.teams.push({...team});
 
-  // private generateClubDocs(year: string): void {
-  //   this.clubs = this.clubs.map((club) => {
-  //     return {
-  //       id: club.id,
-  //       name: club.name,
-  //       players: club.players.map((player) => {
-  //         player.games = [];
-  //         return player;
-  //       }),
-  //       teams: club.teams
-  //         .map((team) => {
-  //           team.players = [];
-  //           team.rounds = [];
-  //           return team;
-  //         })
-  //         .sort((a, b) => a.id - b.id),
-  //     };
-  //   });
+  }
 
-  //   this.clubs.forEach((club) =>
-  //     setDoc(doc(this.store, 'years', year, 'club', club.id.toString()), club)
-  //       .then(() => console.log(club.name))
-  //       .catch((err) => console.error(err.message, club.name))
-  //   );
-  // }
+  private setYear(year: string): void {
+    let yearobj: Year = { id: year, clubView: [] };
 
-  // private setOverview(year: string): void {
-  //   const db = collection(this.store, 'years', year, 'clubOverview');
+    const db = collection(this.store, 'years');
 
-  //   setDoc(doc(db, 'overview'), this.generateOverview())
-  //     .then(() => console.log('succes'))
-  //     .catch((err) => console.error(err.message));
-  // }
+    setDoc(doc(db, year), yearobj)
+      .then(() => console.log('done'))
+      .catch((err) => console.error(err.message));
+  }
 
-  // private generateOverview(): ClubOverview {
-  //   const overview: ClubOverview = { provinces: [] };
+  private generatePlayerOverview(year: string): void {
+    this.players = this.players.map((player) => {
+      player.games = [];
+      return player;
+    });
+    this.players.sort((a, b) => b.tpr - a.tpr);
 
-  //   this.clubs.forEach((club) => this.addToProvince(club, overview));
-  //   return overview;
-  // }
+    setDoc(doc(this.store, 'years', year, 'overviews', 'players'), {
+      players: this.players,
+    })
+      .then(() => {
+        console.log('done players');
+      })
+      .catch((err) => {
+        console.error(err.message);
+      });
+  }
 
-  // private addToProvince(club: ClubView, overview: ClubOverview): void {
-  //   const provinceId = Math.floor(club.id / 100);
-  //   const province: ProvinceOverview = overview.provinces.find(
-  //     (prov) => prov.id === provinceId
-  //   );
-  //   if (!province)
-  //     overview.provinces.push({
-  //       id: provinceId,
-  //       clubs: [{ id: club.id, name: club.name }],
-  //     });
-  //   else province.clubs.push({ id: club.id, name: club.name });
-  // }
+  private generatePlayerDocs(year: string): void {
+    let failed: Player[] = [];
+
+    console.log(this.players.length);
+
+    let count: number = 0;
+
+    this.players.forEach((player) => {
+      setDoc(
+        doc(this.store, 'years', year, 'players', player.id.toString()),
+        player
+      )
+        .then(() => {
+          console.log(count++);
+        })
+        .catch((err) => {
+          console.error(err.message);
+        });
+    });
+  }
+
+  private generateTeams(year: string): void {
+    this.clubs.forEach((club) =>
+      club.teams.forEach((team) =>
+        setDoc(
+          doc(
+            this.store,
+            'years',
+            year,
+            'club',
+            club.id.toString(),
+            'team',
+            team.id.toString()
+          ),
+          team
+        )
+          .then(() => console.log(club.name, team.id))
+          .catch((err) => console.log(err, club.name, team.id))
+      )
+    );
+  }
+
+  private generateClubDocs(year: string): void {
+    this.clubs = this.clubs.map((club) => {
+      return {
+        id: club.id,
+        name: club.name,
+        players: club.players.map((player) => {
+          player.games = [];
+          return player;
+        }),
+        teams: club.teams
+          .map((team) => {
+            team.players = [];
+            team.rounds = [];
+            return team;
+          })
+          .sort((a, b) => a.id - b.id),
+      };
+    });
+
+    this.clubs.forEach((club) =>
+      setDoc(doc(this.store, 'years', year, 'club', club.id.toString()), club)
+        .then(() => console.log(club.name))
+        .catch((err) => console.error(err.message, club.name))
+    );
+  }
+
+  private setOverview(year: string): void {
+    const db = collection(this.store, 'years', year, 'clubOverview');
+
+    setDoc(doc(db, 'overview'), this.generateOverview())
+      .then(() => console.log('succes'))
+      .catch((err) => console.error(err.message));
+  }
+
+  private generateOverview(): ClubOverview {
+    const overview: ClubOverview = { provinces: [] };
+
+    this.clubs.forEach((club) => this.addToProvince(club, overview));
+    return overview;
+  }
+
+  private addToProvince(club: ClubView, overview: ClubOverview): void {
+    const provinceId = Math.floor(club.id / 100);
+    const province: ProvinceOverview = overview.provinces.find(
+      (prov) => prov.id === provinceId
+    );
+    if (!province)
+      overview.provinces.push({
+        id: provinceId,
+        clubs: [{ id: club.id, name: club.name }],
+      });
+    else province.clubs.push({ id: club.id, name: club.name });
+  }
 }

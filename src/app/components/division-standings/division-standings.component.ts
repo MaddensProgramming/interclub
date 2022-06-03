@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Division } from 'src/app/models/division';
+import { DivisionForm } from 'src/app/models/division';
 
 @Component({
   selector: 'app-division-standings',
@@ -8,7 +8,7 @@ import { Division } from 'src/app/models/division';
 })
 export class DivisionStandingsComponent implements OnInit {
   @Input()
-  division: Division;
+  division: DivisionForm;
 
   constructor() {}
 
