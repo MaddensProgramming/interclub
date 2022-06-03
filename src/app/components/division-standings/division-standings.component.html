@@ -1,12 +1,32 @@
 <ng-container *ngIf="division$ | async as division; else loading">
-  <h1> UNDER CONSTRUCTION</h1>
-    <p>Showing: {{ division.class }} {{ division.division }}</p>
-    <ul>
-      <li *ngFor="let team of division.teams"> {{team.clubName}} {{team.id}}</li>
-    </ul>
+  <table [cellSpacing]="0">
+    <tr class="titles">
+      <th>Ploeg</th>
+      <th *ngFor="let team of division.teams; let indexTeam = index">
+        {{ indexTeam + 1 }}
+      </th>
+      <th>MP</th>
+      <th>BP</th>
+    </tr>
+    <tr *ngFor="let teamHome of division.teams; let indexTeam = index">
+      <th
+        class="teams clickable-title"
+        [routerLink]="'/club/' + teamHome.clubId + '/' + teamHome.id"
+      >
+        {{ indexTeam + 1 }}. {{ teamHome.clubName }} {{ teamHome.id }}
+      </th>
+      <td
+        *ngFor="let teamAway of division.teams"
+        [ngClass]="sameTeam(teamAway, teamHome) ? 'black' : ''"
+      >
+        {{ findResult(teamHome, teamAway) }}
+      </td>
+      <td class="important">{{ teamHome.matchPoints }}</td>
+      <td class="important">{{ teamHome.boardPoints }}</td>
+    </tr>
+  </table>
 </ng-container>
 
 <ng-template #loading>
   <mat-spinner></mat-spinner>
 </ng-template>
-

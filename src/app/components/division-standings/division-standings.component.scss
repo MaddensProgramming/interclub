@@ -1,0 +1,32 @@
+table {
+  border: 1px solid rgb(103, 58, 183);
+  margin: 3rem auto 0 auto;
+}
+td,
+th {
+  border: 1px solid rgb(0, 0, 0);
+  height: 2rem;
+}
+td {
+  width: 2rem;
+  text-align: center;
+}
+
+.titles {
+  background-color: rgba(104, 58, 183, 0.822);
+  color: #fff;
+  font-weight: 400;
+}
+
+.teams {
+  background-color: rgba(128, 128, 128, 0.322);
+}
+
+.black {
+  background-color: rgba(0, 0, 0, 0.884);
+}
+
+.important {
+  font-weight: 600;
+  background-color: rgba(104, 58, 183, 0.096);
+}
