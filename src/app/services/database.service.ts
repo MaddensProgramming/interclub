@@ -20,7 +20,7 @@ import {
 } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { ClubOverview, ClubView, TeamView, Year } from '../models/club';
-import { Player } from '../models/player';
+import { Player, PlayerOverview, SimplePlayer } from '../models/player';
 import { Router } from '@angular/router';
 import { ClassOverview, Division } from '../models/division';
 
@@ -39,8 +39,10 @@ export class DataBaseService {
   private cacheClub: { [key: number]: ClubView } = {};
   private cacheClubOverview: { [key: string]: ClubOverview } = {};
   private cacheTeam: { [key: number]: TeamView } = {};
-  private cacheClassOverview: ClassOverview;
   private cacheDivision: { [key: string]: Division } = {};
+  private cacheClassOverview: { [key: string]:ClassOverview} = {};
+  private cachePlayerOverview: { [key: string]:Player[]} = {};
+  private cacheSimplePlayerOverview: { [key: string]:PlayerOverview} = {};
 
 
   constructor(private router: Router) {
@@ -52,12 +54,12 @@ export class DataBaseService {
   getDivision(division: string): Observable<Division> {
     return this.year$.pipe(
       switchMap((year) => {
-        if (this.cacheDivision[division]) return of(this.cacheDivision[division]);
+        if (this.cacheDivision[year+division]) return of(this.cacheDivision[division]);
         return from(
           getDoc(doc(this.store, 'years', year, 'divisions', division))
         ).pipe(
           map((data) => data.data() as Division),
-          tap((div) => (this.cacheDivision[division] = div))
+          tap((div) => (this.cacheDivision[year+division] = div))
         );
       }),
       filter((data) => {
@@ -70,8 +72,8 @@ export class DataBaseService {
   public getClassOverview(): Observable<ClassOverview> {
     return this.year$.pipe(
       switchMap((year) => {
-        if (this.cacheClassOverview)
-          return of(this.cacheClassOverview);
+        if (this.cacheClassOverview[year])
+          return of(this.cacheClassOverview[year]);
         return from(
           getDoc(
             doc(this.store, 'years', this.year, 'overviews', 'divisions')
@@ -79,7 +81,7 @@ export class DataBaseService {
         ).pipe(
           map((data) => data.data() as ClassOverview),
           tap(
-            (classoverview) => (this.cacheClassOverview = classoverview)
+            (classoverview) => (this.cacheClassOverview[this.year] = classoverview)
           ),
           filter((data) => {
             if (!data) this.router.navigate(['404']);
@@ -190,15 +192,35 @@ export class DataBaseService {
   public getPlayerOverview(): Observable<Player[]> {
     return this.year$.pipe(
       switchMap((year) => {
+        if (this.cachePlayerOverview)
+          return of(this.cachePlayerOverview[this.year]);
         return from(
           getDoc(doc(this.store, 'years', year, 'overviews', 'players'))
-        );
+        ).pipe( map((data: any) => data.data().players as Player[]));
       }),
       filter((data) => {
         if (!data) this.router.navigate(['404']);
         return !!data;
       }),
-      map((data: any) => data.data().players as Player[])
+      tap((players) => (this.cachePlayerOverview[this.year] = players))
+    );
+  }
+
+
+  public getSimplePlayerOverview(): Observable<PlayerOverview> {
+    return this.year$.pipe(
+      switchMap((year) => {
+        if (this.cacheSimplePlayerOverview[this.year])
+          return of(this.cacheSimplePlayerOverview[this.year]);
+        return from(
+          getDoc(doc(this.store, 'years', year, 'overviews', 'simplelayers'))
+        ).pipe(map((data: any) => data.data() as PlayerOverview));
+      }),
+      filter((data) => {
+        if (!data) this.router.navigate(['404']);
+        return !!data;
+      }),
+      tap((players) => (this.cacheSimplePlayerOverview[this.year] = players))
     );
   }
 }

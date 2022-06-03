@@ -6,17 +6,17 @@
         <input
           type="text"
           placeholder="Kies een club"
-          [formControl]="form"
+          [formControl]="formClub"
           matInput
-          [matAutocomplete]="auto"
+          [matAutocomplete]="autoClub"
         />
         <mat-autocomplete
-          #auto="matAutocomplete"
+          #autoClub="matAutocomplete"
           autoActiveFirstOption
           [displayWith]="display"
         >
           <mat-option
-            *ngFor="let club of filteredOptions | async"
+            *ngFor="let club of filteredOptionsClub | async"
             [value]="club"
           >
             {{ club.name }}
@@ -29,20 +29,20 @@
         <input
           type="text"
           placeholder="Zoek een speler"
-          [formControl]="form"
+          [formControl]="formPlayer"
           matInput
-          [matAutocomplete]="auto"
+          [matAutocomplete]="autoPlayer"
         />
         <mat-autocomplete
-          #auto="matAutocomplete"
+          #autoPlayer="matAutocomplete"
           autoActiveFirstOption
           [displayWith]="display"
         >
           <mat-option
-            *ngFor="let club of filteredOptions | async"
-            [value]="club"
+            *ngFor="let player of filteredOptionsPlayer| async"
+            [value]="player"
           >
-            {{ club.name }}
+            {{ player.name }}
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>

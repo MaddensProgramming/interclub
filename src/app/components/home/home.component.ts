@@ -5,6 +5,7 @@ import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { Router } from '@angular/router';
 import { filter, map, Observable, startWith, tap } from 'rxjs';
 import { ClubOverviewItem } from 'src/app/models/club';
+import { PlayerOverview, SimplePlayer } from 'src/app/models/player';
 import { TreeNode } from 'src/app/models/tree-node';
 import { DataBaseService } from '../../services/database.service';
 
@@ -16,8 +17,14 @@ import { DataBaseService } from '../../services/database.service';
 export class HomeComponent implements OnInit {
   public dataSource$ = new Observable<MatTreeNestedDataSource<TreeNode>>();
   public clubs: ClubOverviewItem[];
-  form = new FormControl();
-  filteredOptions: Observable<ClubOverviewItem[]>;
+  public players:SimplePlayer[] = [];
+
+  formClub = new FormControl();
+  filteredOptionsClub: Observable<ClubOverviewItem[]>;
+
+  formPlayer = new FormControl();
+  filteredOptionsPlayer: Observable<SimplePlayer[]>;
+
   treeControl = new NestedTreeControl<TreeNode>((node) => node.children);
   hasChild = (_: number, node: TreeNode) =>
     !!node.children && node.children.length > 0;
@@ -25,13 +32,22 @@ export class HomeComponent implements OnInit {
   constructor(private service: DataBaseService, private router: Router) {}
 
   ngOnInit(): void {
-    this.filteredOptions = this.form.valueChanges.pipe(
+    this.filteredOptionsClub = this.formClub.valueChanges.pipe(
       tap((value) => {
         if (value?.id) this.router.navigate(['club/' + value.id]);
       }),
       startWith(''),
       map((value) => (typeof value === 'string' ? value : value.name)),
-      map((name) => (name ? this._filter(name) : this.clubs.slice()))
+      map((name) => (name ? this._filterClub(name) : this.clubs.slice()))
+    );
+
+    this.filteredOptionsPlayer = this.formPlayer.valueChanges.pipe(
+      tap((value) => {
+        if (value?.id) this.router.navigate(['player/' + value.id]);
+      }),
+      startWith(''),
+      map((value) => (typeof value === 'string' ? value : value.name)),
+      map((name) => (name ? this._filterPlayer(name) : this.players.slice()))
     );
 
     this.dataSource$ = this.service.getOverview().pipe(
@@ -56,17 +72,32 @@ export class HomeComponent implements OnInit {
         });
         dataSource.data = treeNodes;
         return dataSource;
-      })
+      }),
+      tap(()=> this.getPlayers() )
     );
   }
 
-  private _filter(name: string): ClubOverviewItem[] {
+  getPlayers(){
+    this.service.getSimplePlayerOverview().pipe(map(overview=> overview.players)).subscribe(players => this.players= players);
+  }
+
+  private _filterClub(name: string): ClubOverviewItem[] {
     const filterValue = name.toLowerCase();
 
     return this.clubs.filter((option) =>
       option.name.toLowerCase().includes(filterValue)
     );
   }
+
+  private _filterPlayer(name: string): SimplePlayer[] {
+    const filterValue = name.toLowerCase();
+
+    return this.players.filter((option) =>
+      option.name.toLowerCase().includes(filterValue)
+    );
+  }
+
+
 
   display(club: ClubOverviewItem): string {
     return club?.name;

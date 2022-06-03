@@ -22,7 +22,6 @@ export class PlayerComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private databaseService: DataBaseService,
-    private router: Router
   ) {}
 
   ngOnInit(): void {
