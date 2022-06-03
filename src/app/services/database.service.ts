@@ -28,7 +28,6 @@ import { ClassOverview, Division } from '../models/division';
   providedIn: 'root',
 })
 export class DataBaseService {
-
   public store: Firestore;
   public year: string;
   public year$: BehaviorSubject<string> = new BehaviorSubject<string>('2021');
@@ -40,31 +39,26 @@ export class DataBaseService {
   private cacheClubOverview: { [key: string]: ClubOverview } = {};
   private cacheTeam: { [key: number]: TeamView } = {};
   private cacheDivision: { [key: string]: Division } = {};
-  private cacheClassOverview: { [key: string]:ClassOverview} = {};
-  private cachePlayerOverview: { [key: string]:Player[]} = {};
-  private cacheSimplePlayerOverview: { [key: string]:PlayerOverview} = {};
-
+  private cacheClassOverview: { [key: string]: ClassOverview } = {};
+  private cachePlayerOverview: { [key: string]: Player[] } = {};
+  private cacheSimplePlayerOverview: { [key: string]: PlayerOverview } = {};
 
   constructor(private router: Router) {
     initializeApp(environment.firebase);
     this.store = getFirestore();
   }
 
-
   getDivision(division: string): Observable<Division> {
     return this.year$.pipe(
       switchMap((year) => {
-        if (this.cacheDivision[year+division]) return of(this.cacheDivision[division]);
+        if (this.cacheDivision[year + division])
+          return of(this.cacheDivision[year + division]);
         return from(
           getDoc(doc(this.store, 'years', year, 'divisions', division))
         ).pipe(
           map((data) => data.data() as Division),
-          tap((div) => (this.cacheDivision[year+division] = div))
+          tap((div) => (this.cacheDivision[year + division] = div))
         );
-      }),
-      filter((data) => {
-        if (!data) this.router.navigate(['404']);
-        return !!data;
       })
     );
   }
@@ -75,13 +69,12 @@ export class DataBaseService {
         if (this.cacheClassOverview[year])
           return of(this.cacheClassOverview[year]);
         return from(
-          getDoc(
-            doc(this.store, 'years', this.year, 'overviews', 'divisions')
-          )
+          getDoc(doc(this.store, 'years', this.year, 'overviews', 'divisions'))
         ).pipe(
           map((data) => data.data() as ClassOverview),
           tap(
-            (classoverview) => (this.cacheClassOverview[this.year] = classoverview)
+            (classoverview) =>
+              (this.cacheClassOverview[this.year] = classoverview)
           ),
           filter((data) => {
             if (!data) this.router.navigate(['404']);
@@ -90,7 +83,6 @@ export class DataBaseService {
         );
       })
     );
-
   }
 
   public changeYear(year: string): void {
@@ -196,7 +188,7 @@ export class DataBaseService {
           return of(this.cachePlayerOverview[this.year]);
         return from(
           getDoc(doc(this.store, 'years', year, 'overviews', 'players'))
-        ).pipe( map((data: any) => data.data().players as Player[]));
+        ).pipe(map((data: any) => data.data().players as Player[]));
       }),
       filter((data) => {
         if (!data) this.router.navigate(['404']);
@@ -205,7 +197,6 @@ export class DataBaseService {
       tap((players) => (this.cachePlayerOverview[this.year] = players))
     );
   }
-
 
   public getSimplePlayerOverview(): Observable<PlayerOverview> {
     return this.year$.pipe(

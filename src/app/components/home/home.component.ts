@@ -17,7 +17,7 @@ import { DataBaseService } from '../../services/database.service';
 export class HomeComponent implements OnInit {
   public dataSource$ = new Observable<MatTreeNestedDataSource<TreeNode>>();
   public clubs: ClubOverviewItem[];
-  public players:SimplePlayer[] = [];
+  public players: SimplePlayer[] = [];
 
   formClub = new FormControl();
   filteredOptionsClub: Observable<ClubOverviewItem[]>;
@@ -37,8 +37,7 @@ export class HomeComponent implements OnInit {
         if (value?.id) this.router.navigate(['club/' + value.id]);
       }),
       startWith(''),
-      map((value) => (typeof value === 'string' ? value : value.name)),
-      map((name) => (name ? this._filterClub(name) : this.clubs.slice()))
+      map((name) => this._filterClub(name))
     );
 
     this.filteredOptionsPlayer = this.formPlayer.valueChanges.pipe(
@@ -46,8 +45,7 @@ export class HomeComponent implements OnInit {
         if (value?.id) this.router.navigate(['player/' + value.id]);
       }),
       startWith(''),
-      map((value) => (typeof value === 'string' ? value : value.name)),
-      map((name) => (name ? this._filterPlayer(name) : this.players.slice()))
+      map((name) => this._filterPlayer(name))
     );
 
     this.dataSource$ = this.service.getOverview().pipe(
@@ -73,15 +71,19 @@ export class HomeComponent implements OnInit {
         dataSource.data = treeNodes;
         return dataSource;
       }),
-      tap(()=> this.getPlayers() )
+      tap(() => this.getPlayers())
     );
   }
 
-  getPlayers(){
-    this.service.getSimplePlayerOverview().pipe(map(overview=> overview.players)).subscribe(players => this.players= players);
+  getPlayers() {
+    this.service
+      .getSimplePlayerOverview()
+      .pipe(map((overview) => overview.players))
+      .subscribe((players) => (this.players = players));
   }
 
   private _filterClub(name: string): ClubOverviewItem[] {
+    if (!name) return this.clubs;
     const filterValue = name.toLowerCase();
 
     return this.clubs.filter((option) =>
@@ -90,14 +92,16 @@ export class HomeComponent implements OnInit {
   }
 
   private _filterPlayer(name: string): SimplePlayer[] {
+    if (!name || name.length < 2) return [];
     const filterValue = name.toLowerCase();
 
     return this.players.filter((option) =>
-      option.name.toLowerCase().includes(filterValue)
+      option.name
+        .toLowerCase()
+        .split(' ')
+        .some((str) => str.startsWith(filterValue))
     );
   }
-
-
 
   display(club: ClubOverviewItem): string {
     return club?.name;
