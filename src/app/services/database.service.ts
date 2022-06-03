@@ -22,11 +22,13 @@ import { environment } from 'src/environments/environment';
 import { ClubOverview, ClubView, TeamView, Year } from '../models/club';
 import { Player } from '../models/player';
 import { Router } from '@angular/router';
+import { ClassOverview, Division } from '../models/division';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DataBaseService {
+
   public store: Firestore;
   public year: string;
   public year$: BehaviorSubject<string> = new BehaviorSubject<string>('2021');
@@ -37,10 +39,56 @@ export class DataBaseService {
   private cacheClub: { [key: number]: ClubView } = {};
   private cacheClubOverview: { [key: string]: ClubOverview } = {};
   private cacheTeam: { [key: number]: TeamView } = {};
+  private cacheClassOverview: ClassOverview;
+  private cacheDivision: { [key: string]: Division } = {};
+
 
   constructor(private router: Router) {
     initializeApp(environment.firebase);
     this.store = getFirestore();
+  }
+
+
+  getDivision(division: string): Observable<Division> {
+    return this.year$.pipe(
+      switchMap((year) => {
+        if (this.cacheDivision[division]) return of(this.cacheDivision[division]);
+        return from(
+          getDoc(doc(this.store, 'years', year, 'divisions', division))
+        ).pipe(
+          map((data) => data.data() as Division),
+          tap((div) => (this.cacheDivision[division] = div))
+        );
+      }),
+      filter((data) => {
+        if (!data) this.router.navigate(['404']);
+        return !!data;
+      })
+    );
+  }
+
+  public getClassOverview(): Observable<ClassOverview> {
+    return this.year$.pipe(
+      switchMap((year) => {
+        if (this.cacheClassOverview)
+          return of(this.cacheClassOverview);
+        return from(
+          getDoc(
+            doc(this.store, 'years', this.year, 'overviews', 'divisions')
+          )
+        ).pipe(
+          map((data) => data.data() as ClassOverview),
+          tap(
+            (classoverview) => (this.cacheClassOverview = classoverview)
+          ),
+          filter((data) => {
+            if (!data) this.router.navigate(['404']);
+            return !!data;
+          })
+        );
+      })
+    );
+
   }
 
   public changeYear(year: string): void {

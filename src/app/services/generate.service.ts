@@ -7,9 +7,9 @@ import {
   setDoc,
   doc,
 } from 'firebase/firestore';
-import clubs from 'src/assets/2020.json';
+import clubs from 'src/assets/2021.json';
 import { environment } from 'src/environments/environment';
-import { ClubView, ClubOverview, ProvinceOverview, Year, TeamView } from '../models/club';
+import { ClubView, ClubOverview, ProvinceOverview, Year, TeamView, Round } from '../models/club';
 import { ClassOverview, Division } from '../models/division';
 import { Player, PlayerOverview } from '../models/player';
 
@@ -20,19 +20,15 @@ export class GenerateService {
   public store: Firestore;
   private players: Player[];
   private clubs: ClubView[];
-  private year: string = '2020';
+  private year: string = '2021';
 
   constructor() {
     initializeApp(environment.firebase);
     this.store = getFirestore();
-    this.getDataFromJson();
+    //this.getDataFromJson();
   }
 
   sendData(): void {
-    this.generateDivisionOverview(this.year);
-    this.generateDivisions(this.year);
-    this.generateSimplePlayers(this.year);
-    this.generatePlayerOverview(this.year);
   }
 
   private getDataFromJson(): void {
@@ -114,7 +110,21 @@ export class GenerateService {
   private generateDivisions(year: string): void {
    const divisions: Division[] = [];
 
-   this.clubs.forEach(club => club.teams.forEach( team => ))
+   this.clubs.forEach(club => club.teams.forEach( team => this.addTeamToDivision(team,divisions) ));
+
+
+   divisions.forEach((div) => {
+    setDoc(
+      doc(this.store, 'years', year, 'divisions', div.class+div.division),
+      div
+    )
+      .then(() => {
+        console.log(div.class+div.division);
+      })
+      .catch((err) => {
+        console.error(err.message);
+      });
+  });
 
 
   }
@@ -126,8 +136,24 @@ export class GenerateService {
       divisions.push(division);
     }
 
-    division.teams.push({...team});
+    const newTeam = {...team};
+    newTeam.boardPoints = newTeam.rounds.reduce((bp, round ) => bp+= this.sameTeam(newTeam,round.teamHome)?round.scoreHome:round.scoreAway ,0);
+    newTeam.matchPoints =  newTeam.rounds.reduce((mp, round ) => mp+=this.findMatchpoints(newTeam,round) ,0);
+    newTeam.rounds.forEach(round => {round.games=[]})
+    division.teams.push(newTeam);
 
+
+  }
+
+  private findMatchpoints( team: TeamView, round:Round):number {
+    if (round.scoreAway===round.scoreHome) return 1;
+    if(round.scoreHome>round.scoreAway)
+    return this.sameTeam(round.teamHome,team)?2:0;
+    return this.sameTeam(round.teamAway,team)?2:0;
+  }
+
+  private sameTeam (teama: TeamView, teamb: TeamView):boolean{
+    return teama.clubId===teamb.clubId&&teama.id===teamb.id
   }
 
   private setYear(year: string): void {

@@ -1,7 +1,9 @@
+
+<ng-container *ngIf="classoverview$ | async as dataSource; else loading">
 <form [formGroup]="form">
   <mat-button-toggle-group class="m-1 stand-out" formControlName="class">
-    <mat-button-toggle *ngFor="let class of classes" value="{{ +class }}">{{
-      class
+    <mat-button-toggle *ngFor="let class of classoverview.classes" value="{{ +class.class }}">{{
+      class.class
     }}</mat-button-toggle>
   </mat-button-toggle-group>
   <mat-button-toggle-group class="m-1 stand-out" formControlName="division">
@@ -12,4 +14,10 @@
     >
   </mat-button-toggle-group>
 </form>
-<app-division-standings [division]="form.value"></app-division-standings>
+<app-division-standings [form]="form"></app-division-standings>
+</ng-container>
+
+<ng-template #loading>
+  <mat-spinner></mat-spinner>
+</ng-template>
+

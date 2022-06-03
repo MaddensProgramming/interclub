@@ -1,2 +1,11 @@
-<h1>Stand</h1>
-<p>Showing: {{ division.class }} {{ division.division }}</p>
+<ng-container *ngIf="division$ | async as division; else loading">
+    <p>Showing: {{ division.class }} {{ division.division }}</p>
+    <ul>
+      <li *ngFor="let team of division.teams"> {{team.clubName}} {{team.id}}</li>
+    </ul>
+</ng-container>
+
+<ng-template #loading>
+  <mat-spinner></mat-spinner>
+</ng-template>
+

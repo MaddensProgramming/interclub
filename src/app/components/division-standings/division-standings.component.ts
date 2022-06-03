@@ -1,5 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { DivisionForm } from 'src/app/models/division';
+import { FormGroup } from '@angular/forms';
+import { Observable, startWith, switchMap } from 'rxjs';
+import { Division, DivisionForm } from 'src/app/models/division';
+import { DataBaseService } from 'src/app/services/database.service';
 
 @Component({
   selector: 'app-division-standings',
@@ -8,9 +11,13 @@ import { DivisionForm } from 'src/app/models/division';
 })
 export class DivisionStandingsComponent implements OnInit {
   @Input()
-  division: DivisionForm;
+  form:FormGroup;
 
-  constructor() {}
+  division$: Observable<Division>;
 
-  ngOnInit(): void {}
+  constructor(private db: DataBaseService) {}
+
+  ngOnInit(): void {
+   this.division$ =  this.form.valueChanges.pipe(startWith({class:'1',division:'A'}),switchMap(form=> this.db.getDivision(form.class+form.division)));
+  }
 }
