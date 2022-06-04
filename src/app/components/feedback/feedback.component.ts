@@ -31,7 +31,7 @@ export class FeedbackComponent implements OnInit {
       name: [''],
       email: [''],
       message: [''],
-      showOthers: [true]
+      showOthers: [true],
     });
   }
 
@@ -48,6 +48,7 @@ export class FeedbackComponent implements OnInit {
           name: [''],
           email: [''],
           message: [''],
+          showOthers: [true],
         });
       })
       .catch(() => this.toaster.error('Sorry er is iets misgelopen', 'Error'));
