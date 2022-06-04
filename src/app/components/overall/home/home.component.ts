@@ -74,13 +74,15 @@ export class HomeComponent implements OnInit {
 
   private _filterPlayer(name: string, players: SimplePlayer[]): SimplePlayer[] {
     if (!name || name.length < 2 || typeof name !== 'string') return [];
-    const filterValue = name.toLowerCase();
+    const filterValues = name.toLowerCase().split(' ');
 
     return players.filter((option) =>
-      option.name
-        .toLowerCase()
-        .split(' ')
-        .some((str) => str.startsWith(filterValue))
+      filterValues.every((filterValue) =>
+        option.name
+          .toLowerCase()
+          .split(' ')
+          .some((str) => str.startsWith(filterValue))
+      )
     );
   }
 
