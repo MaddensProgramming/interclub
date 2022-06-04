@@ -4,7 +4,7 @@ import { ClubComponent } from './components/clubs/club/club.component';
 import { HalloffameComponent } from './components/overall/halloffame/halloffame.component';
 import { HomeComponent } from './components/overall/home/home.component';
 import { PageNotFoundComponent } from './components/overall/page-not-found/page-not-found.component';
-import { PlayerComponent } from './components/player/player.component';
+import { PlayerComponent } from './components/overall/player/player.component';
 import { TeamViewComponent } from './components/clubs/team/team-view/team-view.component';
 import { UploadComponent } from './components/overall/upload/upload.component';
 import { PlayeroverviewclubComponent } from './components/clubs/playeroverviewclub/playeroverviewclub.component';

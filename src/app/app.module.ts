@@ -8,7 +8,7 @@ import { PageNotFoundComponent } from './components/overall/page-not-found/page-
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
-import { PlayerComponent } from './components/player/player.component';
+import { PlayerComponent } from './components/overall/player/player.component';
 import { OwnResultPipe, ResultPipe } from './pipes/result.pipe';
 import { UploadComponent } from './components/overall/upload/upload.component';
 import { MatTableModule } from '@angular/material/table';
