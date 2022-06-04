@@ -1,16 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ClubComponent } from './components/club/club.component';
-import { HalloffameComponent } from './components/halloffame/halloffame.component';
-import { HomeComponent } from './components/home/home.component';
-import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
+import { ClubComponent } from './components/clubs/club/club.component';
+import { HalloffameComponent } from './components/overall/halloffame/halloffame.component';
+import { HomeComponent } from './components/overall/home/home.component';
+import { PageNotFoundComponent } from './components/overall/page-not-found/page-not-found.component';
 import { PlayerComponent } from './components/player/player.component';
-import { TeamViewComponent } from './components/team-components/team-view/team-view.component';
-import { UploadComponent } from './components/upload/upload.component';
-import { PlayeroverviewclubComponent } from './components/playeroverviewclub/playeroverviewclub.component';
-import { FeedbackComponent } from './components/feedback/feedback.component';
-import { ReviewsComponent } from './components/reviews/reviews.component';
-import { DivisionOverviewComponent } from './components/division-overview/division-overview.component';
+import { TeamViewComponent } from './components/clubs/team/team-view/team-view.component';
+import { UploadComponent } from './components/overall/upload/upload.component';
+import { PlayeroverviewclubComponent } from './components/clubs/playeroverviewclub/playeroverviewclub.component';
+import { FeedbackComponent } from './components/messages/feedback/feedback.component';
+import { ReviewsComponent } from './components/messages/reviews/reviews.component';
+import { DivisionOverviewComponent } from './components/division/division-overview/division-overview.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },

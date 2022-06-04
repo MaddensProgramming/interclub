@@ -7,7 +7,7 @@ import { combineLatest, filter, map, Observable, startWith, tap } from 'rxjs';
 import { ClubOverview, ClubOverviewItem } from 'src/app/models/club';
 import { PlayerOverview, SimplePlayer } from 'src/app/models/player';
 import { TreeNode } from 'src/app/models/tree-node';
-import { DataBaseService } from '../../services/database.service';
+import { DataBaseService } from '../../../services/database.service';
 
 @Component({
   selector: 'app-home',

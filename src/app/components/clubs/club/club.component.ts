@@ -24,7 +24,7 @@ import { Player } from 'src/app/models/player';
 import { ResultEnum } from 'src/app/models/result.enum';
 import { DataBaseService } from 'src/app/services/database.service';
 import { TeamServiceService } from 'src/app/services/team-service.service';
-import { PlayerListComponent } from '../team-components/player-list/player-list.component';
+import { PlayerListComponent } from '../team/player-list/player-list.component';
 
 @Component({
   selector: 'app-club',
@@ -38,7 +38,6 @@ export class ClubComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private databaseService: DataBaseService,
-    private router: Router,
     private teamService: TeamServiceService,
     private cd: ChangeDetectorRef
   ) {}
