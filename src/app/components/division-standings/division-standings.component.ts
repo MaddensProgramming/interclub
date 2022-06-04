@@ -57,6 +57,7 @@ export class DivisionStandingsComponent implements OnInit {
 
     const pointsHome = this.findResult(teamHome, teamAway);
     const pointsAway = this.findResult(teamAway, teamHome);
+    if (!pointsAway && !pointsHome) return '';
     if (pointsAway === pointsHome) return 'yellow';
     return pointsHome < pointsAway ? 'green' : 'red';
   }
