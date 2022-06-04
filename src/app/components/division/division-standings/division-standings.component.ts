@@ -20,7 +20,10 @@ export class DivisionStandingsComponent implements OnInit {
 
   ngOnInit(): void {
     this.division$ = this.form.valueChanges.pipe(
-      startWith({ class: '1', division: 'A' }),
+      startWith({
+        class: this.form?.get('class')?.value ?? '1',
+        division: this.form?.get('division')?.value ?? 'A',
+      }),
       switchMap((form) => this.db.getDivision(form.class + form.division)),
       map((overview) => {
         overview.teams.sort(
