@@ -4,7 +4,7 @@ import { FormControl } from '@angular/forms';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { Router } from '@angular/router';
 import { filter, map, Observable, startWith, tap } from 'rxjs';
-import { ClubOverviewItem } from 'src/app/models/club';
+import { ClubOverview, ClubOverviewItem } from 'src/app/models/club';
 import { PlayerOverview, SimplePlayer } from 'src/app/models/player';
 import { TreeNode } from 'src/app/models/tree-node';
 import { DataBaseService } from '../../services/database.service';
@@ -49,28 +49,8 @@ export class HomeComponent implements OnInit {
     );
 
     this.dataSource$ = this.service.getOverview().pipe(
-      map((cluboverview) => {
-        this.clubs = cluboverview.provinces.reduce(
-          (previous: ClubOverviewItem[], newvalue) =>
-            previous.concat(newvalue.clubs),
-          []
-        );
-
-        const treeNodes: TreeNode[] = [];
-        const dataSource = new MatTreeNestedDataSource<TreeNode>();
-
-        cluboverview.provinces.forEach((province) => {
-          const node: TreeNode = {
-            id: province.id,
-            children: province.clubs.map((club) => {
-              return { id: club.id, name: club.name };
-            }),
-          };
-          treeNodes.push(node);
-        });
-        dataSource.data = treeNodes;
-        return dataSource;
-      }),
+      tap((cluboverview) => this.fillClubSearchBox(cluboverview)),
+      map((overview) => this.createDataSource(overview)),
       tap(() => this.getPlayers())
     );
   }
@@ -105,5 +85,33 @@ export class HomeComponent implements OnInit {
 
   display(club: ClubOverviewItem): string {
     return club?.name;
+  }
+
+  fillClubSearchBox(cluboverview: ClubOverview): void {
+    this.clubs = cluboverview.provinces.reduce(
+      (previous: ClubOverviewItem[], newvalue) =>
+        previous.concat(newvalue.clubs),
+      []
+    );
+    this.clubs = this.clubs.map((club) => {
+      return { ...club, name: `${club.name} (${club.id})` };
+    });
+  }
+
+  createDataSource(overview: ClubOverview): MatTreeNestedDataSource<TreeNode> {
+    const treeNodes: TreeNode[] = [];
+    const dataSource = new MatTreeNestedDataSource<TreeNode>();
+
+    overview.provinces.forEach((province) => {
+      const node: TreeNode = {
+        id: province.id,
+        children: province.clubs.map((club) => {
+          return { id: club.id, name: club.name };
+        }),
+      };
+      treeNodes.push(node);
+    });
+    dataSource.data = treeNodes;
+    return dataSource;
   }
 }
