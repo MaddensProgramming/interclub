@@ -28,6 +28,10 @@ export class TeamresultsComponent implements OnInit {
     'scoreHome',
   ];
 
+  getRowPosition(id: number, team: TeamView): number {
+    return team.rounds.findIndex((round) => round.id === id);
+  }
+
   score(round: Round): number {
     if (this.sameTeam(this.team, round.teamHome)) return round.scoreHome;
     return round.scoreAway;

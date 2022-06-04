@@ -1,5 +1,5 @@
 <ng-container *ngIf="team$ | async as team; else loading">
-  <mat-tab-group animationDuration="200ms">
+  <mat-tab-group [(selectedIndex)]="selectedIndex" animationDuration="200ms">
     <mat-tab label="Resultaten">
       <app-teamresults [team]="team"></app-teamresults>
     </mat-tab>
@@ -18,7 +18,10 @@
           >
         </mat-button-toggle-group>
       </div>
-      <app-player-list  [players]="players$" [showTotal]="true"></app-player-list>
+      <app-player-list
+        [players]="players$"
+        [showTotal]="true"
+      ></app-player-list>
     </mat-tab>
     <mat-tab *ngFor="let round of team.rounds" label="{{ round.id }}">
       <app-round-view [round]="round" [team]="team"></app-round-view>

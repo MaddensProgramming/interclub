@@ -1,7 +1,13 @@
 <table mat-table [dataSource]="team.rounds" class="mat-elevation-z8 big-table">
   <ng-container matColumnDef="id">
     <th mat-header-cell *matHeaderCellDef>Ronde</th>
-    <td mat-cell *matCellDef="let element">
+    <td
+      class="clickable-title"
+      [routerLink]="'/club/' + team.clubId + '/' + team.id"
+      [queryParams]="{ round: getRowPosition(element.id, team) }"
+      mat-cell
+      *matCellDef="let element"
+    >
       {{ element.id }}
     </td>
     <td mat-footer-cell colspan="2" *matFooterCellDef>Totaal</td>

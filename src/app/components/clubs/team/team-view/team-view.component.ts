@@ -3,6 +3,7 @@ import {
   ChangeDetectorRef,
   Component,
   Input,
+  OnDestroy,
   OnInit,
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
@@ -13,10 +14,12 @@ import {
   map,
   Observable,
   of,
+  ReplaySubject,
   share,
   shareReplay,
   startWith,
   switchMap,
+  takeUntil,
   tap,
 } from 'rxjs';
 import { Round, TeamView } from 'src/app/models/club';
@@ -30,9 +33,13 @@ import { TeamServiceService } from 'src/app/services/team-service.service';
   templateUrl: './team-view.component.html',
   styleUrls: ['./team-view.component.scss'],
 })
-export class TeamViewComponent implements OnInit {
+export class TeamViewComponent implements OnInit, OnDestroy {
   @Input() clubId: number;
   @Input() id: number;
+
+  selectedIndex: number;
+
+  destroy$: ReplaySubject<void> = new ReplaySubject<void>();
 
   public team$: Observable<TeamView>;
   public players$: Observable<Player[]>;
@@ -45,6 +52,10 @@ export class TeamViewComponent implements OnInit {
     private route: ActivatedRoute,
     private teamService: TeamServiceService
   ) {}
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
   ngOnInit(): void {
     const boardObs = this.board.valueChanges.pipe(startWith('Alle'));
@@ -62,6 +73,16 @@ export class TeamViewComponent implements OnInit {
     this.players$ = combineLatest([boardObs, this.team$]).pipe(
       map(([board, team]) => this.filterResultsForBoard(board, team))
     );
+
+    this.route.queryParams
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((params) => {
+        if (params['round']) this.selectTab(+params['round']);
+      });
+  }
+
+  selectTab(round: number): void {
+    this.selectedIndex = round + 2;
   }
 
   boardArray(boardCount: number): string[] {

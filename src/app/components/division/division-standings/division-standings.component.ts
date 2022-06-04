@@ -61,4 +61,13 @@ export class DivisionStandingsComponent implements OnInit {
     if (pointsAway === pointsHome) return 'yellow';
     return pointsHome < pointsAway ? 'green' : 'red';
   }
+
+  round(teamHome: TeamView, teamAway: TeamView): number {
+    if (this.sameTeam(teamAway, teamHome)) return null;
+    return teamHome.rounds.findIndex(
+      (round) =>
+        this.sameTeam(round.teamAway, teamAway) ||
+        this.sameTeam(round.teamHome, teamAway)
+    );
+  }
 }

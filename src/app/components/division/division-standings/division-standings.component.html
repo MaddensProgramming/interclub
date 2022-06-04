@@ -16,8 +16,11 @@
         {{ indexTeam + 1 }}. {{ teamHome.clubName }} {{ teamHome.id }}
       </th>
       <td
+        class="clickable-title"
         *ngFor="let teamAway of division.teams"
         [ngClass]="colorResult(teamAway, teamHome)"
+        [routerLink]="'/club/' + teamHome.clubId + '/' + teamHome.id"
+        [queryParams]="{ round: round(teamHome, teamAway) }"
       >
         {{ findResult(teamHome, teamAway) }}
       </td>
