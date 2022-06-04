@@ -39,3 +39,14 @@ td {
   font-weight: 600;
   background-color: rgba(104, 58, 183, 0.096);
 }
+
+@media screen and (max-width: 600px) {
+  td,
+  th {
+    font-size: 12px !important;
+  }
+
+  td {
+    width: 1.1rem;
+  }
+}
