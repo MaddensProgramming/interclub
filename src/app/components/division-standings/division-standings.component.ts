@@ -51,4 +51,13 @@ export class DivisionStandingsComponent implements OnInit {
   sameTeam(teamA: TeamView, teamB: TeamView): boolean {
     return teamA.clubId === teamB.clubId && teamA.id === teamB.id;
   }
+
+  colorResult(teamHome: TeamView, teamAway: TeamView): string {
+    if (this.sameTeam(teamAway, teamHome)) return 'black';
+
+    const pointsHome = this.findResult(teamHome, teamAway);
+    const pointsAway = this.findResult(teamAway, teamHome);
+    if (pointsAway === pointsHome) return 'yellow';
+    return pointsHome < pointsAway ? 'green' : 'red';
+  }
 }

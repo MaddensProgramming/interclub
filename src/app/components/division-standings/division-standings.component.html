@@ -17,7 +17,7 @@
       </th>
       <td
         *ngFor="let teamAway of division.teams"
-        [ngClass]="sameTeam(teamAway, teamHome) ? 'black' : ''"
+        [ngClass]="colorResult(teamAway, teamHome)"
       >
         {{ findResult(teamHome, teamAway) }}
       </td>
