@@ -29,7 +29,7 @@ import { ClassOverview, Division } from '../models/division';
 })
 export class DataBaseService {
   public store: Firestore;
-  public year: string;
+  public year: string = '2021';
   public year$: BehaviorSubject<string> = new BehaviorSubject<string>('2021');
 
   public yearDb: Year[] = [];

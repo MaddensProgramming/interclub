@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { Router } from '@angular/router';
-import { filter, map, Observable, startWith, tap } from 'rxjs';
+import { combineLatest, filter, map, Observable, startWith, tap } from 'rxjs';
 import { ClubOverview, ClubOverviewItem } from 'src/app/models/club';
 import { PlayerOverview, SimplePlayer } from 'src/app/models/player';
 import { TreeNode } from 'src/app/models/tree-node';
@@ -17,7 +17,6 @@ import { DataBaseService } from '../../services/database.service';
 export class HomeComponent implements OnInit {
   public dataSource$ = new Observable<MatTreeNestedDataSource<TreeNode>>();
   public clubs: ClubOverviewItem[];
-  public players: SimplePlayer[] = [];
 
   formClub = new FormControl();
   filteredOptionsClub: Observable<ClubOverviewItem[]>;
@@ -40,30 +39,32 @@ export class HomeComponent implements OnInit {
       map((name) => this._filterClub(name))
     );
 
-    this.filteredOptionsPlayer = this.formPlayer.valueChanges.pipe(
-      tap((value) => {
-        if (value?.id) this.router.navigate(['player/' + value.id]);
-      }),
-      startWith(''),
-      map((name) => this._filterPlayer(name))
-    );
+    this.setUpPlayerCombobox();
 
     this.dataSource$ = this.service.getOverview().pipe(
       tap((cluboverview) => this.fillClubSearchBox(cluboverview)),
-      map((overview) => this.createDataSource(overview)),
-      tap(() => this.getPlayers())
+      map((overview) => this.createDataSource(overview))
     );
   }
 
-  getPlayers() {
-    this.service
+  private setUpPlayerCombobox() {
+    const playerdb = this.service
       .getSimplePlayerOverview()
-      .pipe(map((overview) => overview.players))
-      .subscribe((players) => (this.players = players));
+      .pipe(map((overview) => overview.players));
+
+    this.filteredOptionsPlayer = combineLatest([
+      this.formPlayer.valueChanges.pipe(startWith('')),
+      playerdb,
+    ]).pipe(
+      tap(([value, players]) => {
+        if (value?.id) this.router.navigate(['player/' + value.id]);
+      }),
+      map(([name, players]) => this._filterPlayer(name, players))
+    );
   }
 
   private _filterClub(name: string): ClubOverviewItem[] {
-    if (!name) return this.clubs;
+    if (!name || typeof name !== 'string') return this.clubs;
     const filterValue = name.toLowerCase();
 
     return this.clubs.filter((option) =>
@@ -71,11 +72,11 @@ export class HomeComponent implements OnInit {
     );
   }
 
-  private _filterPlayer(name: string): SimplePlayer[] {
-    if (!name || name.length < 2) return [];
+  private _filterPlayer(name: string, players: SimplePlayer[]): SimplePlayer[] {
+    if (!name || name.length < 2 || typeof name !== 'string') return [];
     const filterValue = name.toLowerCase();
 
-    return this.players.filter((option) =>
+    return players.filter((option) =>
       option.name
         .toLowerCase()
         .split(' ')
@@ -96,6 +97,8 @@ export class HomeComponent implements OnInit {
     this.clubs = this.clubs.map((club) => {
       return { ...club, name: `${club.name} (${club.id})` };
     });
+
+    this.formClub.setValue(this.formClub.value);
   }
 
   createDataSource(overview: ClubOverview): MatTreeNestedDataSource<TreeNode> {

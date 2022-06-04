@@ -20,6 +20,7 @@ td {
 
 .teams {
   background-color: rgba(128, 128, 128, 0.2);
+  padding: 0 1rem;
 }
 
 .black {
@@ -44,6 +45,10 @@ td {
   td,
   th {
     font-size: 12px !important;
+  }
+
+  .teams {
+    padding: 0;
   }
 
   td {

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { DataBaseService } from './services/database.service';
 
 @Component({
@@ -10,9 +11,15 @@ export class AppComponent implements OnInit {
   title = 'Interclub';
   year: string = '2021';
 
-  constructor(private databaseService: DataBaseService) {}
+  constructor(
+    private databaseService: DataBaseService,
+    private route: ActivatedRoute
+  ) {}
   ngOnInit(): void {
-    this.changeYear();
+    this.route.queryParams.subscribe((data) => {
+      if (!!data['year']) this.databaseService.changeYear(data['year']);
+    });
+    this.databaseService.year$.subscribe((year) => (this.year = year));
   }
 
   public changeYear(): void {
