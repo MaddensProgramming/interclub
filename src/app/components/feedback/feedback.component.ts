@@ -31,6 +31,7 @@ export class FeedbackComponent implements OnInit {
       name: [''],
       email: [''],
       message: [''],
+      showOthers: [true]
     });
   }
 

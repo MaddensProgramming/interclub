@@ -33,5 +33,10 @@
       formControlName="message"
     ></textarea>
   </mat-form-field>
-  <button (click)="submit()" mat-raised-button>Verzend</button>
+  <div class="bottom-buttons">
+    <mat-checkbox formControlName="showOthers" [color]="'primary'"
+      >Deel dit met anderen</mat-checkbox
+    >
+    <button (click)="submit()" mat-raised-button>Verzend</button>
+  </div>
 </form>

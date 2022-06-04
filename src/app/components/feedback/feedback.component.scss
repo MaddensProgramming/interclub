@@ -30,3 +30,8 @@ form > p {
 button {
   max-width: 8rem;
 }
+
+form > .bottom-buttons {
+  display: flex;
+  justify-content: space-around;
+}

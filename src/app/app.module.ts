@@ -41,8 +41,7 @@ import { ReviewsComponent } from './components/reviews/reviews.component';
 import { HttpClientModule } from '@angular/common/http';
 import { DivisionOverviewComponent } from './components/division-overview/division-overview.component';
 import { DivisionStandingsComponent } from './components/division-standings/division-standings.component';
-
-
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
   declarations: [
@@ -90,8 +89,8 @@ import { DivisionStandingsComponent } from './components/division-standings/divi
     MatAutocompleteModule,
     ReactiveComponentModule,
     ToastrModule.forRoot(),
-    HttpClientModule
-
+    HttpClientModule,
+    MatCheckboxModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
