@@ -14,11 +14,8 @@
       style="width: min-content; margin: 0 1rem"
     >
       <mat-option value="2021">2022</mat-option>
-      <mat-option value="2020">2020</mat-option>
-      <mat-option value="2019">2019</mat-option>
-      <mat-option value="2018">2018</mat-option>
-      <mat-option value="2017">2017</mat-option>
-      <mat-option value="2016">2016</mat-option>
+      <mat-option *ngFor="let yeartitle of years" value={{yeartitle}}>{{yeartitle}}</mat-option>
+
     </mat-select>
     <div style="flex-grow: 1"></div>
 

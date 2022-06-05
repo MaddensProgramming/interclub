@@ -7,7 +7,7 @@ import {
   setDoc,
   doc,
 } from 'firebase/firestore';
-import clubs from 'src/assets/2017.json';
+import clubs from 'src/assets/2018.json';
 import { environment } from 'src/environments/environment';
 import {
   ClubView,
@@ -27,7 +27,7 @@ export class GenerateService {
   public store: Firestore;
   private players: Player[];
   private clubs: ClubView[];
-  private year: string = '2017';
+  private year: string = '2018';
 
   constructor() {
     initializeApp(environment.firebase);
@@ -35,7 +35,10 @@ export class GenerateService {
     //this.getDataFromJson();
   }
 
-  sendData(): void {}
+  sendData(): void {
+    //this.writeEverything(this.year);
+
+  }
 
   // private getDataFromJson(): void {
   //   this.clubs = clubs;
@@ -48,15 +51,16 @@ export class GenerateService {
   //   );
   // }
   // private writeEverything(year: string): void {
-  //   this.generateYear(year);
-  //   this.generatePlayerOverview(year);
-  //   this.generatePlayerDocs(year);
-  //   this.generateClubDocs(year);
+  //   // this.generateYear(year);
+  //   // this.generatePlayerOverview(year);
+  //   // this.generateClubDocs(year);
+  //   // this.generateClubOverview(year);
+  //   // this.generateDivisionOverview(year);
+  //   // this.generateSimplePlayers(year);
+
   //   this.generateTeams(year);
-  //   this.generateClubOverview(year);
-  //   this.generateDivisionOverview(year);
   //   this.generateDivisions(year);
-  //   this.generateSimplePlayers(year);
+  //   this.generatePlayerDocs(year);
   // }
   // generateSimplePlayers(year: string) {
   //   const playerOverview: PlayerOverview = {
