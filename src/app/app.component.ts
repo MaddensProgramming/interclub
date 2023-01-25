@@ -9,9 +9,9 @@ import { DataBaseService } from './services/database.service';
 })
 export class AppComponent implements OnInit {
   title = 'Interclub';
-  year: string = '2021';
+  year: string;
 
-  years:string[] = ['2020','2019','2018','2017','2016'];
+  years: string[] = ['2020', '2019', '2018', '2017', '2016'];
 
   constructor(
     private databaseService: DataBaseService,

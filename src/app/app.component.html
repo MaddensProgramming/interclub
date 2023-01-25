@@ -13,9 +13,11 @@
       (valueChange)="changeYear()"
       style="width: min-content; margin: 0 1rem"
     >
+          <mat-option value="2022">2023</mat-option>
       <mat-option value="2021">2022</mat-option>
-      <mat-option *ngFor="let yeartitle of years" value={{yeartitle}}>{{yeartitle}}</mat-option>
-
+      <mat-option *ngFor="let yeartitle of years" value="{{ yeartitle }}">{{
+        yeartitle
+      }}</mat-option>
     </mat-select>
     <div style="flex-grow: 1"></div>
 

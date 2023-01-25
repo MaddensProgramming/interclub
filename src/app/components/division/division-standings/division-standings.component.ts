@@ -30,8 +30,7 @@ export class DivisionStandingsComponent implements OnInit {
           (a, b) =>
             b.matchPoints * 100 +
             b.boardPoints -
-            a.matchPoints * 100 +
-            a.boardPoints
+            (a.matchPoints * 100 + a.boardPoints)
         );
         return overview;
       })
