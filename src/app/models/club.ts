@@ -19,6 +19,7 @@ export interface TeamView {
   clubId: number;
   class: number;
   division: string;
+  pairingsNumber:number;
   matchPoints?: number;
   boardPoints?: number;
   players?: Player[];
