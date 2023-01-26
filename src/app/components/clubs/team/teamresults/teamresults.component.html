@@ -1,4 +1,5 @@
-<table mat-table [dataSource]="team.rounds" class="mat-elevation-z8 big-table">
+<h3 [routerLink]="'/division/'+team.class+'/'+ team.division" class="clickable-title">Klasse: {{team.class}}{{team.division}}</h3>
+<table mat-table [dataSource]="team.rounds" class="mat-elevation-z8 big-table" style="margin-top: 1rem;">
   <ng-container matColumnDef="id">
     <th mat-header-cell *matHeaderCellDef>Ronde</th>
     <td

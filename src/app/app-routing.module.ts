@@ -16,7 +16,8 @@ const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'feedback', component: FeedbackComponent },
   { path: 'reviews', component: ReviewsComponent },
-  { path: 'division', component: DivisionOverviewComponent },
+  { path: 'division/:id/:class', component: DivisionOverviewComponent },
+  { path: 'division', redirectTo:'division/1/A' },
   {
     path: 'club/:id',
     component: ClubComponent,

@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { Observable, startWith, tap } from 'rxjs';
+import { ActivatedRoute, ParamMap} from '@angular/router';
+import { Observable,  tap } from 'rxjs';
 import { ClassOverview } from 'src/app/models/division';
 import { DataBaseService } from 'src/app/services/database.service';
-import { TeamServiceService } from 'src/app/services/team-service.service';
+import { Location } from '@angular/common';
+
 
 @Component({
   selector: 'app-division-overview',
@@ -20,11 +22,19 @@ export class DivisionOverviewComponent implements OnInit {
 
   constructor(
     private db: DataBaseService,
-    private teamService: TeamServiceService
-  ) {}
+    private route: ActivatedRoute,
+    private location: Location,
+      ) {}
 
   ngOnInit(): void {
-    this.form = this.teamService.formSelectedClass;
+    this.route.paramMap.subscribe(
+      (params: ParamMap) => {
+       this.form = new FormGroup({
+      class: new FormControl(params.get('id')),
+      division: new FormControl(params.get('class')),
+    });
+  });
+
 
     this.classoverview$ = this.db.getClassOverview().pipe(
       tap((data) => (this.classoverview = data)),
@@ -40,5 +50,7 @@ export class DivisionOverviewComponent implements OnInit {
       )
         this.form.get('division').setValue('A');
     });
+    this.form.valueChanges.subscribe((value) => this.location.replaceState('/division/'+value.class+'/'+ value.division))
+
   }
 }

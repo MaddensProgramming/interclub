@@ -42,6 +42,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { DivisionOverviewComponent } from './components/division/division-overview/division-overview.component';
 import { DivisionStandingsComponent } from './components/division/division-standings/division-standings.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -69,6 +71,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     DivisionStandingsComponent,
   ],
   imports: [
+    CommonModule,
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
