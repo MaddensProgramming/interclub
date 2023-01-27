@@ -9,6 +9,7 @@
       {{ round.teamHome.clubName }}
       {{ round.teamHome.id }}
     </span>
+    <span *ngIf="!round.teamHome" class="team-name"> BYE </span>
     <span class="rating" *ngIf="round?.averageRatingHome">{{ round.averageRatingHome }}</span>
   </div>
   <span class="result"> {{ round.scoreHome }} - {{ round.scoreAway }} </span>
@@ -16,6 +17,7 @@
     <span *ngIf="round.teamAway"  class="team-name clickable-title" [routerLink]="['//club/' +round.teamAway.clubId + '/' + round.teamAway.id]">
       {{ round.teamAway.clubName }}
       {{ round.teamAway.id }}</span>
+    <span *ngIf="!round.teamAway" class="team-name"> BYE </span>
     <span class="rating" *ngIf="round?.averageRatingAway">{{ round.averageRatingAway }}</span>
   </div>
 </div>

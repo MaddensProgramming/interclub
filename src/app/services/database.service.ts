@@ -227,7 +227,6 @@ export class DataBaseService {
         ).pipe(map((data: any) => data.data() as Dates));
       }),
       filter((data) => {
-        if (!data) this.router.navigate(['404']);
         return !!data;
       }),
       tap((dates) => (this.cacheDates[this.year] = dates))
