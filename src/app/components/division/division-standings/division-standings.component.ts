@@ -70,6 +70,6 @@ export class DivisionStandingsComponent implements OnInit {
       (round) =>
         this.sameTeam(round.teamAway, teamAway) ||
         this.sameTeam(round.teamHome, teamAway)
-    );
+    )+1;
   }
 }

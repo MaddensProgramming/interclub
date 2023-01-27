@@ -4,9 +4,8 @@
     <th mat-header-cell *matHeaderCellDef>Ronde</th>
     <td
       class="clickable-title"
-      [routerLink]="'/club/' + team.clubId + '/' + team.id"
-      [queryParams]="{ round: getRowPosition(element.id, team) }"
-      mat-cell
+      [routerLink]="'/club/' + team.clubId + '/' + team.id + '/' + getRowPosition(element.id, team)"
+          mat-cell
       *matCellDef="let element"
     >
       {{ element.id }}

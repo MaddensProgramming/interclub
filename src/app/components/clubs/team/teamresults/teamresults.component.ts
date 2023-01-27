@@ -33,7 +33,7 @@ export class TeamresultsComponent implements OnInit {
   }
 
   getRowPosition(id: number, team: TeamView): number {
-    return team.rounds.findIndex((round) => round.id === id);
+    return team.rounds.findIndex((round) => round.id === id) +1 ;
   }
 
   score(round: Round): number {

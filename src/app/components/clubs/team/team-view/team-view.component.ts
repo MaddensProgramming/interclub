@@ -27,6 +27,8 @@ import { Player } from 'src/app/models/player';
 import { ResultEnum } from 'src/app/models/result.enum';
 import { DataBaseService } from 'src/app/services/database.service';
 import { TeamServiceService } from 'src/app/services/team-service.service';
+import { Location } from '@angular/common';
+import { MatTabChangeEvent } from '@angular/material/tabs';
 
 @Component({
   selector: 'app-team-view',
@@ -34,11 +36,10 @@ import { TeamServiceService } from 'src/app/services/team-service.service';
   styleUrls: ['./team-view.component.scss'],
 })
 export class TeamViewComponent implements OnInit, OnDestroy {
-  @Input() clubId: number;
-  @Input() id: number;
 
+  teamId :number;
+  clubId:number;
   selectedIndex: number;
-
   destroy$: ReplaySubject<void> = new ReplaySubject<void>();
 
   public team$: Observable<TeamView>;
@@ -50,7 +51,8 @@ export class TeamViewComponent implements OnInit, OnDestroy {
   constructor(
     private db: DataBaseService,
     private route: ActivatedRoute,
-    private teamService: TeamServiceService
+    private teamService: TeamServiceService,
+    private location: Location
   ) {}
   ngOnDestroy(): void {
     this.destroy$.next();
@@ -63,7 +65,11 @@ export class TeamViewComponent implements OnInit, OnDestroy {
       this.route.params,
       this.route.parent.params,
     ]).pipe(
-      tap(([team, club]) => this.teamService.selectedTeamTab.next(team['id'])),
+      tap(([team, club]) => {
+        this.teamService.selectedTeamTab.next(team['id']);
+        this.clubId = club['id'];
+        this.teamId = team['id'];
+    }),
       switchMap(([team, club]) => this.db.getTeam(team['id'], club['id']))
     );
 
@@ -74,15 +80,24 @@ export class TeamViewComponent implements OnInit, OnDestroy {
       map(([board, team]) => this.filterResultsForBoard(board, team))
     );
 
-    this.route.queryParams
+    this.route.params
       .pipe(takeUntil(this.destroy$))
-      .subscribe((params) => {
-        if (params['round']) this.selectTab(+params['round']);
+      .subscribe((params) => {this.selectedIndex = this.selectTab(params['tab']);
       });
+
   }
 
-  selectTab(round: number): void {
-    this.selectedIndex = round + 2;
+  changeUrl(tab: MatTabChangeEvent){
+    let url:string= (tab.index-1).toString();
+    if(tab.index===0)url='results'
+    if(tab.index===1)url='players'
+    this.location.replaceState('/club/'+ this.clubId +'/'+ this.teamId +'/'+ url);
+  }
+
+  selectTab(tab: string): number {
+    if(tab==='results') return 0;
+    if(tab==='players') return 1;
+    return +tab + 1;
   }
 
   boardArray(boardCount: number): string[] {

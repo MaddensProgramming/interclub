@@ -19,9 +19,8 @@
         class="clickable-title"
         *ngFor="let teamAway of division.teams"
         [ngClass]="colorResult(teamAway, teamHome)"
-        [routerLink]="'/club/' + teamHome.clubId + '/' + teamHome.id"
-        [queryParams]="{ round: round(teamHome, teamAway) }"
-      >
+        [routerLink]="'/club/' + teamHome.clubId + '/' + teamHome.id+ '/' + round(teamHome, teamAway)"
+              >
         {{ findResult(teamHome, teamAway) }}
       </td>
       <td class="important">{{ teamHome.matchPoints }}</td>

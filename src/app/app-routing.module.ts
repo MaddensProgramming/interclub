@@ -23,7 +23,8 @@ const routes: Routes = [
     component: ClubComponent,
     children: [
       { path: 'players', component: PlayeroverviewclubComponent },
-      { path: ':id', component: TeamViewComponent },
+      { path: ':id/:tab', component: TeamViewComponent },
+      { path: ':id', redirectTo:':id/results' },
       { path: '', redirectTo: 'players', pathMatch: 'full' },
     ],
   },

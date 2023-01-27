@@ -5,7 +5,7 @@
 
   <div class="score-line">
   <div class="team">
-    <span *ngIf="round.teamHome"  class="team-name clickable-title" [routerLink]="['//club/' +round.teamHome.clubId + '/' + round.teamHome.id]">
+    <span *ngIf="round.teamHome"  class="team-name clickable-title" [routerLink]="['//club/' +round.teamHome.clubId + '/' + round.teamHome.id + '/results']">
       {{ round.teamHome.clubName }}
       {{ round.teamHome.id }}
     </span>
@@ -14,7 +14,7 @@
   </div>
   <span class="result"> {{ round.scoreHome }} - {{ round.scoreAway }} </span>
   <div class="team">
-    <span *ngIf="round.teamAway"  class="team-name clickable-title" [routerLink]="['//club/' +round.teamAway.clubId + '/' + round.teamAway.id]">
+    <span *ngIf="round.teamAway"  class="team-name clickable-title" [routerLink]="['//club/' +round.teamAway.clubId + '/' + round.teamAway.id + '/results']">
       {{ round.teamAway.clubName }}
       {{ round.teamAway.id }}</span>
     <span *ngIf="!round.teamAway" class="team-name"> BYE </span>
