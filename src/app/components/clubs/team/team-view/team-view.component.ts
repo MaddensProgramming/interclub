@@ -69,6 +69,7 @@ export class TeamViewComponent implements OnInit, OnDestroy {
         this.teamService.selectedTeamTab.next(team['id']);
         this.clubId = club['id'];
         this.teamId = team['id'];
+        this.selectedIndex = this.selectTab(team['tab']);
     }),
       switchMap(([team, club]) => this.db.getTeam(team['id'], club['id']))
     );
@@ -80,17 +81,12 @@ export class TeamViewComponent implements OnInit, OnDestroy {
       map(([board, team]) => this.filterResultsForBoard(board, team))
     );
 
-    this.route.params
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((params) => {this.selectedIndex = this.selectTab(params['tab']);
-      });
-
   }
 
-  changeUrl(tab: MatTabChangeEvent){
-    let url:string= (tab.index-1).toString();
-    if(tab.index===0)url='results'
-    if(tab.index===1)url='players'
+  changeUrl(tab: number){
+    let url:string= (tab-1).toString();
+    if(tab===0)url='results'
+    if(tab===1)url='players'
     this.location.replaceState('/club/'+ this.clubId +'/'+ this.teamId +'/'+ url);
   }
 

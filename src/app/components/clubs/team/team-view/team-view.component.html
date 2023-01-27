@@ -1,5 +1,5 @@
 <ng-container *ngIf="team$ | async as team; else loading">
-  <mat-tab-group [(selectedIndex)]="selectedIndex" (selectedTabChange)="changeUrl($event)" animationDuration="200ms">
+  <mat-tab-group [(selectedIndex)]="selectedIndex" (selectedIndexChange)="changeUrl($event)" animationDuration="200ms">
     <mat-tab label="Resultaten">
       <app-teamresults [team]="team"></app-teamresults>
     </mat-tab>
