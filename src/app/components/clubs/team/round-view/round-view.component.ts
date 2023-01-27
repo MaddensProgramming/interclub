@@ -13,8 +13,6 @@ export class RoundViewComponent implements OnInit {
   @Input() round: Round;
   @Input() team: TeamView;
 
-  averageEloHome: number;
-  averageEloAway: number;
   date$: Observable<Date>;
 
   displayedColumnsRound: string[] = ['board', 'white', 'black', 'result'];

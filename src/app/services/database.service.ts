@@ -23,6 +23,7 @@ import { ClubOverview, ClubView, TeamView, Year } from '../models/club';
 import { Player, PlayerOverview, SimplePlayer } from '../models/player';
 import { Router } from '@angular/router';
 import { ClassOverview, Division } from '../models/division';
+import { Dates } from '../models/dates';
 
 @Injectable({
   providedIn: 'root',
@@ -42,6 +43,7 @@ export class DataBaseService {
   private cacheClassOverview: { [key: string]: ClassOverview } = {};
   private cachePlayerOverview: { [key: string]: Player[] } = {};
   private cacheSimplePlayerOverview: { [key: string]: PlayerOverview } = {};
+  private cacheDates: {[key: string]: Dates}= {};
 
   constructor(private router: Router) {
     initializeApp(environment.firebase);
@@ -213,5 +215,23 @@ export class DataBaseService {
       }),
       tap((players) => (this.cacheSimplePlayerOverview[this.year] = players))
     );
+  }
+
+  public getDates() : Observable<Dates>{
+    return this.year$.pipe(
+      switchMap((year) => {
+        if (this.cacheDates[this.year])
+          return of(this.cacheDates[this.year]);
+        return from(
+          getDoc(doc(this.store, 'years', year, 'dates', 'dates'))
+        ).pipe(map((data: any) => data.data() as Dates));
+      }),
+      filter((data) => {
+        if (!data) this.router.navigate(['404']);
+        return !!data;
+      }),
+      tap((dates) => (this.cacheDates[this.year] = dates))
+    );
+
   }
 }

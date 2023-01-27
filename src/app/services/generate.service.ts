@@ -57,11 +57,29 @@ export class GenerateService {
     // this.generateClubOverview(year);
     // this.generateDivisionOverview(year);
     // this.generateSimplePlayers(year);
+    this.generateRoundDates(year);
 
-    this.generateTeams(year);
+    //this.generateTeams(year);
     //this.generateDivisions(year);
     //this.generatePlayerDocs(year);
+
   }
+
+  generateRoundDates(year: string){
+
+    var dates= {dates: [new Date(2022,8,25), new Date(2022,9,16), new Date(2022,10,6), new Date(2022,10,20), new Date(2022,11,4),
+       new Date(2023,0,29),new Date(2023,1,12), new Date(2023,2,5), new Date(2023,2,19), new Date(2023,3,16), new Date(2023,3,30), ]}
+
+      setDoc(doc(this.store, 'years',year, 'dates', 'dates' ), dates)
+      .then(() => {
+        console.log('done dates');
+      })
+      .catch((err) => {
+        console.error(err.message);
+      });
+
+  }
+
   generateSimplePlayers(year: string) {
     const playerOverview: PlayerOverview = {
       players: this.players.map((player) => {

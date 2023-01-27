@@ -28,6 +28,10 @@ export class TeamresultsComponent implements OnInit {
     'scoreHome',
   ];
 
+  numberOfMatches(): number {
+   return this.team.rounds.filter(round => round.games.length!==0).length;
+  }
+
   getRowPosition(id: number, team: TeamView): number {
     return team.rounds.findIndex((round) => round.id === id);
   }
@@ -43,6 +47,7 @@ export class TeamresultsComponent implements OnInit {
   }
 
   sameTeam(teamA: TeamView, teamB: TeamView): boolean {
+    if(!teamA||!teamB)return false;
     return teamA.clubId === teamB.clubId && teamA.id === teamB.id;
   }
 
@@ -59,25 +64,26 @@ export class TeamresultsComponent implements OnInit {
   }
 
   opponent(round: Round): TeamView {
+    if(round.teamAway===null||round.teamHome === null) return {clubId:0,clubName:'Bye',id:0,class:1,division:'A'}
     if (this.sameTeam(this.team, round.teamHome)) return round.teamAway;
     return round.teamHome;
   }
 
   averageRatingOwn() {
     return Math.round(
-      this.team.rounds.reduce(
+      this.team.rounds.filter(round => round.games.length!==0).reduce(
         (total, round) => (total += this.ratingOwn(round)),
         0
-      ) / this.team.rounds.length
+      ) /  this.numberOfMatches()
     );
   }
 
   averageRatingOppenent() {
     return Math.round(
-      this.team.rounds.reduce(
+      this.team.rounds.filter(round => round.games.length!==0).reduce(
         (total, round) => (total += this.ratingOpponent(round)),
         0
-      ) / this.team.rounds.length
+      ) / this.numberOfMatches()
     );
   }
 
@@ -89,6 +95,7 @@ export class TeamresultsComponent implements OnInit {
   }
 
   checkResult(round: Round): number {
+    if(round.scoreAway===0&&round.scoreHome===0) return 0;
     if (round.scoreAway === round.scoreHome) return 0.5;
     if (round.scoreAway > round.scoreHome) {
       return this.sameTeam(this.team, round.teamAway) ? 1 : 0;

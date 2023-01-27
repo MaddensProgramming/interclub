@@ -1,18 +1,25 @@
 <div class="result-card">
+  <ng-container *ngIf="date$|async as date ">
+    <span class="date">{{date.toLocaleDateString('nl-BE')}}</span>
+  </ng-container>
+
+  <div class="score-line">
   <div class="team">
-    <span class="team-name clickable-title" [routerLink]="['//club/' +round.teamHome.clubId + '/' + round.teamHome.id]">
+    <span *ngIf="round.teamHome"  class="team-name clickable-title" [routerLink]="['//club/' +round.teamHome.clubId + '/' + round.teamHome.id]">
       {{ round.teamHome.clubName }}
       {{ round.teamHome.id }}
     </span>
-    <span class="rating">{{ round.averageRatingHome }}</span>
+    <span class="rating" *ngIf="round?.averageRatingHome">{{ round.averageRatingHome }}</span>
   </div>
   <span class="result"> {{ round.scoreHome }} - {{ round.scoreAway }} </span>
   <div class="team">
-    <span  class="team-name clickable-title" [routerLink]="['//club/' +round.teamAway.clubId + '/' + round.teamAway.id]">
+    <span *ngIf="round.teamAway"  class="team-name clickable-title" [routerLink]="['//club/' +round.teamAway.clubId + '/' + round.teamAway.id]">
       {{ round.teamAway.clubName }}
       {{ round.teamAway.id }}</span>
-    <span class="rating">{{ round.averageRatingAway }}</span>
+    <span class="rating" *ngIf="round?.averageRatingAway">{{ round.averageRatingAway }}</span>
   </div>
+</div>
+
 </div>
 
 <table mat-table [dataSource]="round.games" class="mat-elevation-z8 big-table">
