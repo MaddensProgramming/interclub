@@ -37,7 +37,6 @@ export class GenerateService {
 
   sendData(): void {
     this.writeEverything(this.year);
-
   }
 
   private getDataFromJson(): void {
@@ -57,27 +56,38 @@ export class GenerateService {
     // this.generateClubOverview(year);
     // this.generateDivisionOverview(year);
     // this.generateSimplePlayers(year);
-    this.generateRoundDates(year);
 
     //this.generateTeams(year);
     //this.generateDivisions(year);
     //this.generatePlayerDocs(year);
 
+    //this.generateRoundDates(year);
   }
 
-  generateRoundDates(year: string){
+  generateRoundDates(year: string) {
+    var dates = {
+      dates: [
+        new Date(2022, 8, 25),
+        new Date(2022, 9, 16),
+        new Date(2022, 10, 6),
+        new Date(2022, 10, 20),
+        new Date(2022, 11, 4),
+        new Date(2023, 0, 29),
+        new Date(2023, 1, 12),
+        new Date(2023, 2, 5),
+        new Date(2023, 2, 19),
+        new Date(2023, 3, 16),
+        new Date(2023, 3, 30),
+      ],
+    };
 
-    var dates= {dates: [new Date(2022,8,25), new Date(2022,9,16), new Date(2022,10,6), new Date(2022,10,20), new Date(2022,11,4),
-       new Date(2023,0,29),new Date(2023,1,12), new Date(2023,2,5), new Date(2023,2,19), new Date(2023,3,16), new Date(2023,3,30), ]}
-
-      setDoc(doc(this.store, 'years',year, 'dates', 'dates' ), dates)
+    setDoc(doc(this.store, 'years', year, 'dates', 'dates'), dates)
       .then(() => {
         console.log('done dates');
       })
       .catch((err) => {
         console.error(err.message);
       });
-
   }
 
   generateSimplePlayers(year: string) {
@@ -141,8 +151,15 @@ export class GenerateService {
   private generateDivisions(year: string): void {
     const divisions: Division[] = [];
 
+    console.log(this.clubs);
+
     this.clubs.forEach((club) =>
-      club.teams.forEach((team) => this.addTeamToDivision(team, divisions))
+      club.teams.forEach((team) => {
+        team.rounds = team.rounds.filter(
+          (round) => round.scoreAway + round.scoreHome != 0
+        );
+        this.addTeamToDivision(team, divisions);
+      })
     );
 
     divisions.forEach((div) => {
@@ -194,7 +211,7 @@ export class GenerateService {
   }
 
   private sameTeam(teama: TeamView, teamb: TeamView): boolean {
-    return teama.clubId === teamb.clubId && teama.id === teamb.id;
+    return teama?.clubId === teamb?.clubId && teama?.id === teamb?.id;
   }
 
   private generateYear(year: string): void {
