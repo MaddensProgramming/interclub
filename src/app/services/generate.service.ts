@@ -57,9 +57,9 @@ export class GenerateService {
     // this.generateDivisionOverview(year);
     // this.generateSimplePlayers(year);
 
-    //this.generateTeams(year);
-    //this.generateDivisions(year);
-    //this.generatePlayerDocs(year);
+    this.generateTeams(year);
+    this.generatePlayerDocs(year);
+    this.generateDivisions(year);
 
     //this.generateRoundDates(year);
   }
