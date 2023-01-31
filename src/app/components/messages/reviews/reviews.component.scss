@@ -1,23 +1,22 @@
 .container {
   display: flex;
   flex-direction: column;
-
 }
 
 .container > * {
   width: 90%;
 }
-h1{
-  color:#673ab7;
+h1 {
+  color: var(--primary);
   font-weight: 700;
   font-size: 2rem;
 }
 .title {
- margin: 2rem auto;
- padding-bottom: 0.5rem;
- display: flex;
- justify-content:space-between;
- border-bottom: rgba(0, 0, 0, 0.425) solid 0.1rem;
+  margin: 2rem auto;
+  padding-bottom: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: rgba(0, 0, 0, 0.425) solid 0.1rem;
 }
 
 .messages {
@@ -29,5 +28,5 @@ h1{
 
 .mat-card {
   width: 25rem;
-  margin: 1rem
+  margin: 1rem;
 }

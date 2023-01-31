@@ -1,5 +1,5 @@
 table {
-  border: 1px solid rgb(103, 58, 183);
+  border: 1px solid var(--primary);
   margin: 3rem auto 0 auto;
 }
 td,
@@ -13,7 +13,7 @@ td {
 }
 
 .titles {
-  background-color: rgba(104, 58, 183, 0.822);
+  background-color: var(--primary);
   color: #fff;
   font-weight: 400;
 }

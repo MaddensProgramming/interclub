@@ -13,7 +13,7 @@ form > * {
   border-bottom: rgba(0, 0, 0, 0.425) solid 0.1rem;
 }
 h1 {
-  color: #673ab7;
+  color: var(--primary);
   font-weight: 700;
   font-size: 2rem;
 }
