@@ -30,8 +30,8 @@ import { Dates } from '../models/dates';
 })
 export class DataBaseService {
   public store: Firestore;
-  public year: string = '2022';
-  public year$: BehaviorSubject<string> = new BehaviorSubject<string>('2022');
+  public year: string = '2023';
+  public year$: BehaviorSubject<string> = new BehaviorSubject<string>('2023');
 
   public yearDb: Year[] = [];
 
@@ -43,7 +43,7 @@ export class DataBaseService {
   private cacheClassOverview: { [key: string]: ClassOverview } = {};
   private cachePlayerOverview: { [key: string]: Player[] } = {};
   private cacheSimplePlayerOverview: { [key: string]: PlayerOverview } = {};
-  private cacheDates: {[key: string]: Dates}= {};
+  private cacheDates: { [key: string]: Dates } = {};
 
   constructor(private router: Router) {
     initializeApp(environment.firebase);
@@ -217,11 +217,10 @@ export class DataBaseService {
     );
   }
 
-  public getDates() : Observable<Dates>{
+  public getDates(): Observable<Dates> {
     return this.year$.pipe(
       switchMap((year) => {
-        if (this.cacheDates[this.year])
-          return of(this.cacheDates[this.year]);
+        if (this.cacheDates[this.year]) return of(this.cacheDates[this.year]);
         return from(
           getDoc(doc(this.store, 'years', year, 'dates', 'dates'))
         ).pipe(map((data: any) => data.data() as Dates));
@@ -231,6 +230,5 @@ export class DataBaseService {
       }),
       tap((dates) => (this.cacheDates[this.year] = dates))
     );
-
   }
 }

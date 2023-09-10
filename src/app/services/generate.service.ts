@@ -7,7 +7,7 @@ import {
   setDoc,
   doc,
 } from 'firebase/firestore';
-import clubs from 'src/assets/2022.json';
+//import clubs from 'src/assets/2022.json';
 import { environment } from 'src/environments/environment';
 import {
   ClubView,
@@ -40,7 +40,7 @@ export class GenerateService {
   }
 
   private getDataFromJson(): void {
-    this.clubs = clubs;
+    //this.clubs = clubs;
     this.clubs = this.clubs.filter((club) => club.id !== 0);
     this.clubs.sort((club, club2) => club.id - club2.id);
 

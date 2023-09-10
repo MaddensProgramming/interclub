@@ -13,25 +13,49 @@ import { ReviewsComponent } from './components/messages/reviews/reviews.componen
 import { DivisionOverviewComponent } from './components/division/division-overview/division-overview.component';
 
 const routes: Routes = [
-  { path: '', component: HomeComponent },
-  { path: 'feedback', component: FeedbackComponent },
-  { path: 'reviews', component: ReviewsComponent },
-  { path: 'division/:id/:class', component: DivisionOverviewComponent },
-  { path: 'division', redirectTo:'division/1/A' },
+  { path: '', component: HomeComponent, data: { title: 'Home' } },
+  {
+    path: 'feedback',
+    component: FeedbackComponent,
+    data: { title: 'Feedback' },
+  },
+  { path: 'reviews', component: ReviewsComponent, data: { title: 'Reviews' } },
+  {
+    path: 'division/:id/:class',
+    component: DivisionOverviewComponent,
+    data: { title: 'Division Overview' },
+  },
+  { path: 'division', redirectTo: 'division/1/A' },
   {
     path: 'club/:id',
     component: ClubComponent,
     children: [
-      { path: 'players', component: PlayeroverviewclubComponent },
-      { path: ':id/:tab', component: TeamViewComponent },
-      { path: ':id', redirectTo:':id/results' },
+      {
+        path: 'players',
+        component: PlayeroverviewclubComponent,
+        data: { title: 'Club Players' },
+      },
+      {
+        path: ':id/:tab',
+        component: TeamViewComponent,
+        data: { title: 'Club Team' },
+      },
+      { path: ':id', redirectTo: ':id/results' },
       { path: '', redirectTo: 'players', pathMatch: 'full' },
     ],
   },
-  { path: 'player/:id', component: PlayerComponent },
-  { path: 'upload', component: UploadComponent },
-  { path: 'hallOfFame', component: HalloffameComponent },
-  { path: '**', component: PageNotFoundComponent },
+  { path: 'player/:id', component: PlayerComponent, data: { title: 'Player' } },
+  { path: 'upload', component: UploadComponent, data: { title: 'Upload' } },
+  {
+    path: 'hallOfFame',
+    component: HalloffameComponent,
+    data: { title: 'Top Players' },
+  },
+  {
+    path: '**',
+    component: PageNotFoundComponent,
+    data: { title: 'Error not found' },
+  },
 ];
 
 @NgModule({
