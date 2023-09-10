@@ -32,23 +32,23 @@ export class GenerateService {
   constructor() {
     initializeApp(environment.firebase);
     this.store = getFirestore();
-    //   this.getDataFromJson();
+    this.getDataFromJson();
   }
 
   sendData(): void {
     this.writeEverything(this.year);
   }
 
-  // private getDataFromJson(): void {
-  //   this.clubs = clubs;
-  //   this.clubs = this.clubs.filter((club) => club.id !== 0);
-  //   this.clubs.sort((club, club2) => club.id - club2.id);
+  private getDataFromJson(): void {
+    this.clubs = clubs;
+    this.clubs = this.clubs.filter((club) => club.id !== 0);
+    this.clubs.sort((club, club2) => club.id - club2.id);
 
-  //   this.players = this.clubs.reduce(
-  //     (acc: Player[], val: ClubView) => acc.concat(val.players),
-  //     []
-  //   );
-  // }
+    this.players = this.clubs.reduce(
+      (acc: Player[], val: ClubView) => acc.concat(val.players),
+      []
+    );
+  }
   private writeEverything(year: string): void {
     this.generateYear(year);
     // this.generatePlayerOverview(year);

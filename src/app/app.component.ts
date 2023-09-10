@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DataBaseService } from './services/database.service';
 
@@ -7,7 +7,7 @@ import { DataBaseService } from './services/database.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements OnInit, AfterViewInit {
+export class AppComponent implements OnInit {
   title = 'Interclub';
   year: string;
 
@@ -22,10 +22,6 @@ export class AppComponent implements OnInit, AfterViewInit {
       if (!!data['year']) this.databaseService.changeYear(data['year']);
     });
     this.databaseService.year$.subscribe((year) => (this.year = year));
-  }
-
-  ngAfterViewInit(): void {
-    document.documentElement.style.setProperty('--primary', 'yellow');
   }
 
   public changeYear(): void {
