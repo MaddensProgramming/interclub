@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "es2019", // or another ECMAScript version
+    "module": "commonjs",
+    "strict": false,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "./dist", // Specify your output directory
+    "rootDir": "./src" // Specify your source directory
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules"]
+}

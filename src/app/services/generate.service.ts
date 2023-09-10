@@ -50,11 +50,11 @@ export class GenerateService {
   //   );
   // }
   private writeEverything(year: string): void {
-    // this.generateYear(year);
+    this.generateYear(year);
     // this.generatePlayerOverview(year);
     // this.generateClubDocs(year);
     // this.generateClubOverview(year);
-    // this.generateDivisionOverview(year);
+    this.generateDivisionOverview(year);
     // this.generateSimplePlayers(year);
 
     this.generateTeams(year);
