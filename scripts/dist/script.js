@@ -141,56 +141,53 @@ fs.readFile('./division.csv', 'utf8', (err, csvData) => {
                 }
             });
         });
-        // players.forEach((player) => (player.games = []));
-        // allTeams.forEach((team) => (team.players = []));
-        // const roundOverview: RoundOverview = {
-        //   divisions: divisions.map((div) => {
-        //     const matches: Round[] = div.teams.map((teams) => teams.rounds[0]);
-        //     const idsSeen = new Set();
-        //     const uniqueMatches: Round[] = [];
-        //     matches.forEach((match) => {
-        //       if (!idsSeen.has(match.teamHome.pairingsNumber)) {
-        //         idsSeen.add(match.teamHome.pairingsNumber);
-        //         uniqueMatches.push(match);
-        //       }
-        //     });
-        //     const newDiv: DivisionRound = {
-        //       class: div.class,
-        //       division: div.division,
-        //       matches: uniqueMatches,
-        //     };
-        //     newDiv.matches.forEach((match) => {
-        //       match.games.forEach((game) => {
-        //         if (game.board % 2 === 0) {
-        //           const white = { ...game.black };
-        //           game.white = game.black;
-        //           game.black = white;
-        //           game.result = revertResult(game.result);
-        //         }
-        //       });
-        //       match.averageRatingAway = 0;
-        //       match.averageRatingHome = 0;
-        //       match.games.forEach((game) => {
-        //         match.averageRatingAway += game.black.rating;
-        //         match.averageRatingHome += game.white.rating;
-        //       });
-        //       match.averageRatingAway = Math.round(
-        //         match.averageRatingAway / match.games.length
-        //       );
-        //       match.averageRatingHome = Math.round(
-        //         match.averageRatingHome / match.games.length
-        //       );
-        //     });
-        //     return newDiv;
-        //   }),
-        // };
-        (0, populateDb_1.generatePlayerOverview)(players);
+        players.forEach((player) => (player.games = []));
+        allTeams.forEach((team) => (team.players = []));
+        const roundOverview = {
+            divisions: divisions.map((div) => {
+                const matches = div.teams.map((teams) => teams.rounds[0]);
+                const idsSeen = new Set();
+                const uniqueMatches = [];
+                matches.forEach((match) => {
+                    if (!idsSeen.has(match.teamHome.pairingsNumber)) {
+                        idsSeen.add(match.teamHome.pairingsNumber);
+                        uniqueMatches.push(match);
+                    }
+                });
+                const newDiv = {
+                    class: div.class,
+                    division: div.division,
+                    matches: uniqueMatches,
+                };
+                newDiv.matches.forEach((match) => {
+                    match.games.forEach((game) => {
+                        if (game.board % 2 === 0) {
+                            const white = { ...game.black };
+                            const black = { ...game.white };
+                            game.black = black;
+                            game.white = white;
+                            game.result = revertResult(game.result);
+                        }
+                    });
+                    match.averageRatingAway = 0;
+                    match.averageRatingHome = 0;
+                    match.games.forEach((game) => {
+                        match.averageRatingAway += game.black.rating;
+                        match.averageRatingHome += game.white.rating;
+                    });
+                    match.averageRatingAway = Math.round(match.averageRatingAway / match.games.length);
+                    match.averageRatingHome = Math.round(match.averageRatingHome / match.games.length);
+                });
+                return newDiv;
+            }),
+        };
+        //generatePlayerOverview(players);
         //generateClassOverview(divisions);
         //generateDivisions(divisions);
         //generateClubDocs(clubs);
         //generateClubOverview(clubs);
         //generateRoundDates();
-        //generateRoundOverview(roundOverview);
+        (0, populateDb_1.generateRoundOverview)(roundOverview);
     }
     main();
 });
