@@ -9,6 +9,7 @@ export interface Year {
 export interface ClubView {
   id: number;
   name: string;
+  venues?: PlayingHall[];
   teams: TeamView[];
   players: Player[];
 }
@@ -49,4 +50,13 @@ export interface ProvinceOverview {
 export interface ClubOverviewItem {
   id: number;
   name: string;
+}
+
+export interface PlayingHall {
+  address: string;
+  capacity: number;
+  email: string;
+  notavailable: string[];
+  phone: string;
+  remarks: string;
 }

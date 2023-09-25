@@ -1,5 +1,7 @@
-<ng-container *ngIf="dataSource$ | async as dataSource; else loading">
+<ng-container *ngIf="dataSource$ | async as dataSource; else loading"> 
+
   <div class="container">
+    <a routerLink="fullRound" class="clickable-title margin" style="font-size: large; margin-bottom: 2rem;" >Hier alle uitslagen van ronde 1</a>
     <div class="selection">
       <mat-form-field appearance="fill" class="margin">
         <mat-label>Club</mat-label>

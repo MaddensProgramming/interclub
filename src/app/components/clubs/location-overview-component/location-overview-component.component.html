@@ -1,0 +1,27 @@
+<ng-container *ngIf="venues$ | async as venues; else loading">
+    <div  style="display:flex; flex-direction:row; flex-wrap: wrap;" >
+      <ng-container *ngFor="let venue of venues">        
+        <mat-card class="mat-elevation-z8" style="margin:1rem; width: max-content; ">         
+            <mat-card-content>
+              <div class="details">
+                <label>Adres: </label>
+                <span style="min-height: 5rem;" [innerHTML] ='venue.address|newlineToBreak'></span>
+                <label>Email: </label>
+                <span>{{ venue.email }}</span>
+                <label>Telefoon: </label>
+                <span>{{ venue.phone }}</span>
+                <label>Opmerkingen: </label>
+                <span>{{ venue.remarks }}</span>
+                <label>Niet beschikbaar:</label>
+                <br>
+                <span *ngFor="let date of venue.notavailable">{{date}}</span>
+              </div>
+            </mat-card-content>
+          </mat-card>        
+        </ng-container>
+    </div>
+  </ng-container>
+  
+  <ng-template #loading>
+    <mat-spinner></mat-spinner>
+  </ng-template>

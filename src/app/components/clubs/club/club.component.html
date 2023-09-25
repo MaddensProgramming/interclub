@@ -14,6 +14,13 @@
     </a>
     <a
       mat-tab-link
+      [active]="(activeLink | async) === 'location'"
+      [routerLink]="['location']"
+    >
+      Locatie
+    </a>
+    <a
+      mat-tab-link
       *ngFor="let team of clubView.teams"
       [active]="(activeLink | async) === team.id.toString()"
       [routerLink]="[team.id.toString()]"

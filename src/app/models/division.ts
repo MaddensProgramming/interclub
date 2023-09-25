@@ -1,4 +1,4 @@
-import { TeamView } from './club';
+import { Round, TeamView } from './club';
 
 export interface DivisionForm {
   class: number;
@@ -18,4 +18,13 @@ export interface ClassOverview {
 export interface DivisionOverview {
   class: number;
   divisions: string[];
+}
+
+export interface RoundOverview {
+  divisions: DivisionRound[];
+}
+export interface DivisionRound {
+  class: number;
+  division: string;
+  matches: Round[];
 }

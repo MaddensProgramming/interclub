@@ -11,6 +11,8 @@ import { PlayeroverviewclubComponent } from './components/clubs/playeroverviewcl
 import { FeedbackComponent } from './components/messages/feedback/feedback.component';
 import { ReviewsComponent } from './components/messages/reviews/reviews.component';
 import { DivisionOverviewComponent } from './components/division/division-overview/division-overview.component';
+import { LocationOverviewComponentComponent } from './components/clubs/location-overview-component/location-overview-component.component';
+import { FullRoundOverviewComponent } from './components/overall/full-round-overview/full-round-overview.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent, data: { title: 'Home' } },
@@ -18,6 +20,11 @@ const routes: Routes = [
     path: 'feedback',
     component: FeedbackComponent,
     data: { title: 'Feedback' },
+  },
+  {
+    path: 'fullRound',
+    component: FullRoundOverviewComponent,
+    data: { title: 'Full Round' },
   },
   { path: 'reviews', component: ReviewsComponent, data: { title: 'Reviews' } },
   {
@@ -34,6 +41,11 @@ const routes: Routes = [
         path: 'players',
         component: PlayeroverviewclubComponent,
         data: { title: 'Club Players' },
+      },
+      {
+        path: 'location',
+        component: LocationOverviewComponentComponent,
+        data: { title: 'Club Location' },
       },
       {
         path: ':id/:tab',

@@ -51,7 +51,7 @@ export class GenerateService {
   }
   private writeEverything(year: string): void {
     this.generateYear(year);
-    // this.generatePlayerOverview(year);
+    this.generatePlayerOverview(year);
     // this.generateClubDocs(year);
     // this.generateClubOverview(year);
     this.generateDivisionOverview(year);

@@ -33,8 +33,8 @@ function populateRounds(division) {
                 scoreAway: 0,
                 games: [],
             };
-            teamHome.rounds.push(round);
-            teamAway.rounds.push(round);
+            teamHome.rounds.push({ ...round });
+            teamAway.rounds.push({ ...round });
         });
     });
 }

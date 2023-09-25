@@ -24,7 +24,7 @@ export class HalloffameComponent implements OnInit, AfterViewInit {
   dataSource$: Observable<MatTableDataSource<Player>>;
   dataloaded = false;
   form: FormGroup = new FormGroup({
-    minGames: new FormControl('5'),
+    minGames: new FormControl('1'),
   });
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatTable) table: MatTable<MatTableDataSource<Player>>;
@@ -34,7 +34,7 @@ export class HalloffameComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     const mingamesObs = this.form
       .get('minGames')
-      .valueChanges.pipe(startWith('5'));
+      .valueChanges.pipe(startWith('1'));
     const playerOverviewObs = this.db.year$.pipe(
       switchMap((year) => this.db.getPlayerOverview()),
       map((players) => this.addDiff(players))

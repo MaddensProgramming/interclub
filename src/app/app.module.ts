@@ -44,6 +44,9 @@ import { DivisionStandingsComponent } from './components/division/division-stand
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { LocationOverviewComponentComponent } from './components/clubs/location-overview-component/location-overview-component.component';
+import { NewlineToBreakPipe } from './newline-to-break.pipe';
+import { FullRoundOverviewComponent } from './components/overall/full-round-overview/full-round-overview.component';
 
 @NgModule({
   declarations: [
@@ -69,6 +72,9 @@ import { CommonModule } from '@angular/common';
     ReviewsComponent,
     DivisionOverviewComponent,
     DivisionStandingsComponent,
+    LocationOverviewComponentComponent,
+    NewlineToBreakPipe,
+    FullRoundOverviewComponent,
   ],
   imports: [
     CommonModule,

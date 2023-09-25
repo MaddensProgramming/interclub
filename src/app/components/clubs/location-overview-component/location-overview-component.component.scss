@@ -1,0 +1,12 @@
+.details {
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-content: center;
+    padding: 1rem 0rem;
+  }
+
+  .card {
+    max-width: 20rem;
+    margin: auto;
+    margin-top: 3rem;
+  }

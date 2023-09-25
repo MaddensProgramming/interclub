@@ -6,6 +6,9 @@ import {
   ClubView,
   ClubOverview,
   ProvinceOverview,
+  PlayingHall,
+  Player,
+  RoundOverview,
 } from './models';
 import { store } from './initiateDB';
 
@@ -49,26 +52,51 @@ export function generateClassOverview(divisions: Division[]): void {
     });
 }
 
-export function generatePlayerOverview(): void {
-  setDoc(doc(store, 'years', '2023', 'overviews', 'simplelayers'), {
-    players: [],
-  })
-    .then(() => {
-      console.log('done simplePlayers overview');
-    })
-    .catch((err) => {
-      console.error(err.message);
-    });
+export function generatePlayerOverview(players: Player[]): void {
+  // const playersOverview = players
+  //   .map((player) => {
+  //     return { name: player.firstName + ' ' + player.name, id: player.id };
+  //   })
+  //   .sort((a, b) => a.name.localeCompare(b.name));
 
-  setDoc(doc(store, 'years', '2023', 'overviews', 'players'), {
-    players: [],
-  })
-    .then(() => {
-      console.log('done players');
-    })
-    .catch((err) => {
-      console.error(err.message);
-    });
+  // setDoc(doc(store, 'years', '2023', 'overviews', 'simplelayers'), {
+  //   players: playersOverview,
+  // })
+  //   .then(() => {
+  //     console.log('done players');
+  //   })
+  //   .catch((err) => {
+  //     console.error(err.message);
+  //   });
+
+  // const playersHallOfFame = players
+  //   .map((player) => {
+  //     player.games = [];
+  //     return player;
+  //   })
+  //   .sort((a, b) => b.tpr - a.tpr);
+
+  let count = 1;
+
+  // setDoc(doc(store, 'years', '2023', 'overviews', 'players'), {
+  //   players: playersHallOfFame,
+  // })
+  //   .then(() => {
+  //     console.log('done players');
+  //   })
+  //   .catch((err) => {
+  //     console.error(err.message);
+  //   });
+
+  players.forEach((player) => {
+    setDoc(doc(store, 'years', '2023', 'players', player.id.toString()), player)
+      .then(() => {
+        console.log(count++);
+      })
+      .catch((err) => {
+        console.error(err.message);
+      });
+  });
 }
 
 export function generateClubDocs(clubs: ClubView[]): void {
@@ -76,22 +104,51 @@ export function generateClubDocs(clubs: ClubView[]): void {
     return {
       id: club.id,
       name: club.name,
-      players: [],
-      teams: club.teams
-        .map((team) => {
-          team.players = [];
-          team.rounds = [];
-          return team;
+      players: club.players
+        .map((player) => {
+          player.games = [];
+          return player;
         })
-        .sort((a, b) => a.id - b.id),
+        .sort((a, b) => a.rating - b.rating),
+      teams: club.teams.sort((a, b) => a.id - b.id),
     };
   });
 
-  clubs.forEach((club) =>
+  clubs.forEach(async (club) => {
+    club.venues = await getPlayingHall(club.id);
     setDoc(doc(store, 'years', '2023', 'club', club.id.toString()), club)
       .then(() => console.log(club.name))
-      .catch((err) => console.error(err.message, club.name))
-  );
+      .catch((err) => console.error(err.message, club.name));
+    club.teams.forEach((team) =>
+      setDoc(
+        doc(
+          store,
+          'years',
+          '2023',
+          'club',
+          club.id.toString(),
+          'team',
+          team.id.toString()
+        ),
+        team
+      )
+        .then(() => console.log(club.name, team.id))
+        .catch((err) => console.log(err, club.name, team.id))
+    );
+  });
+}
+
+async function getPlayingHall(clubId: number): Promise<PlayingHall[]> {
+  try {
+    const response = await fetch(
+      `https://www.frbe-kbsb-ksb.be/api/v1/interclubs/anon/venue/${clubId}`
+    );
+    const data = await response.json();
+    return data.venues; // assuming the response contains a "playingHall" property
+  } catch (err) {
+    console.error('Error fetching playing hall:', err);
+    return null;
+  }
 }
 
 export function generateClubOverview(clubs: ClubView[]): void {
@@ -103,10 +160,18 @@ export function generateClubOverview(clubs: ClubView[]): void {
     .catch((err) => console.error(err.message));
 }
 
+export function generateRoundOverview(roundOverview: RoundOverview): void {
+  setDoc(doc(store, 'years', '2023', 'roundOverview', '1'), roundOverview)
+    .then(() => console.log('succes'))
+    .catch((err) => console.error(err.message));
+}
+
 export function generateOverview(clubs: ClubView[]): ClubOverview {
   const overview: ClubOverview = { provinces: [] };
 
-  clubs.forEach((club) => addToProvince(club, overview));
+  clubs
+    .filter((club) => club.id !== 0)
+    .forEach((club) => addToProvince(club, overview));
   console.log(overview);
   return overview;
 }
@@ -148,25 +213,4 @@ export function generateRoundDates() {
     .catch((err) => {
       console.error(err.message);
     });
-}
-
-export function generateTeams(clubs: ClubView[]): void {
-  clubs.forEach((club) =>
-    club.teams.forEach((team) =>
-      setDoc(
-        doc(
-          store,
-          'years',
-          '2023',
-          'club',
-          club.id.toString(),
-          'team',
-          team.id.toString()
-        ),
-        team
-      )
-        .then(() => console.log(club.name, team.id))
-        .catch((err) => console.log(err, club.name, team.id))
-    )
-  );
 }

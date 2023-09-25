@@ -96,6 +96,7 @@ export interface DivisionOverview {
 export interface ClubView {
   id: number;
   name: string;
+  venues?: PlayingHall[];
   teams: TeamView[];
   players: Player[];
 }
@@ -111,4 +112,60 @@ export interface ProvinceOverview {
 export interface ClubOverviewItem {
   id: number;
   name: string;
+}
+
+export interface PlayingHall {
+  address: string;
+  capacity: number;
+  email: string;
+  notavailable: string[];
+  phone: string;
+  remarks: string;
+}
+
+export interface Player {
+  id: number;
+  firstName: string;
+  name: string;
+  rating: number;
+  tpr: number;
+  diff?: number;
+  score: number;
+  numberOfGames: number;
+  clubId?: number;
+  clubName?: string;
+  games?: Game[];
+  team?: number;
+}
+
+export interface FRBEPlayer {
+  assignedrating: number;
+  average: number;
+  fiderating: number;
+  first_name: string;
+  idcluborig: number;
+  idclubvisit: number;
+  idnumber: number;
+  last_name: string;
+  natrating: number;
+  nature: string;
+  titular: string;
+}
+export interface Game {
+  white: Player;
+  black: Player;
+  teamWhite: TeamView;
+  teamBlack: TeamView;
+  board: number;
+  round: number;
+  result: ResultEnum;
+}
+
+export interface RoundOverview {
+  divisions: DivisionRound[];
+}
+export interface DivisionRound {
+  class: number;
+  division: string;
+  matches: Round[];
 }

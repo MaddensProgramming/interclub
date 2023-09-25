@@ -21,14 +21,14 @@ export class PlayerComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private databaseService: DataBaseService,
+    private databaseService: DataBaseService
   ) {}
 
   ngOnInit(): void {
     this.player$ = this.route.paramMap.pipe(
       switchMap((params: ParamMap) =>
         this.databaseService.getPlayer(+params.get('id'))
-      ),
+      )
     );
   }
 }

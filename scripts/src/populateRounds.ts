@@ -43,8 +43,8 @@ export function populateRounds(division: Division) {
         games: [],
       };
 
-      teamHome.rounds.push(round);
-      teamAway.rounds.push(round);
+      teamHome.rounds.push({ ...round });
+      teamAway.rounds.push({ ...round });
     });
   });
 }

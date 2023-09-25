@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.generateTeams = exports.generateRoundDates = exports.addToProvince = exports.generateOverview = exports.generateClubOverview = exports.generateClubDocs = exports.generatePlayerOverview = exports.generateClassOverview = exports.generateDivisions = void 0;
+exports.generateRoundDates = exports.addToProvince = exports.generateOverview = exports.generateRoundOverview = exports.generateClubOverview = exports.generateClubDocs = exports.generatePlayerOverview = exports.generateClassOverview = exports.generateDivisions = void 0;
 const firestore_1 = require("firebase/firestore");
 const initiateDB_1 = require("./initiateDB");
 function generateDivisions(divisions) {
@@ -38,24 +38,45 @@ function generateClassOverview(divisions) {
     });
 }
 exports.generateClassOverview = generateClassOverview;
-function generatePlayerOverview() {
-    (0, firestore_1.setDoc)((0, firestore_1.doc)(initiateDB_1.store, 'years', '2023', 'overviews', 'simplelayers'), {
-        players: [],
-    })
-        .then(() => {
-        console.log('done simplePlayers overview');
-    })
-        .catch((err) => {
-        console.error(err.message);
-    });
-    (0, firestore_1.setDoc)((0, firestore_1.doc)(initiateDB_1.store, 'years', '2023', 'overviews', 'players'), {
-        players: [],
-    })
-        .then(() => {
-        console.log('done players');
-    })
-        .catch((err) => {
-        console.error(err.message);
+function generatePlayerOverview(players) {
+    // const playersOverview = players
+    //   .map((player) => {
+    //     return { name: player.firstName + ' ' + player.name, id: player.id };
+    //   })
+    //   .sort((a, b) => a.name.localeCompare(b.name));
+    // setDoc(doc(store, 'years', '2023', 'overviews', 'simplelayers'), {
+    //   players: playersOverview,
+    // })
+    //   .then(() => {
+    //     console.log('done players');
+    //   })
+    //   .catch((err) => {
+    //     console.error(err.message);
+    //   });
+    // const playersHallOfFame = players
+    //   .map((player) => {
+    //     player.games = [];
+    //     return player;
+    //   })
+    //   .sort((a, b) => b.tpr - a.tpr);
+    let count = 1;
+    // setDoc(doc(store, 'years', '2023', 'overviews', 'players'), {
+    //   players: playersHallOfFame,
+    // })
+    //   .then(() => {
+    //     console.log('done players');
+    //   })
+    //   .catch((err) => {
+    //     console.error(err.message);
+    //   });
+    players.forEach((player) => {
+        (0, firestore_1.setDoc)((0, firestore_1.doc)(initiateDB_1.store, 'years', '2023', 'players', player.id.toString()), player)
+            .then(() => {
+            console.log(count++);
+        })
+            .catch((err) => {
+            console.error(err.message);
+        });
     });
 }
 exports.generatePlayerOverview = generatePlayerOverview;
@@ -64,30 +85,54 @@ function generateClubDocs(clubs) {
         return {
             id: club.id,
             name: club.name,
-            players: [],
-            teams: club.teams
-                .map((team) => {
-                team.players = [];
-                team.rounds = [];
-                return team;
+            players: club.players
+                .map((player) => {
+                player.games = [];
+                return player;
             })
-                .sort((a, b) => a.id - b.id),
+                .sort((a, b) => a.rating - b.rating),
+            teams: club.teams.sort((a, b) => a.id - b.id),
         };
     });
-    clubs.forEach((club) => (0, firestore_1.setDoc)((0, firestore_1.doc)(initiateDB_1.store, 'years', '2023', 'club', club.id.toString()), club)
-        .then(() => console.log(club.name))
-        .catch((err) => console.error(err.message, club.name)));
+    clubs.forEach(async (club) => {
+        club.venues = await getPlayingHall(club.id);
+        (0, firestore_1.setDoc)((0, firestore_1.doc)(initiateDB_1.store, 'years', '2023', 'club', club.id.toString()), club)
+            .then(() => console.log(club.name))
+            .catch((err) => console.error(err.message, club.name));
+        club.teams.forEach((team) => (0, firestore_1.setDoc)((0, firestore_1.doc)(initiateDB_1.store, 'years', '2023', 'club', club.id.toString(), 'team', team.id.toString()), team)
+            .then(() => console.log(club.name, team.id))
+            .catch((err) => console.log(err, club.name, team.id)));
+    });
 }
 exports.generateClubDocs = generateClubDocs;
+async function getPlayingHall(clubId) {
+    try {
+        const response = await fetch(`https://www.frbe-kbsb-ksb.be/api/v1/interclubs/anon/venue/${clubId}`);
+        const data = await response.json();
+        return data.venues; // assuming the response contains a "playingHall" property
+    }
+    catch (err) {
+        console.error('Error fetching playing hall:', err);
+        return null;
+    }
+}
 function generateClubOverview(clubs) {
     (0, firestore_1.setDoc)((0, firestore_1.doc)(initiateDB_1.store, 'years', '2023', 'clubOverview', 'overview'), generateOverview(clubs))
         .then(() => console.log('succes'))
         .catch((err) => console.error(err.message));
 }
 exports.generateClubOverview = generateClubOverview;
+function generateRoundOverview(roundOverview) {
+    (0, firestore_1.setDoc)((0, firestore_1.doc)(initiateDB_1.store, 'years', '2023', 'roundOverview', '1'), roundOverview)
+        .then(() => console.log('succes'))
+        .catch((err) => console.error(err.message));
+}
+exports.generateRoundOverview = generateRoundOverview;
 function generateOverview(clubs) {
     const overview = { provinces: [] };
-    clubs.forEach((club) => addToProvince(club, overview));
+    clubs
+        .filter((club) => club.id !== 0)
+        .forEach((club) => addToProvince(club, overview));
     console.log(overview);
     return overview;
 }
@@ -129,9 +174,3 @@ function generateRoundDates() {
     });
 }
 exports.generateRoundDates = generateRoundDates;
-function generateTeams(clubs) {
-    clubs.forEach((club) => club.teams.forEach((team) => (0, firestore_1.setDoc)((0, firestore_1.doc)(initiateDB_1.store, 'years', '2023', 'club', club.id.toString(), 'team', team.id.toString()), team)
-        .then(() => console.log(club.name, team.id))
-        .catch((err) => console.log(err, club.name, team.id))));
-}
-exports.generateTeams = generateTeams;

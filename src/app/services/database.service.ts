@@ -24,6 +24,7 @@ import { Player, PlayerOverview, SimplePlayer } from '../models/player';
 import { Router } from '@angular/router';
 import { ClassOverview, Division } from '../models/division';
 import { Dates } from '../models/dates';
+import { RoundOverview } from 'scripts/src/models';
 
 @Injectable({
   providedIn: 'root',
@@ -44,6 +45,7 @@ export class DataBaseService {
   private cachePlayerOverview: { [key: string]: Player[] } = {};
   private cacheSimplePlayerOverview: { [key: string]: PlayerOverview } = {};
   private cacheDates: { [key: string]: Dates } = {};
+  private cacheFullRound: RoundOverview;
 
   constructor(private router: Router) {
     initializeApp(environment.firebase);
@@ -62,6 +64,17 @@ export class DataBaseService {
           tap((div) => (this.cacheDivision[year + division] = div))
         );
       })
+    );
+  }
+
+  public getFullRoundOverview(): Observable<RoundOverview> {
+    if (this.cacheFullRound) return of(this.cacheFullRound);
+
+    return from(
+      getDoc(doc(this.store, 'years', '2023', 'roundOverview', '1'))
+    ).pipe(
+      map((data) => data.data() as RoundOverview),
+      tap((data) => (this.cacheFullRound = data))
     );
   }
 
