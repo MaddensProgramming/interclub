@@ -6,11 +6,11 @@ import {
   ClubView,
   ClubOverview,
   ProvinceOverview,
-  PlayingHall,
   Player,
   RoundOverview,
 } from './models';
 import { store } from './initiateDB';
+import { getPlayingHall } from './frbeGatewayCalls';
 
 export function generateDivisions(divisions: Division[]): void {
   divisions.forEach((div) => {
@@ -109,8 +109,14 @@ export function generateClubDocs(clubs: ClubView[]): void {
           player.games = [];
           return player;
         })
-        .sort((a, b) => a.rating - b.rating),
-      teams: club.teams.sort((a, b) => a.id - b.id),
+        .sort((a, b) => b.rating - a.rating),
+      teams: club.teams
+        .map((team) => {
+          team.players = [];
+          team.rounds = [];
+          return team;
+        })
+        .sort((a, b) => a.id - b.id),
     };
   });
 
@@ -119,6 +125,25 @@ export function generateClubDocs(clubs: ClubView[]): void {
     setDoc(doc(store, 'years', '2023', 'club', club.id.toString()), club)
       .then(() => console.log(club.name))
       .catch((err) => console.error(err.message, club.name));
+  });
+}
+
+export function generateTeamDocs(clubs: ClubView[]): void {
+  clubs = clubs.map((club) => {
+    return {
+      id: club.id,
+      name: club.name,
+      players: club.players
+        .map((player) => {
+          player.games = [];
+          return player;
+        })
+        .sort((a, b) => b.rating - a.rating),
+      teams: club.teams.sort((a, b) => a.id - b.id),
+    };
+  });
+
+  clubs.forEach(async (club) => {
     club.teams.forEach((team) =>
       setDoc(
         doc(
@@ -136,19 +161,6 @@ export function generateClubDocs(clubs: ClubView[]): void {
         .catch((err) => console.log(err, club.name, team.id))
     );
   });
-}
-
-async function getPlayingHall(clubId: number): Promise<PlayingHall[]> {
-  try {
-    const response = await fetch(
-      `https://www.frbe-kbsb-ksb.be/api/v1/interclubs/anon/venue/${clubId}`
-    );
-    const data = await response.json();
-    return data.venues; // assuming the response contains a "playingHall" property
-  } catch (err) {
-    console.error('Error fetching playing hall:', err);
-    return null;
-  }
 }
 
 export function generateClubOverview(clubs: ClubView[]): void {

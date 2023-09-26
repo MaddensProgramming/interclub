@@ -26,12 +26,6 @@
     <td mat-footer-cell *matFooterCellDef>Totaal</td>
   </ng-container>
 
-  <ng-container matColumnDef="rating">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Rating</th>
-    <td mat-cell *matCellDef="let element">{{ element.rating }}</td>
-    <td mat-footer-cell *matFooterCellDef>{{ totaal?.rating }}</td>
-  </ng-container>
-
   <ng-container matColumnDef="score">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>Score</th>
     <td mat-cell *matCellDef="let element">
@@ -46,6 +40,25 @@
     <th mat-header-cell *matHeaderCellDef mat-sort-header>Partijen</th>
     <td mat-cell *matCellDef="let element">{{ element.numberOfGames }}</td>
     <td mat-footer-cell *matFooterCellDef>{{ totaal?.numberOfGames }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="rating">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Rating IC</th>
+    <td mat-cell *matCellDef="let element">{{ element.rating }}</td>
+    <td mat-footer-cell *matFooterCellDef>{{ totaal?.rating }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="ratingFide">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Fide rating</th>
+    <td mat-cell *matCellDef="let element">{{ element.ratingFide }}</td>
+    <td mat-footer-cell *matFooterCellDef>{{ totaal?.ratingFide }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="ratingNat">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Nat. rating</th>
+    <td mat-cell *matCellDef="let element">{{ element.ratingNat }}</td>
+    <td mat-footer-cell *matFooterCellDef>{{ totaal?.ratingNat }}</td>
+
   </ng-container>
 
   <ng-container matColumnDef="tpr">

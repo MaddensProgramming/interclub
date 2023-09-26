@@ -6,7 +6,6 @@ import { HomeComponent } from './components/overall/home/home.component';
 import { PageNotFoundComponent } from './components/overall/page-not-found/page-not-found.component';
 import { PlayerComponent } from './components/overall/player/player.component';
 import { TeamViewComponent } from './components/clubs/team/team-view/team-view.component';
-import { UploadComponent } from './components/overall/upload/upload.component';
 import { PlayeroverviewclubComponent } from './components/clubs/playeroverviewclub/playeroverviewclub.component';
 import { FeedbackComponent } from './components/messages/feedback/feedback.component';
 import { ReviewsComponent } from './components/messages/reviews/reviews.component';
@@ -57,7 +56,6 @@ const routes: Routes = [
     ],
   },
   { path: 'player/:id', component: PlayerComponent, data: { title: 'Player' } },
-  { path: 'upload', component: UploadComponent, data: { title: 'Upload' } },
   {
     path: 'hallOfFame',
     component: HalloffameComponent,

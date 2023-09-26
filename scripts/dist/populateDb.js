@@ -1,8 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.generateRoundDates = exports.addToProvince = exports.generateOverview = exports.generateRoundOverview = exports.generateClubOverview = exports.generateClubDocs = exports.generatePlayerOverview = exports.generateClassOverview = exports.generateDivisions = void 0;
+exports.generateRoundDates = exports.addToProvince = exports.generateOverview = exports.generateRoundOverview = exports.generateClubOverview = exports.generateTeamDocs = exports.generateClubDocs = exports.generatePlayerOverview = exports.generateClassOverview = exports.generateDivisions = void 0;
 const firestore_1 = require("firebase/firestore");
 const initiateDB_1 = require("./initiateDB");
+const frbeGatewayCalls_1 = require("./frbeGatewayCalls");
 function generateDivisions(divisions) {
     divisions.forEach((div) => {
         (0, firestore_1.setDoc)((0, firestore_1.doc)(initiateDB_1.store, 'years', '2023', 'divisions', div.class + div.division), div)
@@ -90,32 +91,45 @@ function generateClubDocs(clubs) {
                 player.games = [];
                 return player;
             })
-                .sort((a, b) => a.rating - b.rating),
+                .sort((a, b) => b.rating - a.rating),
+            teams: club.teams
+                .map((team) => {
+                team.players = [];
+                team.rounds = [];
+                return team;
+            })
+                .sort((a, b) => a.id - b.id),
+        };
+    });
+    clubs.forEach(async (club) => {
+        club.venues = await (0, frbeGatewayCalls_1.getPlayingHall)(club.id);
+        (0, firestore_1.setDoc)((0, firestore_1.doc)(initiateDB_1.store, 'years', '2023', 'club', club.id.toString()), club)
+            .then(() => console.log(club.name))
+            .catch((err) => console.error(err.message, club.name));
+    });
+}
+exports.generateClubDocs = generateClubDocs;
+function generateTeamDocs(clubs) {
+    clubs = clubs.map((club) => {
+        return {
+            id: club.id,
+            name: club.name,
+            players: club.players
+                .map((player) => {
+                player.games = [];
+                return player;
+            })
+                .sort((a, b) => b.rating - a.rating),
             teams: club.teams.sort((a, b) => a.id - b.id),
         };
     });
     clubs.forEach(async (club) => {
-        club.venues = await getPlayingHall(club.id);
-        (0, firestore_1.setDoc)((0, firestore_1.doc)(initiateDB_1.store, 'years', '2023', 'club', club.id.toString()), club)
-            .then(() => console.log(club.name))
-            .catch((err) => console.error(err.message, club.name));
         club.teams.forEach((team) => (0, firestore_1.setDoc)((0, firestore_1.doc)(initiateDB_1.store, 'years', '2023', 'club', club.id.toString(), 'team', team.id.toString()), team)
             .then(() => console.log(club.name, team.id))
             .catch((err) => console.log(err, club.name, team.id)));
     });
 }
-exports.generateClubDocs = generateClubDocs;
-async function getPlayingHall(clubId) {
-    try {
-        const response = await fetch(`https://www.frbe-kbsb-ksb.be/api/v1/interclubs/anon/venue/${clubId}`);
-        const data = await response.json();
-        return data.venues; // assuming the response contains a "playingHall" property
-    }
-    catch (err) {
-        console.error('Error fetching playing hall:', err);
-        return null;
-    }
-}
+exports.generateTeamDocs = generateTeamDocs;
 function generateClubOverview(clubs) {
     (0, firestore_1.setDoc)((0, firestore_1.doc)(initiateDB_1.store, 'years', '2023', 'clubOverview', 'overview'), generateOverview(clubs))
         .then(() => console.log('succes'))

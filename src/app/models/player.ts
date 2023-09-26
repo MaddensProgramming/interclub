@@ -8,6 +8,8 @@ export interface Player {
   tpr: number;
   diff?: number;
   score: number;
+  ratingFide?: number;
+  ratingNat?: number;
   numberOfGames: number;
   clubId?: number;
   clubName?: string;

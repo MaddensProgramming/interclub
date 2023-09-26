@@ -34,9 +34,11 @@ export class PlayerListComponent implements OnInit, AfterViewInit {
 
   displayedColumnsPlayer: string[] = [
     'name',
-    'rating',
     'score',
     'numberOfGames',
+    'rating',
+    'ratingFide',
+    'ratingNat',
   ];
 
   public getSource(players: Player[]): MatTableDataSource<Player> {
@@ -45,16 +47,18 @@ export class PlayerListComponent implements OnInit, AfterViewInit {
     return dataSource;
   }
 
-
-
-  public calcTotal(players: Player[]):void{
+  public calcTotal(players: Player[]): void {
     let totalRating = 0;
     let totalScore = 0;
     let totalGames = 0;
+    let totalFideRating = 0;
+    let totalNatRating = 0;
     players.forEach((player) => {
       totalGames += player.numberOfGames;
       totalScore += player.score;
       totalRating += player.rating * player.numberOfGames;
+      totalFideRating += (player.ratingFide ?? 0) * player.numberOfGames;
+      totalNatRating += (player.ratingNat ?? 0) * player.numberOfGames;
     });
 
     this.totaal = {
@@ -62,6 +66,8 @@ export class PlayerListComponent implements OnInit, AfterViewInit {
       firstName: '',
       id: 0,
       rating: Math.round(totalRating / totalGames),
+      ratingFide: Math.round(totalFideRating / totalGames),
+      ratingNat: Math.round(totalNatRating / totalGames),
       numberOfGames: totalGames,
       score: totalScore,
       tpr: 0,
@@ -71,7 +77,9 @@ export class PlayerListComponent implements OnInit, AfterViewInit {
   constructor() {}
   ngAfterViewInit(): void {
     this.dataSource$ = this.players.pipe(
-      tap(players => {if(this.showTotal)this.calcTotal(players)}),
+      tap((players) => {
+        if (this.showTotal) this.calcTotal(players);
+      }),
       map((players) => this.getSource(players))
     );
   }

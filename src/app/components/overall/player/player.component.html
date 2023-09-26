@@ -6,8 +6,12 @@
     </mat-card-header>
     <mat-card-content>
       <div class="details">
-        <label>Elo: </label>
+        <label>Interclub rating: </label>
         <span>{{ player.rating }}</span>
+        <label>Fide rating: </label>
+        <span>{{ player.ratingFide}}</span>
+        <label>Nationale rating: </label>
+        <span>{{ player.ratingNat }}</span>
         <label>Club: </label>
         <span class="clickable-title" [routerLink]="['/club/' + player.clubId]">
           {{ player.clubName }} ({{ player.clubId }})</span

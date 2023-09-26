@@ -1,10 +1,10 @@
-export interface Game {
+export interface GameFrbe {
   idnumber_home: number | null;
   idnumber_visit: number;
   result: string;
 }
 
-export interface Encounter {
+export interface EncounterFrbe {
   icclub_home: number;
   icclub_visit: number;
   pairingnr_home: number;
@@ -13,7 +13,7 @@ export interface Encounter {
   matchpoint_visit: number;
   boardpoint2_home: number;
   boardpoint2_visit: number;
-  games: Game[];
+  games: GameFrbe[];
   played: boolean;
   signhome_idnumber: number;
   signhome_ts: string | null;
@@ -21,13 +21,13 @@ export interface Encounter {
   signvisit_ts: string | null;
 }
 
-export interface Round {
+export interface RoundFrbe {
   round: number;
   rdate: string;
-  encounters: Encounter[];
+  encounters: EncounterFrbe[];
 }
 
-export interface Team {
+export interface TeamFrbe {
   division: number;
   titular: any[]; // You can define a proper interface for this if needed
   idclub: number;
@@ -40,6 +40,20 @@ export interface Team {
 export interface DivisionFrbe {
   division: number;
   index: string;
-  teams: Team[];
-  rounds: Round[];
+  teams: TeamFrbe[];
+  rounds: RoundFrbe[];
+}
+
+export interface PlayerFrbe {
+  assignedrating: number;
+  average: number;
+  fiderating?: number;
+  first_name: string;
+  idcluborig: number;
+  idclubvisit: number;
+  idnumber: number;
+  last_name: string;
+  natrating?: number;
+  nature: string;
+  titular: string;
 }

@@ -10,7 +10,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { PlayerComponent } from './components/overall/player/player.component';
 import { OwnResultPipe, ResultPipe } from './pipes/result.pipe';
-import { UploadComponent } from './components/overall/upload/upload.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ProvincePipe } from './pipes/province.pipe';
@@ -42,7 +41,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { DivisionOverviewComponent } from './components/division/division-overview/division-overview.component';
 import { DivisionStandingsComponent } from './components/division/division-standings/division-standings.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { LocationOverviewComponentComponent } from './components/clubs/location-overview-component/location-overview-component.component';
 import { NewlineToBreakPipe } from './newline-to-break.pipe';
@@ -57,7 +55,6 @@ import { FullRoundOverviewComponent } from './components/overall/full-round-over
     PlayerComponent,
     ResultPipe,
     OwnResultPipe,
-    //UploadComponent,
     ProvincePipe,
     OwnGamePipe,
     ColorPipe,

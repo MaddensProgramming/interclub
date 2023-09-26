@@ -67,6 +67,8 @@ export interface Player {
   firstName: string;
   name: string;
   rating: number;
+  ratingFide?: number;
+  ratingNational?: number;
   tpr: number;
   diff?: number;
   score: number;
@@ -138,19 +140,6 @@ export interface Player {
   team?: number;
 }
 
-export interface FRBEPlayer {
-  assignedrating: number;
-  average: number;
-  fiderating: number;
-  first_name: string;
-  idcluborig: number;
-  idclubvisit: number;
-  idnumber: number;
-  last_name: string;
-  natrating: number;
-  nature: string;
-  titular: string;
-}
 export interface Game {
   white: Player;
   black: Player;
