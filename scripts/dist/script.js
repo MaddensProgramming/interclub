@@ -53,15 +53,22 @@ fs.readFile('./division.csv', 'utf8', (err, csvData) => {
         const players = clubs.flatMap((club) => club.players);
         extractInfoFromResultsJson(json, allTeams, players);
         // players.forEach((player) => (player.games = []));
-        // allTeams.forEach((team) => (team.players = []));
-        const roundOverview = createRoundOverview(divisions);
-        (0, populateDb_1.generatePlayerOverview)(players);
-        //generateClassOverview(divisions);
-        //generateDivisions(divisions);
-        //generateClubDocs(clubs);
-        //generateClubOverview(clubs);
-        //generateRoundDates();
+        // allTeams.forEach((team) => {
+        //   team.players = [];
+        //   team.rounds?.forEach((round) => (round.games = []));
+        // });
+        //const roundOverview: RoundOverview = createRoundOverview(divisions);
+        // generateHallOfFameOverview(players);
+        // generateDivisions(divisions);
+        (0, populateDb_1.generateTeamDocs)(clubs);
         //generateRoundOverview(roundOverview);
+        //generateClubDocs(clubs);
+        //generatePlayerOverview(players);
+        //ONCE PER SEASON
+        //generateClassOverview(divisions);
+        //generateRoundDates();
+        //generateClubOverview(clubs);
+        //generatePlayerSearchIndexOverview(players);
     }
     main();
 });

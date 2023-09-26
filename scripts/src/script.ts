@@ -20,9 +20,12 @@ import {
   generateClubDocs,
   generateClubOverview,
   generateDivisions,
+  generateHallOfFameOverview,
   generatePlayerOverview,
+  generatePlayerSearchIndexOverview,
   generateRoundDates,
   generateRoundOverview,
+  generateTeamDocs,
 } from './populateDb';
 import {
   getGameResult,
@@ -62,17 +65,25 @@ fs.readFile('./division.csv', 'utf8', (err, csvData) => {
     extractInfoFromResultsJson(json, allTeams, players);
 
     // players.forEach((player) => (player.games = []));
-    // allTeams.forEach((team) => (team.players = []));
+    // allTeams.forEach((team) => {
+    //   team.players = [];
+    //   team.rounds?.forEach((round) => (round.games = []));
+    // });
 
-    const roundOverview: RoundOverview = createRoundOverview(divisions);
+    //const roundOverview: RoundOverview = createRoundOverview(divisions);
 
-    generatePlayerOverview(players);
-    //generateClassOverview(divisions);
-    //generateDivisions(divisions);
-    //generateClubDocs(clubs);
-    //generateClubOverview(clubs);
-    //generateRoundDates();
+    // generateHallOfFameOverview(players);
+    // generateDivisions(divisions);
+    //generateTeamDocs(clubs);
     //generateRoundOverview(roundOverview);
+    //generateClubDocs(clubs);
+    //generatePlayerOverview(players);
+
+    //ONCE PER SEASON
+    //generateClassOverview(divisions);
+    //generateRoundDates();
+    //generateClubOverview(clubs);
+    //generatePlayerSearchIndexOverview(players);
   }
 
   main();

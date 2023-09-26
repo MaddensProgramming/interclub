@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.generateRoundDates = exports.addToProvince = exports.generateOverview = exports.generateRoundOverview = exports.generateClubOverview = exports.generateTeamDocs = exports.generateClubDocs = exports.generatePlayerOverview = exports.generateClassOverview = exports.generateDivisions = void 0;
+exports.generateRoundDates = exports.addToProvince = exports.generateOverview = exports.generateRoundOverview = exports.generateClubOverview = exports.generateTeamDocs = exports.generateClubDocs = exports.generatePlayerOverview = exports.generatePlayerSearchIndexOverview = exports.generateHallOfFameOverview = exports.generateClassOverview = exports.generateDivisions = void 0;
 const firestore_1 = require("firebase/firestore");
 const initiateDB_1 = require("./initiateDB");
 const frbeGatewayCalls_1 = require("./frbeGatewayCalls");
@@ -39,6 +39,41 @@ function generateClassOverview(divisions) {
     });
 }
 exports.generateClassOverview = generateClassOverview;
+function generateHallOfFameOverview(players) {
+    const playersHallOfFame = players
+        .map((player) => {
+        player.games = [];
+        return player;
+    })
+        .sort((a, b) => b.tpr - a.tpr);
+    (0, firestore_1.setDoc)((0, firestore_1.doc)(initiateDB_1.store, 'years', '2023', 'overviews', 'players'), {
+        players: playersHallOfFame,
+    })
+        .then(() => {
+        console.log('done players');
+    })
+        .catch((err) => {
+        console.error(err.message);
+    });
+}
+exports.generateHallOfFameOverview = generateHallOfFameOverview;
+function generatePlayerSearchIndexOverview(players) {
+    const playersOverview = players
+        .map((player) => {
+        return { name: player.firstName + ' ' + player.name, id: player.id };
+    })
+        .sort((a, b) => a.name.localeCompare(b.name));
+    (0, firestore_1.setDoc)((0, firestore_1.doc)(initiateDB_1.store, 'years', '2023', 'overviews', 'simplelayers'), {
+        players: playersOverview,
+    })
+        .then(() => {
+        console.log('done players');
+    })
+        .catch((err) => {
+        console.error(err.message);
+    });
+}
+exports.generatePlayerSearchIndexOverview = generatePlayerSearchIndexOverview;
 function generatePlayerOverview(players) {
     // const playersOverview = players
     //   .map((player) => {

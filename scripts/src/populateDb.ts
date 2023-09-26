@@ -52,6 +52,43 @@ export function generateClassOverview(divisions: Division[]): void {
     });
 }
 
+export function generateHallOfFameOverview(players: Player[]): void {
+  const playersHallOfFame = players
+    .map((player) => {
+      player.games = [];
+      return player;
+    })
+    .sort((a, b) => b.tpr - a.tpr);
+
+  setDoc(doc(store, 'years', '2023', 'overviews', 'players'), {
+    players: playersHallOfFame,
+  })
+    .then(() => {
+      console.log('done players');
+    })
+    .catch((err) => {
+      console.error(err.message);
+    });
+}
+
+export function generatePlayerSearchIndexOverview(players: Player[]): void {
+  const playersOverview = players
+    .map((player) => {
+      return { name: player.firstName + ' ' + player.name, id: player.id };
+    })
+    .sort((a, b) => a.name.localeCompare(b.name));
+
+  setDoc(doc(store, 'years', '2023', 'overviews', 'simplelayers'), {
+    players: playersOverview,
+  })
+    .then(() => {
+      console.log('done players');
+    })
+    .catch((err) => {
+      console.error(err.message);
+    });
+}
+
 export function generatePlayerOverview(players: Player[]): void {
   // const playersOverview = players
   //   .map((player) => {
