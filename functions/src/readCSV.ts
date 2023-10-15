@@ -1,9 +1,8 @@
 import { TeamView, Division } from './models';
-import { DivisionMap } from './script';
 
-export const csvToJsonObject = (csv: string): DivisionMap => {
+export const csvToJsonObject = (csv: string): { [key: string]: TeamView[] } => {
   const lines = csv.split('\n');
-  const divisions: DivisionMap = {};
+  const divisions: { [key: string]: TeamView[] } = {};
 
   let currentDivisionNames: string[] = [];
   let pairingsNumber = 0;
@@ -95,7 +94,9 @@ function extractMiddleValues(
 
   return null;
 }
-export function convertToDivisions(divisionMap: DivisionMap): Division[] {
+export function convertToDivisions(divisionMap: {
+  [key: string]: TeamView[];
+}): Division[] {
   const divisions: Division[] = [];
   const divisionIndexMap: { [key: string]: number } = {};
 

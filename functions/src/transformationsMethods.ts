@@ -1,95 +1,73 @@
-import * as fs from 'fs';
+import { getPlayers } from './frbeGatewayCalls';
 import {
-  ClubOverview,
   ClubView,
   Division,
   DivisionRound,
   Game,
   Player,
-  PlayingHall,
-  ProvinceOverview,
   ResultEnum,
   Round,
   RoundOverview,
   TeamView,
 } from './models';
-import { csvToJsonObject, convertToDivisions } from './readCSV';
-import { populateRounds } from './populateRounds';
+import { DivisionFrbe } from './modelsFRBE';
 import {
-  generateClassOverview,
-  generateClubDocs,
-  generateClubOverview,
-  generateDivisions,
-  generateHallOfFameOverview,
-  generatePlayerOverview,
-  generatePlayerSearchIndexOverview,
-  generateRoundDates,
-  generateRoundOverview,
-  generateTeamDocs,
-} from './populateDb';
-import {
-  getGameResult,
   revertResult,
+  getGameResult,
   getScoreWhite,
   getScoreBlack,
+  GetTpr,
 } from './utility';
-import { GetTpr } from './utility';
-import { getAllResults } from './frbeGatewayCalls';
-import { getPlayers } from './frbeGatewayCalls';
-import { DivisionFrbe } from './modelsFRBE';
 
-export type DivisionMap = { [key: string]: TeamView[] };
+export function populateRounds(division: Division) {
+  const matchups = [
+    ['1-12', '2-11', '3-10', '4-9', '5-8', '6-7'],
+    ['12-7', '8-6', '9-5', '10-4', '11-3', '1-2'],
+    ['2-12', '3-1', '4-11', '5-10', '6-9', '7-8'],
+    ['12-8', '9-7', '10-6', '11-5', '1-4', '2-3'],
+    ['3-12', '4-2', '5-1', '6-11', '7-10', '8-9'],
+    ['12-9', '10-8', '11-7', '1-6', '2-5', '3-4'],
+    ['4-12', '5-3', '6-2', '7-1', '8-11', '9-10'],
+    ['12-10', '11-9', '1-8', '2-7', '3-6', '4-5'],
+    ['5-12', '6-4', '7-3', '8-2', '9-1', '10-11'],
+    ['12-11', '1-10', '2-9', '3-8', '4-7', '5-6'],
+    ['6-12', '7-5', '8-4', '9-3', '10-2', '11-1'],
+  ];
 
-const updateAllClubsSequentially = async (clubs) => {
-  for (const club of clubs) {
-    await updateClubWithPlayers(club);
-  }
-};
+  matchups.forEach((roundMatchups, index) => {
+    const roundId = index + 1;
 
-fs.readFile('./division.csv', 'utf8', (err, csvData) => {
-  if (err) {
-    console.error(`Error reading the file: ${err}`);
-    return;
-  }
-  async function main() {
-    const jsonData = csvToJsonObject(csvData);
-    const divisions = convertToDivisions(jsonData);
-    divisions.forEach((div) => populateRounds(div));
+    roundMatchups.forEach((matchup) => {
+      const [homePairingNumber, awayPairingNumber] = matchup
+        .split('-')
+        .map(Number);
 
-    const allTeams = divisions.flatMap((div) => div.teams);
-    const clubs = groupTeamsByClub(allTeams);
-    const json = await getAllResults();
-    await updateAllClubsSequentially(clubs);
-    const players = clubs.flatMap((club) => club.players);
+      const teamHome = division.teams.find(
+        (team) => team.pairingsNumber === homePairingNumber
+      )!;
 
-    extractInfoFromResultsJson(json, allTeams, players);
+      const teamAway = division.teams.find(
+        (team) => team.pairingsNumber === awayPairingNumber
+      )!;
 
-    // players.forEach((player) => (player.games = []));
-    // allTeams.forEach((team) => {
-    //   team.players = [];
-    //   team.rounds?.forEach((round) => (round.games = []));
-    // });
+      const { rounds: _, ...simpleTeamHome } = teamHome;
+      const { rounds: __, ...simpleTeamAway } = teamAway;
 
-    //const roundOverview: RoundOverview = createRoundOverview(divisions);
+      const round: Round = {
+        id: roundId,
+        teamHome: simpleTeamHome,
+        scoreHome: 0,
+        teamAway: simpleTeamAway,
+        scoreAway: 0,
+        games: [],
+      };
 
-    // generateHallOfFameOverview(players);
-    // generateDivisions(divisions);
-    //generateTeamDocs(clubs);
-    //generateRoundOverview(roundOverview);
-    //generateClubDocs(clubs);
-    //generatePlayerOverview(players);
-
-    //ONCE PER SEASON
-    //generateClassOverview(divisions);
-    //generateRoundDates();
-    //generateClubOverview(clubs);
-    //generatePlayerSearchIndexOverview(players);
-  }
-
-  main();
-});
-
-const groupTeamsByClub = (teams: TeamView[]): ClubView[] => {
+      teamHome.rounds.push({ ...round });
+      teamAway.rounds.push({ ...round });
+    });
+  });
+}
+export const groupTeamsByClub = (teams: TeamView[]): ClubView[] => {
   const clubMap: { [key: number]: ClubView } = {};
 
   for (const team of teams) {
@@ -106,7 +84,7 @@ const groupTeamsByClub = (teams: TeamView[]): ClubView[] => {
 
   return Object.values(clubMap);
 };
-const updateClubWithPlayers = async (club: any) => {
+export const updateClubWithPlayers = async (club: any) => {
   const frbePlayer = await getPlayers(club.id);
   if (frbePlayer) {
     club.players = frbePlayer.map((player) => {
@@ -128,16 +106,16 @@ const updateClubWithPlayers = async (club: any) => {
       };
     });
     club.teams.forEach(
-      (team) =>
+      (team: TeamView) =>
         (team.players = club.players.filter(
-          (player) => player.team === team.id
+          (player: Player) => player.team === team.id
         ))
     );
   } else {
     console.log('No players for ', club.id);
   }
 };
-function createRoundOverview(divisions: Division[]): RoundOverview {
+export function createRoundOverview(divisions: Division[]): RoundOverview {
   return {
     divisions: divisions.map((div) => {
       const matches: Round[] = div.teams.map((teams) => teams.rounds[0]);
@@ -184,7 +162,7 @@ function createRoundOverview(divisions: Division[]): RoundOverview {
     }),
   };
 }
-function extractInfoFromResultsJson(
+export function extractInfoFromResultsJson(
   json: DivisionFrbe[],
   allTeams: TeamView[],
   players: Player[]
