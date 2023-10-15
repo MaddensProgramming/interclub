@@ -6,8 +6,15 @@ admin.initializeApp();
 
 const runtimeOpts = {
   timeoutSeconds: 540,
-  memory: '1GB' as const,
+  memory: '8GB' as const,
 };
+
+exports.updateRoundTimed = functions
+  .region('europe-west1')
+  .runWith(runtimeOpts)
+  .pubsub.schedule('every 15 minutes')
+  .timeZone('Europe/Brussels')
+  .onRun(main);
 
 exports.updateRound = functions
   .region('europe-west1')

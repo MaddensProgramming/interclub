@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Observable, tap, switchMap, map } from 'rxjs';
-import { PlayingHall } from 'scripts/src/models';
+import { PlayingHall } from 'src/app/models/club';
+
 import { DataBaseService } from 'src/app/services/database.service';
 import { TeamServiceService } from 'src/app/services/team-service.service';
 

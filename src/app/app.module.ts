@@ -45,6 +45,7 @@ import { CommonModule } from '@angular/common';
 import { LocationOverviewComponentComponent } from './components/clubs/location-overview-component/location-overview-component.component';
 import { NewlineToBreakPipe } from './newline-to-break.pipe';
 import { FullRoundOverviewComponent } from './components/overall/full-round-overview/full-round-overview.component';
+import { RoundResultsContainerComponent } from './round-results-container/round-results-container.component';
 
 @NgModule({
   declarations: [
@@ -72,6 +73,7 @@ import { FullRoundOverviewComponent } from './components/overall/full-round-over
     LocationOverviewComponentComponent,
     NewlineToBreakPipe,
     FullRoundOverviewComponent,
+    RoundResultsContainerComponent,
   ],
   imports: [
     CommonModule,

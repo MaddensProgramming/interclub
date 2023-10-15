@@ -1,0 +1,7 @@
+<div class="center-container">
+  <mat-button-toggle-group class="m-1 stand-out" [value]="roundNumber" (change)="onRoundChange($event)">
+      <mat-button-toggle *ngFor="let round of roundsArray" [value]="round">{{ round }}</mat-button-toggle>
+  </mat-button-toggle-group>
+</div>
+
+<app-full-round-overview [roundNumberSubject]="roundNumberSubject"></app-full-round-overview>

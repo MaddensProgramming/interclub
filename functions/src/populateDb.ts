@@ -12,7 +12,7 @@ import {
 import { store } from './initiateDB';
 import { getPlayingHall } from './frbeGatewayCalls';
 
-const year = '2024';
+const year = '2023';
 //generates the standings
 export function generateDivisions(divisions: Division[]): void {
   divisions.forEach((originalDiv) => {
@@ -57,18 +57,15 @@ export function generateHallOfFameOverview(players: Player[]): void {
       console.log('done players');
     })
     .catch((err) => {
-      console.error(err.message);
+      console.log(err.message);
     });
 }
 
 //generates the personal player page
 export function generatePlayerOverview(players: Player[]): void {
-  let count = 1;
   players.forEach((player) => {
     setDoc(doc(store, 'years', year, 'players', player.id.toString()), player)
-      .then(() => {
-        if (count % 100 === 1) console.log(count++);
-      })
+      .then(() => {})
       .catch((err) => {
         console.error(err.message);
       });
@@ -77,7 +74,7 @@ export function generatePlayerOverview(players: Player[]): void {
 
 //generates the personal player page
 export function generateLastUpdated(): void {
-  setDoc(doc(store, 'years', year, 'lastUpdate'), {
+  setDoc(doc(store, 'years', year), {
     lastUpdate: new Date(),
   })
     .then(() => {
@@ -109,13 +106,13 @@ export function generateClubDocs(clubs: ClubView[]): void {
     };
   });
 
-  copiedClubs.forEach(async (copiedClub) => {
-    copiedClub.venues = await getPlayingHall(copiedClub.id);
+  copiedClubs.forEach((copiedClub) => {
+    delete copiedClub.venues;
     setDoc(
       doc(store, 'years', year, 'club', copiedClub.id.toString()),
       copiedClub
     )
-      .then(() => console.log(copiedClub.name))
+      .then()
       .catch((err) => console.error(err.message, copiedClub.name));
   });
 }
@@ -150,16 +147,24 @@ export function generateTeamDocs(clubs: ClubView[]): void {
         ),
         team
       )
-        .then(() => console.log(club.name, team.id))
+        .then()
         .catch((err) => console.log(err, club.name, team.id))
     );
   });
 }
 //generates the round results page
-export function generateRoundOverview(roundOverview: RoundOverview): void {
-  setDoc(doc(store, 'years', year, 'roundOverview', '1'), roundOverview)
-    .then(() => console.log('succes'))
-    .catch((err) => console.error(err.message));
+export function generateRoundOverviews(roundOverviews: RoundOverview[]): void {
+  const promises = roundOverviews.map((roundOverview, index) => {
+    const roundNumber = index + 1;
+    return setDoc(
+      doc(store, 'years', year, 'roundOverview', `${roundNumber}`),
+      roundOverview
+    );
+  });
+
+  Promise.all(promises)
+    .then(() => console.log('All rounds saved successfully'))
+    .catch((err) => console.error('Error saving rounds:', err.message));
 }
 
 //Once per year

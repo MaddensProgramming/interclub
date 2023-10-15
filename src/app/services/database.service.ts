@@ -22,9 +22,8 @@ import { environment } from 'src/environments/environment';
 import { ClubOverview, ClubView, TeamView, Year } from '../models/club';
 import { Player, PlayerOverview, SimplePlayer } from '../models/player';
 import { Router } from '@angular/router';
-import { ClassOverview, Division } from '../models/division';
+import { ClassOverview, Division, RoundOverview } from '../models/division';
 import { Dates } from '../models/dates';
-import { RoundOverview } from 'scripts/src/models';
 
 @Injectable({
   providedIn: 'root',
@@ -45,7 +44,6 @@ export class DataBaseService {
   private cachePlayerOverview: { [key: string]: Player[] } = {};
   private cacheSimplePlayerOverview: { [key: string]: PlayerOverview } = {};
   private cacheDates: { [key: string]: Dates } = {};
-  private cacheFullRound: RoundOverview;
 
   constructor(private router: Router) {
     initializeApp(environment.firebase);
@@ -67,14 +65,15 @@ export class DataBaseService {
     );
   }
 
-  public getFullRoundOverview(): Observable<RoundOverview> {
-    if (this.cacheFullRound) return of(this.cacheFullRound);
-
+  public getFullRoundOverview(round: string): Observable<RoundOverview> {
     return from(
-      getDoc(doc(this.store, 'years', '2023', 'roundOverview', '1'))
-    ).pipe(
-      map((data) => data.data() as RoundOverview),
-      tap((data) => (this.cacheFullRound = data))
+      getDoc(doc(this.store, 'years', '2023', 'roundOverview', round))
+    ).pipe(map((data) => data.data() as RoundOverview));
+  }
+
+  public getLastUpdate(): Observable<Date> {
+    return from(getDoc(doc(this.store, 'years', '2023'))).pipe(
+      map((data) => data.data()['lastUpdate'].toDate() as Date)
     );
   }
 

@@ -17,6 +17,7 @@ import { DataBaseService } from '../../../services/database.service';
 export class HomeComponent implements OnInit {
   public dataSource$ = new Observable<MatTreeNestedDataSource<TreeNode>>();
   public clubs: ClubOverviewItem[];
+  public lastUpdate$: Observable<Date>;
 
   formClub = new FormControl();
   filteredOptionsClub: Observable<ClubOverviewItem[]>;
@@ -40,6 +41,8 @@ export class HomeComponent implements OnInit {
     );
 
     this.setUpPlayerCombobox();
+
+    this.lastUpdate$ = this.service.getLastUpdate();
 
     this.dataSource$ = this.service.getOverview().pipe(
       tap((cluboverview) => this.fillClubSearchBox(cluboverview)),

@@ -12,6 +12,7 @@ import { ReviewsComponent } from './components/messages/reviews/reviews.componen
 import { DivisionOverviewComponent } from './components/division/division-overview/division-overview.component';
 import { LocationOverviewComponentComponent } from './components/clubs/location-overview-component/location-overview-component.component';
 import { FullRoundOverviewComponent } from './components/overall/full-round-overview/full-round-overview.component';
+import { RoundResultsContainerComponent } from './round-results-container/round-results-container.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent, data: { title: 'Home' } },
@@ -22,9 +23,14 @@ const routes: Routes = [
   },
   {
     path: 'fullRound',
-    component: FullRoundOverviewComponent,
-    data: { title: 'Full Round' },
+    redirectTo: 'round/1',
   },
+  {
+    path: 'round/:id',
+    component: RoundResultsContainerComponent,
+    data: { title: 'Round' },
+  },
+
   { path: 'reviews', component: ReviewsComponent, data: { title: 'Reviews' } },
   {
     path: 'division/:id/:class',

@@ -1,7 +1,11 @@
 <ng-container *ngIf="dataSource$ | async as dataSource; else loading"> 
 
   <div class="container">
-    <a routerLink="fullRound" class="clickable-title margin" style="font-size: large; margin-bottom: 2rem;" >Hier alle uitslagen van ronde 1</a>
+    <span style="margin: 1rem; font-size: large;">
+    Normaal gezien worden alle 
+    <a routerLink="round/2" class="clickable-title">uitslagen</a>
+    iedere 15 minuten automatisch geupdate. Als dit in de soep draait probeer ik het vanavond te fixen. Laatste update: {{(lastUpdate$|async)| date:'short'}}
+    </span>
     <div class="selection">
       <mat-form-field appearance="fill" class="margin">
         <mat-label>Club</mat-label>

@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { RoundOverview } from 'scripts/src/models';
+import { Component, Input, OnInit } from '@angular/core';
+import { BehaviorSubject, Observable, of, switchMap, tap } from 'rxjs';
+import { RoundOverview } from 'src/app/models/division';
 import { DataBaseService } from 'src/app/services/database.service';
 
 @Component({
@@ -11,10 +11,17 @@ import { DataBaseService } from 'src/app/services/database.service';
 export class FullRoundOverviewComponent implements OnInit {
   constructor(private database: DataBaseService) {}
   public fullRoundOverview$: Observable<RoundOverview>;
+  @Input() public roundNumberSubject: BehaviorSubject<number>;
 
   displayedColumnsRound: string[] = ['board', 'white', 'black', 'result'];
 
   ngOnInit(): void {
-    this.fullRoundOverview$ = this.database.getFullRoundOverview();
+    this.fullRoundOverview$ = this.roundNumberSubject.pipe(
+      tap((test) => console.log(test)),
+      switchMap((roundNumber) =>
+        this.database.getFullRoundOverview(roundNumber.toString())
+      ),
+      tap((test) => console.log(test))
+    );
   }
 }

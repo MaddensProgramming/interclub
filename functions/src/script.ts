@@ -6,7 +6,7 @@ import {
   updateClubWithPlayers,
   groupTeamsByClub,
   extractInfoFromResultsJson,
-  createRoundOverview,
+  createRoundOverviews,
 } from './transformationsMethods';
 import {
   generateClassOverview,
@@ -14,10 +14,11 @@ import {
   generateClubOverview,
   generateDivisions,
   generateHallOfFameOverview,
+  generateLastUpdated,
   generatePlayerOverview,
   generatePlayerSearchIndexOverview,
   generateRoundDates,
-  generateRoundOverview,
+  generateRoundOverviews,
   generateTeamDocs,
 } from './populateDb';
 import { getAllResults } from './frbeGatewayCalls';
@@ -39,16 +40,17 @@ const updateAllClubsSequentially = async (clubs: ClubView[]) => {
 
 const executeEveryRound = (
   divisions: Division[],
-  roundOverview: RoundOverview,
+  roundOverview: RoundOverview[],
   players: Player[],
   clubs: ClubView[]
 ): void => {
   generateDivisions(divisions);
-  generateRoundOverview(roundOverview);
+  generateRoundOverviews(roundOverview);
   generateHallOfFameOverview(players);
   generatePlayerOverview(players);
   generateTeamDocs(clubs);
   generateClubDocs(clubs);
+  generateLastUpdated();
 };
 
 const executeOncePerYear = (
@@ -76,7 +78,7 @@ export const main = async () => {
     const players = clubs.flatMap((club) => club.players);
 
     extractInfoFromResultsJson(json, allTeams, players);
-    const roundOverview = createRoundOverview(divisions);
+    const roundOverview = createRoundOverviews(divisions);
 
     executeEveryRound(divisions, roundOverview, players, clubs);
     //executeOncePerYear(divisions, clubs, players);
