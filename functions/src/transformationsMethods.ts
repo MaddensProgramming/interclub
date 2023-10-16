@@ -102,6 +102,8 @@ export const updateClubWithPlayers = async (club: any) => {
         score: 0,
         numberOfGames: 0,
         tpr: player.assignedrating,
+        games: [],
+        acccumulatedRating: 0,
         team: lastNumberMatch != null ? parseInt(lastNumberMatch[0], 10) : null,
       };
     });
@@ -118,11 +120,14 @@ export const updateClubWithPlayers = async (club: any) => {
 export function createRoundOverviews(divisions: Division[]): RoundOverview[] {
   let allRoundOverviews: RoundOverview[] = [];
 
-  const numRounds = divisions[0]?.teams[0]?.rounds?.length || 0;
+  // Deep copy the input parameter using JSON serialization/deserialization
+  const copiedDivisions: Division[] = JSON.parse(JSON.stringify(divisions));
+
+  const numRounds = copiedDivisions[0]?.teams[0]?.rounds?.length || 0;
 
   for (let i = 0; i < numRounds; i++) {
     let roundOverview: RoundOverview = {
-      divisions: divisions.map((div) => {
+      divisions: copiedDivisions.map((div) => {
         const matches: Round[] = div.teams.map((teams) => teams.rounds[i]);
         const idsSeen = new Set();
         const uniqueMatches: Round[] = [];
@@ -200,10 +205,6 @@ export function extractInfoFromResultsJson(
           if (teamAway && teamHome) {
             teamHome.rounds[roundIndex].games = [];
             teamAway.rounds[roundIndex].games = [];
-            teamAway.boardPoints = 0;
-            teamHome.boardPoints = 0;
-            teamAway.matchPoints = 0;
-            teamHome.matchPoints = 0;
             let oddBoard = true;
 
             encounter.games.forEach((game, index) => {
@@ -249,57 +250,70 @@ export function extractInfoFromResultsJson(
                 result: oddBoard ? result : revertResult(result),
                 round: roundIndex + 1,
               };
-              if (white && black) {
-                white.games = [gameForDb];
-                black.games = [gameForDb];
-                white.numberOfGames = 1;
-                black.numberOfGames = 1;
-
-                white.score = getScoreWhite(gameForDb.result);
-                black.score = getScoreBlack(gameForDb.result);
-
-                const percentageWhite = Math.round(
-                  (white.score / white.numberOfGames) * 100
-                );
-                const percentageBlack = Math.round(
-                  (black.score / black.numberOfGames) * 100
-                );
-
-                white.tpr = black.rating + GetTpr(percentageWhite);
-                black.tpr = white.rating + GetTpr(percentageBlack);
-                white.diff = white.tpr - white.rating;
-                black.diff = black.tpr - black.rating;
+              if (white && black && roundIndex < 2) {
+                UpdateGameForPlayers(white, gameForDb, black);
               } else {
-                //console.log(game.idnumber_home, game.idnumber_visit);
+                if (game.idnumber_home != 0 && game.idnumber_visit != 0)
+                  console.log(game.idnumber_home, game.idnumber_visit);
               }
 
               teamHome.rounds[roundIndex].games.push(gameForDb);
+
               teamHome.boardPoints += getScoreWhite(result);
               teamAway.boardPoints += getScoreBlack(result);
               teamAway.rounds[roundIndex].games.push(gameForDb);
               oddBoard = !oddBoard;
             });
-
-            if (teamAway.boardPoints > teamHome.boardPoints) {
-              teamAway.matchPoints += 2;
+            if (roundIndex < 2) {
+              if (
+                teamAway.rounds[roundIndex].scoreAway >
+                teamHome.rounds[roundIndex].scoreHome
+              ) {
+                teamAway.matchPoints += 2;
+              }
+              if (
+                teamAway.rounds[roundIndex].scoreAway ===
+                teamHome.rounds[roundIndex].scoreHome
+              ) {
+                teamAway.matchPoints += 1;
+                teamHome.matchPoints += 1;
+              }
+              if (
+                teamAway.rounds[roundIndex].scoreAway <
+                teamHome.rounds[roundIndex].scoreHome
+              ) {
+                teamHome.matchPoints += 2;
+              }
             }
-            if (teamAway.boardPoints === teamHome.boardPoints) {
-              teamAway.matchPoints += 1;
-              teamHome.matchPoints += 1;
-            }
-            if (teamAway.boardPoints < teamHome.boardPoints) {
-              teamHome.matchPoints += 2;
-            }
-          } else {
-            // /console.log(
-            //   encounter.icclub_visit,
-            //   encounter.pairingnr_visit,
-            //   div.division,
-            //   div.index
-            // );
           }
         }
       });
     });
   });
+}
+function UpdateGameForPlayers(white: Player, gameForDb: Game, black: Player) {
+  white.games.push(gameForDb);
+  black.games.push(gameForDb);
+  white.numberOfGames += 1;
+  black.numberOfGames += 1;
+
+  white.score += getScoreWhite(gameForDb.result);
+  black.score += getScoreBlack(gameForDb.result);
+
+  if (!white.accumulatedRatings) white.accumulatedRatings = 0;
+  if (!black.accumulatedRatings) black.accumulatedRatings = 0;
+
+  white.accumulatedRatings += black.rating;
+  black.accumulatedRatings += white.rating;
+
+  const averageRatingWhite = white.accumulatedRatings / white.numberOfGames;
+  const averageRatingBlack = black.accumulatedRatings / black.numberOfGames;
+
+  const percentageWhite = Math.round((white.score / white.numberOfGames) * 100);
+  const percentageBlack = Math.round((black.score / black.numberOfGames) * 100);
+
+  white.tpr = averageRatingWhite + GetTpr(percentageWhite);
+  black.tpr = averageRatingBlack + GetTpr(percentageBlack);
+  white.diff = white.tpr - white.rating;
+  black.diff = black.tpr - black.rating;
 }

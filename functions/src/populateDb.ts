@@ -14,8 +14,8 @@ import { getPlayingHall } from './frbeGatewayCalls';
 
 const year = '2023';
 //generates the standings
-export function generateDivisions(divisions: Division[]): void {
-  divisions.forEach((originalDiv) => {
+export async function generateDivisions(divisions: Division[]): Promise<void> {
+  for (const originalDiv of divisions) {
     // Making a shallow copy of the division
     const div: Division = {
       ...originalDiv,
@@ -28,65 +28,80 @@ export function generateDivisions(divisions: Division[]): void {
         })),
       })),
     };
-
-    setDoc(
-      doc(store, 'years', year, 'divisions', div.class + div.division),
-      div
-    )
-      .then(() => {
-        console.log(div.class + div.division);
-      })
-      .catch((err) => {
-        console.error(err.message);
-      });
-  });
+    try {
+      await setDoc(
+        doc(store, 'years', year, 'divisions', div.class + div.division),
+        div
+      );
+    } catch (err) {
+      console.error(err.message);
+    }
+  }
 }
+
 //generates the hall of fame
-export function generateHallOfFameOverview(players: Player[]): void {
+export async function generateHallOfFameOverview(
+  players: Player[]
+): Promise<void> {
   const playersHallOfFame = players
-    .map((player) => ({
-      ...player,
-      games: [],
-    }))
+    .map((player) => {
+      const filteredPlayer = {
+        id: player.id,
+        firstName: player.firstName,
+        name: player.name,
+        rating: player.rating,
+        tpr: player.tpr,
+        diff: player.diff,
+        score: player.score,
+        numberOfGames: player.numberOfGames,
+      };
+
+      // Remove properties with undefined values
+      Object.keys(filteredPlayer).forEach((key) => {
+        if (filteredPlayer[key] === undefined) {
+          delete filteredPlayer[key];
+        }
+      });
+
+      return filteredPlayer;
+    })
     .sort((a, b) => b.tpr - a.tpr);
 
-  setDoc(doc(store, 'years', year, 'overviews', 'players'), {
-    players: playersHallOfFame,
-  })
-    .then(() => {
-      console.log('done players');
-    })
-    .catch((err) => {
-      console.log(err.message);
+  try {
+    await setDoc(doc(store, 'years', year, 'overviews', 'players'), {
+      players: playersHallOfFame,
     });
+  } catch (err) {
+    console.error(err.message);
+  }
 }
 
 //generates the personal player page
-export function generatePlayerOverview(players: Player[]): void {
-  players.forEach((player) => {
-    setDoc(doc(store, 'years', year, 'players', player.id.toString()), player)
-      .then(() => {})
-      .catch((err) => {
-        console.error(err.message);
-      });
-  });
-}
-
-//generates the personal player page
-export function generateLastUpdated(): void {
-  setDoc(doc(store, 'years', year), {
-    lastUpdate: new Date(),
-  })
-    .then(() => {
-      console.log('updated date');
-    })
-    .catch((err) => {
+export async function generatePlayerOverview(players: Player[]): Promise<void> {
+  for (const player of players) {
+    try {
+      await setDoc(
+        doc(store, 'years', year, 'players', player.id.toString()),
+        player
+      );
+    } catch (err) {
       console.error(err.message);
-    });
+    }
+  }
 }
 
-//generates the club page (updating players)
-export function generateClubDocs(clubs: ClubView[]): void {
+//generates the personal player page
+export async function generateLastUpdated(): Promise<void> {
+  try {
+    await setDoc(doc(store, 'years', year), {
+      lastUpdate: new Date(),
+    });
+  } catch (err) {
+    console.error(err.message);
+  }
+}
+
+export async function generateClubDocs(clubs: ClubView[]): Promise<void> {
   const copiedClubs = clubs.map((club) => {
     return {
       ...club,
@@ -106,19 +121,22 @@ export function generateClubDocs(clubs: ClubView[]): void {
     };
   });
 
-  copiedClubs.forEach((copiedClub) => {
+  for (const copiedClub of copiedClubs) {
     delete copiedClub.venues;
-    setDoc(
-      doc(store, 'years', year, 'club', copiedClub.id.toString()),
-      copiedClub
-    )
-      .then()
-      .catch((err) => console.error(err.message, copiedClub.name));
-  });
+
+    try {
+      await setDoc(
+        doc(store, 'years', year, 'club', copiedClub.id.toString()),
+        copiedClub
+      );
+    } catch (err) {
+      console.error(err.message, copiedClub.name);
+    }
+  }
 }
 
 //generates the team page
-export function generateTeamDocs(clubs: ClubView[]): void {
+export async function generateTeamDocs(clubs: ClubView[]): Promise<void> {
   clubs = clubs.map((club) => {
     return {
       id: club.id,
@@ -133,27 +151,32 @@ export function generateTeamDocs(clubs: ClubView[]): void {
     };
   });
 
-  clubs.forEach(async (club) => {
-    club.teams.forEach((team) =>
-      setDoc(
-        doc(
-          store,
-          'years',
-          year,
-          'club',
-          club.id.toString(),
-          'team',
-          team.id.toString()
-        ),
-        team
-      )
-        .then()
-        .catch((err) => console.log(err, club.name, team.id))
-    );
-  });
+  for (const club of clubs) {
+    for (const team of club.teams) {
+      try {
+        await setDoc(
+          doc(
+            store,
+            'years',
+            year,
+            'club',
+            club.id.toString(),
+            'team',
+            team.id.toString()
+          ),
+          team
+        );
+      } catch (err) {
+        console.error(err, club.name, team.id);
+      }
+    }
+  }
 }
+
 //generates the round results page
-export function generateRoundOverviews(roundOverviews: RoundOverview[]): void {
+export async function generateRoundOverviews(
+  roundOverviews: RoundOverview[]
+): Promise<void> {
   const promises = roundOverviews.map((roundOverview, index) => {
     const roundNumber = index + 1;
     return setDoc(
@@ -162,13 +185,16 @@ export function generateRoundOverviews(roundOverviews: RoundOverview[]): void {
     );
   });
 
-  Promise.all(promises)
-    .then(() => console.log('All rounds saved successfully'))
-    .catch((err) => console.error('Error saving rounds:', err.message));
+  try {
+    await Promise.all(promises);
+    console.log('All rounds saved successfully');
+  } catch (err) {
+    console.error('Error saving rounds:', err.message);
+  }
 }
 
 //Once per year
-export function generateRoundDates() {
+export async function generateRoundDates() {
   var dates = {
     dates: [
       new Date(2023, 8, 24), // 24/09/2023
@@ -185,15 +211,15 @@ export function generateRoundDates() {
     ],
   };
 
-  setDoc(doc(store, 'years', year, 'dates', 'dates'), dates)
-    .then(() => {
-      console.log('done dates');
-    })
-    .catch((err) => {
-      console.error(err.message);
-    });
+  try {
+    await setDoc(doc(store, 'years', year, 'dates', 'dates'), dates);
+  } catch (err) {
+    console.error(err.message);
+  }
 }
-export function generateClassOverview(divisions: Division[]): void {
+export async function generateClassOverview(
+  divisions: Division[]
+): Promise<void> {
   const classMap: Record<string, string[]> = {};
 
   divisions.forEach((div) => {
@@ -209,39 +235,40 @@ export function generateClassOverview(divisions: Division[]): void {
       divisions: classMap[key],
     })),
   };
-
-  setDoc(doc(store, 'years', year, 'overviews', 'divisions'), classOverview)
-    .then(() => {
-      console.log('done division overview');
-    })
-    .catch((err) => {
-      console.error(err.message);
-    });
+  try {
+    await setDoc(
+      doc(store, 'years', year, 'overviews', 'divisions'),
+      classOverview
+    );
+  } catch (err) {
+    console.error(err.message);
+  }
 }
-export function generateClubOverview(clubs: ClubView[]): void {
-  setDoc(
-    doc(store, 'years', year, 'clubOverview', 'overview'),
-    generateOverview(clubs)
-  )
-    .then(() => console.log('succes'))
-    .catch((err) => console.error(err.message));
+export async function generateClubOverview(clubs: ClubView[]): Promise<void> {
+  try {
+    await setDoc(
+      doc(store, 'years', year, 'clubOverview', 'overview'),
+      generateOverview(clubs)
+    );
+  } catch (err) {
+    console.error(err.message);
+  }
 }
-export function generatePlayerSearchIndexOverview(players: Player[]): void {
+export async function generatePlayerSearchIndexOverview(
+  players: Player[]
+): Promise<void> {
   const playersOverview = players
     .map((player) => {
       return { name: player.firstName + ' ' + player.name, id: player.id };
     })
     .sort((a, b) => a.name.localeCompare(b.name));
-
-  setDoc(doc(store, 'years', year, 'overviews', 'simplelayers'), {
-    players: playersOverview,
-  })
-    .then(() => {
-      console.log('done players');
-    })
-    .catch((err) => {
-      console.error(err.message);
+  try {
+    await setDoc(doc(store, 'years', year, 'overviews', 'simplelayers'), {
+      players: playersOverview,
     });
+  } catch (err) {
+    console.error(err.message);
+  }
 }
 function generateOverview(clubs: ClubView[]): ClubOverview {
   const overview: ClubOverview = { provinces: [] };
@@ -249,7 +276,6 @@ function generateOverview(clubs: ClubView[]): ClubOverview {
   clubs
     .filter((club) => club.id !== 0)
     .forEach((club) => addToProvince(club, overview));
-  console.log(overview);
   return overview;
 }
 function addToProvince(club: ClubView, overview: ClubOverview): void {

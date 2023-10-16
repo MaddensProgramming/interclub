@@ -76,6 +76,7 @@ export interface Player {
   clubId?: number;
   clubName?: string;
   games?: Game[];
+  accumulatedRatings?: number;
 }
 
 export interface PlayerOverview {
@@ -138,6 +139,7 @@ export interface Player {
   clubName?: string;
   games?: Game[];
   team?: number;
+  accumulatedRatings?: number;
 }
 
 export interface Game {

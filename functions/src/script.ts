@@ -38,19 +38,32 @@ const updateAllClubsSequentially = async (clubs: ClubView[]) => {
   }
 };
 
-const executeEveryRound = (
+const executeEveryRound = async (
   divisions: Division[],
   roundOverview: RoundOverview[],
   players: Player[],
   clubs: ClubView[]
-): void => {
-  generateDivisions(divisions);
-  generateRoundOverviews(roundOverview);
-  generateHallOfFameOverview(players);
-  generatePlayerOverview(players);
-  generateTeamDocs(clubs);
-  generateClubDocs(clubs);
-  generateLastUpdated();
+): Promise<void> => {
+  await generateDivisions(divisions);
+  console.log('Divisions done');
+
+  await generateHallOfFameOverview(players);
+  console.log('Hall Of fame done');
+
+  await generatePlayerOverview(players);
+  console.log('Player overview done');
+
+  await generateTeamDocs(clubs);
+  console.log('Teamdocs done');
+
+  await generateClubDocs(clubs);
+  console.log('Clubdocs done');
+
+  await generateLastUpdated();
+  console.log('Date set');
+
+  await generateRoundOverviews(roundOverview);
+  console.log('Roundoverview done');
 };
 
 const executeOncePerYear = (
@@ -80,7 +93,9 @@ export const main = async () => {
     extractInfoFromResultsJson(json, allTeams, players);
     const roundOverview = createRoundOverviews(divisions);
 
-    executeEveryRound(divisions, roundOverview, players, clubs);
+    console.log('All info read starting to write');
+
+    await executeEveryRound(divisions, roundOverview, players, clubs);
     //executeOncePerYear(divisions, clubs, players);
   } catch (error) {
     console.error(error);
