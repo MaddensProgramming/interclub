@@ -1,10 +1,9 @@
 <ng-container *ngIf="dataSource$ | async as dataSource; else loading"> 
 
   <div class="container">
-    <span style="margin: 1rem; font-size: large;">
-    Buiten enkele vreemde gevallen worden de
-    <a routerLink="round/2" class="clickable-title">uitslagen</a>
-    nu iedere 15 minuten automatisch geupdate. <br/> 
+    <span style="margin: 1rem; font-size: large;">    
+    <a routerLink="round/3" class="clickable-title">Uitslagen</a>
+    <br/> 
     Laatste update: {{(lastUpdate$|async)| date:'short'}}
     </span>
     <div class="selection">

@@ -8,6 +8,13 @@
         {{ element.board }}
       </td>
     </ng-container>
+
+    <ng-container matColumnDef="colorHome">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let element">
+        <div [ngClass]="element.board%2 === 1 ? 'white' : 'black'"></div>
+      </td>
+    </ng-container>
   
     <ng-container matColumnDef="white">
       <th mat-header-cell *matHeaderCellDef class="clickable-title" [routerLink]="['/club/' + match.teamHome.clubId + '/'+ match.teamHome.id]"  style="font-size: 1rem; font-weight: 700; color: rgba(0, 0, 0, 0.85); ">{{match.teamHome.clubName +" " + match.teamHome.id +" ("+ match.averageRatingHome +")"}}</th>
@@ -36,6 +43,13 @@
         {{ element.black.firstName }} {{ element.black.name }} ({{
           element.black.rating
         }})
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="colorAway">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let element">
+        <div [ngClass]="element.board%2 === 0 ? 'white' : 'black'"></div>
       </td>
     </ng-container>
   

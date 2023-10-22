@@ -5,9 +5,9 @@ import {
   fillTeamsAndPlayersWithInfoFromJson,
   createRoundOverviews,
   addPlayersToClubs,
-  readCsvFile
+  readCsvFile,
 } from './transformationsMethods';
-import { getAllResults } from './frbeGatewayCalls';
+import { getAllResults, getPlayingHall } from './frbeGatewayCalls';
 import { executeEveryRound, executeOncePerYear } from './populateDb';
 
 export const main = async () => {
@@ -16,7 +16,9 @@ export const main = async () => {
     const divisions = await readAndProcessCsv();
 
     // Fetch and process results data
-    const { allTeams, clubs, players } = await fetchAndProcessResults(divisions);
+    const { allTeams, clubs, players } = await fetchAndProcessResults(
+      divisions
+    );
 
     // Generate round overviews
     const roundOverview = createRoundOverviews(divisions);
@@ -26,7 +28,7 @@ export const main = async () => {
     await executeEveryRound(divisions, roundOverview, players, clubs);
     // await executeOncePerYear(divisions, clubs, players);
   } catch (error) {
-    console.error("Error executing the main function:", error);
+    console.error('Error executing the main function:', error);
   }
 };
 
@@ -41,6 +43,9 @@ const readAndProcessCsv = async () => {
 const fetchAndProcessResults = async (divisions) => {
   const allTeams = divisions.flatMap((div) => div.teams);
   const clubs = groupTeamsByClub(allTeams);
+  for (const club of clubs) {
+    club.venues = await getPlayingHall(club.id);
+  }
   const resultsJson = await getAllResults();
   await addPlayersToClubs(clubs);
   const players = clubs.flatMap((club) => club.players);

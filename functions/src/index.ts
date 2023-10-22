@@ -88,14 +88,14 @@ const runtimeOpts = {
   memory: '8GB' as const,
 };
 
-// exports.updateRoundTimed = functions
-//   .region('europe-west1')
-//   .runWith(runtimeOpts)
-//   .pubsub.schedule('every 15 minutes')
-//   .timeZone('Europe/Brussels')
-//   .onRun(main);
+exports.updateRoundTimed = functions
+  .region('europe-west1')
+  .runWith(runtimeOpts)
+  .pubsub.schedule('every 15 minutes')
+  .timeZone('Europe/Brussels')
+  .onRun(main);
 
-// exports.updateRound = functions
-//   .region('europe-west1')
-//   .runWith(runtimeOpts)
-//   .https.onRequest(main);
+exports.updateRound = functions
+  .region('europe-west1')
+  .runWith(runtimeOpts)
+  .https.onRequest(main);

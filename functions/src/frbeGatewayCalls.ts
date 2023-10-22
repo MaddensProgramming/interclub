@@ -3,7 +3,7 @@ import { PlayerFrbe } from './modelsFRBE';
 import { DivisionFrbe } from './modelsFRBE';
 
 export async function getAllResults(): Promise<DivisionFrbe[]> {
-  const roundsToFetch = [1, 2]; // You can add more rounds to this array as needed
+  const roundsToFetch = [1, 2, 3]; // You can add more rounds to this array as needed
 
   try {
     // Fetch data for each round and store in an array

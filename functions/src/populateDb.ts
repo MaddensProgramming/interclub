@@ -10,7 +10,6 @@ import {
   RoundOverview,
 } from './models';
 import { store } from './initiateDB';
-import { getPlayingHall } from './frbeGatewayCalls';
 
 const year = '2023';
 
@@ -51,7 +50,6 @@ export const executeEveryRound = async (
   await generateRoundOverviews(roundOverview);
   console.log('Roundoverview done');
 };
-
 
 //generates the standings
 export async function generateDivisions(divisions: Division[]): Promise<void> {
@@ -158,8 +156,6 @@ export async function generateClubDocs(clubs: ClubView[]): Promise<void> {
   });
 
   for (const copiedClub of copiedClubs) {
-    delete copiedClub.venues;
-
     try {
       await setDoc(
         doc(store, 'years', year, 'club', copiedClub.id.toString()),

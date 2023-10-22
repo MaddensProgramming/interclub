@@ -13,15 +13,20 @@ export class FullRoundOverviewComponent implements OnInit {
   public fullRoundOverview$: Observable<RoundOverview>;
   @Input() public roundNumberSubject: BehaviorSubject<number>;
 
-  displayedColumnsRound: string[] = ['board', 'white', 'black', 'result'];
+  displayedColumnsRound: string[] = [
+    'board',
+    'colorHome',
+    'white',
+    'result',
+    'colorAway',
+    'black',
+  ];
 
   ngOnInit(): void {
     this.fullRoundOverview$ = this.roundNumberSubject.pipe(
-      tap((test) => console.log(test)),
       switchMap((roundNumber) =>
         this.database.getFullRoundOverview(roundNumber.toString())
-      ),
-      tap((test) => console.log(test))
+      )
     );
   }
 }
