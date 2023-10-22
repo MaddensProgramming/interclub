@@ -1,4 +1,4 @@
-import * as fs from "fs";
+import * as fs from 'fs';
 import { getPlayers } from './frbeGatewayCalls';
 import {
   ClubView,
@@ -250,7 +250,7 @@ export function fillTeamsAndPlayersWithInfoFromJson(
                 result: oddBoard ? result : revertResult(result),
                 round: roundIndex + 1,
               };
-              if (white && black && roundIndex < 2) {
+              if (white && black && roundIndex < 3) {
                 UpdateGameForPlayers(white, gameForDb, black);
               } else {
                 if (game.idnumber_home != 0 && game.idnumber_visit != 0)
@@ -264,7 +264,7 @@ export function fillTeamsAndPlayersWithInfoFromJson(
               teamAway.rounds[roundIndex].games.push(gameForDb);
               oddBoard = !oddBoard;
             });
-            if (roundIndex < 2) {
+            if (roundIndex < 3) {
               if (
                 teamAway.rounds[roundIndex].scoreAway >
                 teamHome.rounds[roundIndex].scoreHome
@@ -306,8 +306,12 @@ function UpdateGameForPlayers(white: Player, gameForDb: Game, black: Player) {
   white.accumulatedRatings += black.rating;
   black.accumulatedRatings += white.rating;
 
-  const averageRatingWhite = white.accumulatedRatings / white.numberOfGames;
-  const averageRatingBlack = black.accumulatedRatings / black.numberOfGames;
+  const averageRatingWhite = Math.round(
+    white.accumulatedRatings / white.numberOfGames
+  );
+  const averageRatingBlack = Math.round(
+    black.accumulatedRatings / black.numberOfGames
+  );
 
   const percentageWhite = Math.round((white.score / white.numberOfGames) * 100);
   const percentageBlack = Math.round((black.score / black.numberOfGames) * 100);
@@ -330,4 +334,3 @@ export const readCsvFile = (path: string): Promise<string> => {
     });
   });
 };
-
