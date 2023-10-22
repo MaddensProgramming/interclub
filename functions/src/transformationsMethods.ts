@@ -1,3 +1,4 @@
+import * as fs from "fs";
 import { getPlayers } from './frbeGatewayCalls';
 import {
   ClubView,
@@ -177,8 +178,7 @@ export function createRoundOverviews(divisions: Division[]): RoundOverview[] {
 
   return allRoundOverviews;
 }
-
-export function extractInfoFromResultsJson(
+export function fillTeamsAndPlayersWithInfoFromJson(
   json: DivisionFrbe[],
   allTeams: TeamView[],
   players: Player[]
@@ -317,3 +317,17 @@ function UpdateGameForPlayers(white: Player, gameForDb: Game, black: Player) {
   white.diff = white.tpr - white.rating;
   black.diff = black.tpr - black.rating;
 }
+export const addPlayersToClubs = async (clubs: ClubView[]) => {
+  for (const club of clubs) {
+    await updateClubWithPlayers(club);
+  }
+};
+export const readCsvFile = (path: string): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    fs.readFile(path, 'utf8', (err, data) => {
+      if (err) reject(`Error reading the file: ${err}`);
+      else resolve(data);
+    });
+  });
+};
+

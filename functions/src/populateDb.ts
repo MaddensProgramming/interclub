@@ -1,18 +1,58 @@
 import { setDoc, doc } from 'firebase/firestore';
 import {
-  Division,
   ClassOverview,
   TeamView,
-  ClubView,
   ClubOverview,
   ProvinceOverview,
   Player,
+  ClubView,
+  Division,
   RoundOverview,
 } from './models';
 import { store } from './initiateDB';
 import { getPlayingHall } from './frbeGatewayCalls';
 
 const year = '2023';
+
+export const executeOncePerYear = (
+  divisions: Division[],
+  clubs: ClubView[],
+  players: Player[]
+) => {
+  generateClassOverview(divisions);
+  generateRoundDates();
+  generateClubOverview(clubs);
+  generatePlayerSearchIndexOverview(players);
+};
+export const executeEveryRound = async (
+  divisions: Division[],
+  roundOverview: RoundOverview[],
+  players: Player[],
+  clubs: ClubView[]
+): Promise<void> => {
+  await generateDivisions(divisions);
+  console.log('Divisions done');
+
+  await generateHallOfFameOverview(players);
+  console.log('Hall Of fame done');
+
+  await generatePlayerOverview(players);
+  console.log('Player overview done');
+
+  await generateTeamDocs(clubs);
+  console.log('Teamdocs done');
+
+  await generateClubDocs(clubs);
+  console.log('Clubdocs done');
+
+  await generateLastUpdated();
+  console.log('Date set');
+
+  await generateRoundOverviews(roundOverview);
+  console.log('Roundoverview done');
+};
+
+
 //generates the standings
 export async function generateDivisions(divisions: Division[]): Promise<void> {
   for (const originalDiv of divisions) {
@@ -38,7 +78,6 @@ export async function generateDivisions(divisions: Division[]): Promise<void> {
     }
   }
 }
-
 //generates the hall of fame
 export async function generateHallOfFameOverview(
   players: Player[]
@@ -75,7 +114,6 @@ export async function generateHallOfFameOverview(
     console.error(err.message);
   }
 }
-
 //generates the personal player page
 export async function generatePlayerOverview(players: Player[]): Promise<void> {
   for (const player of players) {
@@ -89,7 +127,6 @@ export async function generatePlayerOverview(players: Player[]): Promise<void> {
     }
   }
 }
-
 //generates the personal player page
 export async function generateLastUpdated(): Promise<void> {
   try {
@@ -100,7 +137,6 @@ export async function generateLastUpdated(): Promise<void> {
     console.error(err.message);
   }
 }
-
 export async function generateClubDocs(clubs: ClubView[]): Promise<void> {
   const copiedClubs = clubs.map((club) => {
     return {
@@ -134,7 +170,6 @@ export async function generateClubDocs(clubs: ClubView[]): Promise<void> {
     }
   }
 }
-
 //generates the team page
 export async function generateTeamDocs(clubs: ClubView[]): Promise<void> {
   clubs = clubs.map((club) => {
@@ -172,7 +207,6 @@ export async function generateTeamDocs(clubs: ClubView[]): Promise<void> {
     }
   }
 }
-
 //generates the round results page
 export async function generateRoundOverviews(
   roundOverviews: RoundOverview[]
