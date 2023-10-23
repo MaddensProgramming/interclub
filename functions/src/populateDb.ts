@@ -1,4 +1,4 @@
-import { setDoc, doc } from 'firebase/firestore';
+import { setDoc, doc, DocumentReference, getDoc } from 'firebase/firestore';
 import { RoundOverview } from './models/RoundOverview';
 import { ProvinceOverview } from './models/ProvinceOverview';
 import { ClubOverview } from './models/ClubOverview';
@@ -64,14 +64,15 @@ export async function generateDivisions(divisions: Division[]): Promise<void> {
         })),
       })),
     };
-    try {
-      await setDoc(
-        doc(store, 'years', year, 'divisions', div.class + div.division),
-        div
-      );
-    } catch (err) {
-      console.error(err.message);
-    }
+
+    const ref = doc(
+      store,
+      'years',
+      year,
+      'divisions',
+      div.class + div.division
+    );
+    await updateIfChanged(ref, div);
   }
 }
 //generates the hall of fame
@@ -102,25 +103,14 @@ export async function generateHallOfFameOverview(
     })
     .sort((a, b) => b.tpr - a.tpr);
 
-  try {
-    await setDoc(doc(store, 'years', year, 'overviews', 'players'), {
-      players: playersHallOfFame,
-    });
-  } catch (err) {
-    console.error(err.message);
-  }
+  const ref = doc(store, 'years', year, 'overviews', 'players');
+  await updateIfChanged(ref, { players: playersHallOfFame });
 }
 //generates the personal player page
 export async function generatePlayerOverview(players: Player[]): Promise<void> {
   for (const player of players) {
-    try {
-      await setDoc(
-        doc(store, 'years', year, 'players', player.id.toString()),
-        player
-      );
-    } catch (err) {
-      console.error(err.message);
-    }
+    const ref = doc(store, 'years', year, 'players', player.id.toString());
+    await updateIfChanged(ref, player);
   }
 }
 //generates the personal player page
@@ -154,14 +144,8 @@ export async function generateClubDocs(clubs: ClubView[]): Promise<void> {
   });
 
   for (const copiedClub of copiedClubs) {
-    try {
-      await setDoc(
-        doc(store, 'years', year, 'club', copiedClub.id.toString()),
-        copiedClub
-      );
-    } catch (err) {
-      console.error(err.message, copiedClub.name);
-    }
+    const ref = doc(store, 'years', year, 'club', copiedClub.id.toString());
+    await updateIfChanged(ref, copiedClub);
   }
 }
 //generates the team page
@@ -182,22 +166,16 @@ export async function generateTeamDocs(clubs: ClubView[]): Promise<void> {
 
   for (const club of clubs) {
     for (const team of club.teams) {
-      try {
-        await setDoc(
-          doc(
-            store,
-            'years',
-            year,
-            'club',
-            club.id.toString(),
-            'team',
-            team.id.toString()
-          ),
-          team
-        );
-      } catch (err) {
-        console.error(err, club.name, team.id);
-      }
+      const ref = doc(
+        store,
+        'years',
+        year,
+        'club',
+        club.id.toString(),
+        'team',
+        team.id.toString()
+      );
+      updateIfChanged(ref, team);
     }
   }
 }
@@ -205,12 +183,10 @@ export async function generateTeamDocs(clubs: ClubView[]): Promise<void> {
 export async function generateRoundOverviews(
   roundOverviews: RoundOverview[]
 ): Promise<void> {
-  const promises = roundOverviews.map((roundOverview, index) => {
+  const promises = roundOverviews.map(async (roundOverview, index) => {
     const roundNumber = index + 1;
-    return setDoc(
-      doc(store, 'years', year, 'roundOverview', `${roundNumber}`),
-      roundOverview
-    );
+    const ref = doc(store, 'years', year, 'roundOverview', `${roundNumber}`);
+    await updateIfChanged(ref, roundOverview);
   });
 
   try {
@@ -317,4 +293,23 @@ function addToProvince(club: ClubView, overview: ClubOverview): void {
       clubs: [{ id: club.id, name: club.name }],
     });
   else province.clubs.push({ id: club.id, name: club.name });
+}
+
+// Utility function to set document only if data changed
+async function updateIfChanged(
+  ref: DocumentReference,
+  data: any
+): Promise<void> {
+  try {
+    const docSnapshot = await getDoc(ref);
+
+    if (
+      !docSnapshot.exists() ||
+      JSON.stringify(docSnapshot.data()) !== JSON.stringify(data)
+    ) {
+      await setDoc(ref, data);
+    }
+  } catch (err) {
+    console.error(err.message);
+  }
 }
