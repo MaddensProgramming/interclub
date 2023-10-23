@@ -9,7 +9,7 @@ import { Division } from './models/Division';
 import { TeamView } from './models/TeamView';
 import { store } from './initiateDB';
 
-const year = '2024';
+const year = '2023';
 
 export const executeOncePerYear = (
   divisions: Division[],

@@ -16,6 +16,7 @@ import {
   getScoreWhite,
   getScoreBlack,
   GetTpr,
+  isForfeit,
 } from './utility';
 
 export function populateRounds(division: Division) {
@@ -204,26 +205,14 @@ export function fillTeamsAndPlayersWithInfoFromJson(
               );
               const result = getGameResult(game.result);
 
-              switch (result) {
-                case ResultEnum.WhiteFF:
-                case ResultEnum.WhiteWins:
-                  teamHome.rounds[roundIndex].scoreHome++;
-                  teamAway.rounds[roundIndex].scoreHome++;
-                  break;
-                case ResultEnum.BlackFF:
-                case ResultEnum.BlackWins:
-                  teamHome.rounds[roundIndex].scoreAway++;
-                  teamAway.rounds[roundIndex].scoreAway++;
-                  break;
-                case ResultEnum.Draw:
-                  teamHome.rounds[roundIndex].scoreAway += 0.5;
-                  teamAway.rounds[roundIndex].scoreAway += 0.5;
-                  teamHome.rounds[roundIndex].scoreHome += 0.5;
-                  teamAway.rounds[roundIndex].scoreHome += 0.5;
-                  break;
-                case ResultEnum.BothFF:
-                  break;
-              }
+              const homeScore = getScoreWhite(result);
+              const awayScore = getScoreBlack(result);
+
+              teamHome.rounds[roundIndex].scoreHome += homeScore;
+              teamAway.rounds[roundIndex].scoreHome += homeScore;
+
+              teamHome.rounds[roundIndex].scoreAway += awayScore;
+              teamAway.rounds[roundIndex].scoreAway += awayScore;
 
               const gameForDb: Game = {
                 playerHome: { ...playerHome, games: [] },
@@ -279,39 +268,57 @@ function UpdateGameForPlayers(
   gameForDb: Game,
   playerAway: Player
 ) {
-  playerHome.games.push(gameForDb);
-  playerAway.games.push(gameForDb);
-  playerHome.numberOfGames += 1;
-  playerAway.numberOfGames += 1;
+  // Update general game statistics
+  updateBasicStats(playerHome, gameForDb, true);
+  updateBasicStats(playerAway, gameForDb, false);
 
-  playerHome.score += getScoreWhite(gameForDb.result);
-  playerAway.score += getScoreBlack(gameForDb.result);
-
-  if (!playerHome.accumulatedRatings) playerHome.accumulatedRatings = 0;
-  if (!playerAway.accumulatedRatings) playerAway.accumulatedRatings = 0;
-
-  playerHome.accumulatedRatings += playerAway.rating;
-  playerAway.accumulatedRatings += playerHome.rating;
-
-  const averageRatingWhite = Math.round(
-    playerHome.accumulatedRatings / playerHome.numberOfGames
-  );
-  const averageRatingBlack = Math.round(
-    playerAway.accumulatedRatings / playerAway.numberOfGames
-  );
-
-  const percentageWhite = Math.round(
-    (playerHome.score / playerHome.numberOfGames) * 100
-  );
-  const percentageBlack = Math.round(
-    (playerAway.score / playerAway.numberOfGames) * 100
-  );
-
-  playerHome.tpr = averageRatingWhite + GetTpr(percentageWhite);
-  playerAway.tpr = averageRatingBlack + GetTpr(percentageBlack);
-  playerHome.diff = playerHome.tpr - playerHome.rating;
-  playerAway.diff = playerAway.tpr - playerAway.rating;
+  // If the game isn't a forfeit, update additional statistics
+  if (!isForfeit(gameForDb.result)) {
+    updateAdvancedStats(playerHome, playerAway.rating, gameForDb.result, true);
+    updateAdvancedStats(playerAway, playerHome.rating, gameForDb.result, false);
+  }
 }
+
+function updateBasicStats(player: Player, game: Game, isWhite: boolean) {
+  player.games.push(game);
+  player.numberOfGames += 1;
+
+  const score = isWhite
+    ? getScoreWhite(game.result)
+    : getScoreBlack(game.result);
+  player.score += score;
+}
+
+function updateAdvancedStats(
+  player: Player,
+  opponentRating: number,
+  gameResult: ResultEnum,
+  isWhite: boolean
+) {
+  // Update scores excluding forfeits
+  const validScore = isWhite
+    ? getScoreWhite(gameResult)
+    : getScoreBlack(gameResult);
+  player.validScore = (player.validScore || 0) + validScore;
+
+  // Update count of valid games
+  player.validNumberOfGames = (player.validNumberOfGames || 0) + 1;
+
+  // Update accumulated ratings
+  player.accumulatedRatings = (player.accumulatedRatings || 0) + opponentRating;
+
+  // Calculate and update derived statistics
+  const averageRating = Math.round(
+    player.accumulatedRatings / player.validNumberOfGames
+  );
+  const percentage = Math.round(
+    (player.validScore / player.validNumberOfGames) * 100
+  );
+
+  player.tpr = averageRating + GetTpr(percentage);
+  player.diff = player.tpr - player.rating;
+}
+
 export const addPlayersToClubs = async (clubs: ClubView[]) => {
   for (const club of clubs) {
     await updateClubWithPlayers(club);

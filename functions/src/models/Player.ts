@@ -16,4 +16,6 @@ export interface Player {
   games?: Game[];
   team?: number;
   accumulatedRatings?: number;
+  validNumberOfGames?: number;
+  validScore?: number;
 }

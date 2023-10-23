@@ -58,6 +58,14 @@ export function getScoreBlack(result: ResultEnum): number {
       return 0.5;
   }
 }
+
+export function isForfeit(result: ResultEnum): boolean {
+  return (
+    result === ResultEnum.WhiteFF ||
+    result === ResultEnum.BlackFF ||
+    result === ResultEnum.BothFF
+  );
+}
 export function GetTpr(percentage: number): number {
   switch (percentage) {
     case 0:

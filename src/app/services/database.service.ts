@@ -36,8 +36,8 @@ import { Year } from '../models/year';
 })
 export class DataBaseService {
   public store: Firestore;
-  public year: string = '2024';
-  public year$: BehaviorSubject<string> = new BehaviorSubject<string>('2024');
+  public year: string = '2023';
+  public year$: BehaviorSubject<string> = new BehaviorSubject<string>('2023');
 
   public yearDb: Year[] = [];
 
