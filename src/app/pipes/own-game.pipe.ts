@@ -1,6 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { ColorEnum } from '../models/color.enum';
-import { Game, OwnGame } from '../models/game';
+import { ColorEnum } from 'shared/models/ColorEnum';
+import { OwnGame } from 'shared/models/OwnGame';
+import { Game } from 'shared/models/Game';
 
 @Pipe({
   name: 'ownGame',

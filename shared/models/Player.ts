@@ -1,25 +1,19 @@
-import { Game } from './game';
+import { Game } from './Game';
 
 export interface Player {
   id: number;
   firstName: string;
   name: string;
   rating: number;
+  ratingFide?: number;
+  ratingNat?: number;
   tpr: number;
   diff?: number;
   score: number;
-  ratingFide?: number;
-  ratingNat?: number;
   numberOfGames: number;
   clubId?: number;
   clubName?: string;
   games?: Game[];
-}
-
-export interface PlayerOverview {
-  players: SimplePlayer[];
-}
-export interface SimplePlayer {
-  id: number;
-  name: string;
+  team?: number;
+  accumulatedRatings?: number;
 }

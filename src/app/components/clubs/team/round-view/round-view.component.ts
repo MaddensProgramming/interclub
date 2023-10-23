@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { map, Observable } from 'rxjs';
-import { Round, TeamView } from 'src/app/models/club';
-import { Dates } from 'src/app/models/dates';
+import { Round } from 'shared/models/Round';
+import { TeamView } from 'shared/models/TeamView';
 import { DataBaseService } from 'src/app/services/database.service';
 
 @Component({
@@ -19,10 +19,12 @@ export class RoundViewComponent implements OnInit {
   constructor(private database: DataBaseService) {}
 
   ngOnInit(): void {
-   this.date$ =  this.database.getDates().pipe(map(dates=> dates.dates[this.round.id-1].toDate() ));
-     }
+    this.date$ = this.database
+      .getDates()
+      .pipe(map((dates) => dates.dates[this.round.id - 1].toDate()));
+  }
 
-  sameTeam(teamA: TeamView, teamB: TeamView):boolean{
-    return teamA.clubId===teamB.clubId && teamA.id ===teamB.id;
+  sameTeam(teamA: TeamView, teamB: TeamView): boolean {
+    return teamA.clubId === teamB.clubId && teamA.id === teamB.id;
   }
 }

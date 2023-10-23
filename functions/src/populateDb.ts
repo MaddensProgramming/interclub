@@ -1,14 +1,12 @@
 import { setDoc, doc } from 'firebase/firestore';
-import {
-  ClassOverview,
-  TeamView,
-  ClubOverview,
-  ProvinceOverview,
-  Player,
-  ClubView,
-  Division,
-  RoundOverview,
-} from './models';
+import { RoundOverview } from 'shared/models/RoundOverview';
+import { ProvinceOverview } from 'shared/models/ProvinceOverview';
+import { ClubOverview } from 'shared/models/ClubOverview';
+import { ClubView } from 'shared/models/ClubView';
+import { ClassOverview } from 'shared/models/ClassOverview';
+import { Player } from 'shared/models/Player';
+import { Division } from 'shared/models/Division';
+import { TeamView } from 'shared/models/TeamView';
 import { store } from './initiateDB';
 
 const year = '2023';

@@ -1,4 +1,4 @@
-import { ResultEnum } from './models';
+import { ResultEnum } from 'shared/models/ResultEnum';
 
 export function getGameResult(result: string): ResultEnum {
   switch (result) {

@@ -4,10 +4,11 @@ import { FormControl } from '@angular/forms';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { Router } from '@angular/router';
 import { combineLatest, filter, map, Observable, startWith, tap } from 'rxjs';
-import { ClubOverview, ClubOverviewItem } from 'src/app/models/club';
-import { PlayerOverview, SimplePlayer } from 'src/app/models/player';
 import { TreeNode } from 'src/app/models/tree-node';
 import { DataBaseService } from '../../../services/database.service';
+import { ClubOverviewItem } from 'shared/models/ClubOverviewItem';
+import { ClubOverview } from 'shared/models/ClubOverview';
+import { SimplePlayer } from 'shared/models/SimplePlayer';
 
 @Component({
   selector: 'app-home',

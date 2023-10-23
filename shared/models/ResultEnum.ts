@@ -4,5 +4,5 @@ export enum ResultEnum {
   BlackWins = 3,
   WhiteFF = 4,
   BlackFF = 5,
-  BothFF= 6,
+  BothFF = 6,
 }

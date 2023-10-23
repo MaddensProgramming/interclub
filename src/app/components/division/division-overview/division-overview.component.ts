@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { ActivatedRoute, ParamMap} from '@angular/router';
-import { Observable,  tap } from 'rxjs';
-import { ClassOverview } from 'src/app/models/division';
+import { ActivatedRoute, ParamMap } from '@angular/router';
+import { Observable, tap } from 'rxjs';
 import { DataBaseService } from 'src/app/services/database.service';
 import { Location } from '@angular/common';
-
+import { ClassOverview } from 'shared/models/ClassOverview';
 
 @Component({
   selector: 'app-division-overview',
@@ -23,18 +22,16 @@ export class DivisionOverviewComponent implements OnInit {
   constructor(
     private db: DataBaseService,
     private route: ActivatedRoute,
-    private location: Location,
-      ) {}
+    private location: Location
+  ) {}
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(
-      (params: ParamMap) => {
-       this.form = new FormGroup({
-      class: new FormControl(params.get('id')),
-      division: new FormControl(params.get('class')),
+    this.route.paramMap.subscribe((params: ParamMap) => {
+      this.form = new FormGroup({
+        class: new FormControl(params.get('id')),
+        division: new FormControl(params.get('class')),
+      });
     });
-  });
-
 
     this.classoverview$ = this.db.getClassOverview().pipe(
       tap((data) => (this.classoverview = data)),
@@ -50,7 +47,10 @@ export class DivisionOverviewComponent implements OnInit {
       )
         this.form.get('division').setValue('A');
     });
-    this.form.valueChanges.subscribe((value) => this.location.replaceState('/division/'+value.class+'/'+ value.division))
-
+    this.form.valueChanges.subscribe((value) =>
+      this.location.replaceState(
+        '/division/' + value.class + '/' + value.division
+      )
+    );
   }
 }

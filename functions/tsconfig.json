@@ -12,5 +12,5 @@
   "compileOnSave": true,
   "include": [
     "src"
-  ]
+, "../shared/models/models.ts"  ]
 }

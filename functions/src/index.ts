@@ -39,50 +39,6 @@ exports.sendEmailNotification = functions
     return transporter.sendMail(mailOptions);
   });
 
-exports.sendAllExistingMessages = functions
-  .region('europe-west1')
-  .https.onRequest(async (req, res) => {
-    // Fetch all the messages from Firestore
-    const messagesSnapshot = await admin
-      .firestore()
-      .collection('messages')
-      .get();
-
-    // Function to send a single email
-    const sendEmail = async (messageData) => {
-      const emailContent = `
-        Date: ${messageData.dateSent.toDate()}
-
-        Name: ${messageData.name}
-
-        Email: ${messageData.email}
-
-        Message: ${messageData.message}
-        `;
-
-      const mailOptions = {
-        from: 'interclubschaken@hotmail.com',
-        to: 'martijn.maddens@hotmail.com',
-        subject: 'Existing Message from Webapp',
-        text: emailContent,
-      };
-
-      return transporter.sendMail(mailOptions);
-    };
-
-    // Send emails one by one
-    try {
-      for (const doc of messagesSnapshot.docs) {
-        const messageData = doc.data();
-        await sendEmail(messageData); // Wait for each email to be sent before proceeding
-      }
-      res.send('Emails sent successfully!');
-    } catch (error) {
-      console.error('Error sending emails:', error);
-      res.status(500).send('Error sending emails.');
-    }
-  });
-
 const runtimeOpts = {
   timeoutSeconds: 540,
   memory: '8GB' as const,

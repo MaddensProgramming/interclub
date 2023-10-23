@@ -12,7 +12,8 @@ import {
   switchMap,
   tap,
 } from 'rxjs';
-import { Player } from 'src/app/models/player';
+import { Player } from 'shared/models/Player';
+
 import { DataBaseService } from 'src/app/services/database.service';
 
 @Component({

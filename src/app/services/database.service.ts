@@ -19,11 +19,17 @@ import {
   tap,
 } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { ClubOverview, ClubView, TeamView, Year } from '../models/club';
-import { Player, PlayerOverview, SimplePlayer } from '../models/player';
 import { Router } from '@angular/router';
-import { ClassOverview, Division, RoundOverview } from '../models/division';
 import { Dates } from '../models/dates';
+import { RoundOverview } from 'shared/models/RoundOverview';
+import { ClubOverview } from 'shared/models/ClubOverview';
+import { ClubView } from 'shared/models/ClubView';
+import { ClassOverview } from 'shared/models/ClassOverview';
+import { PlayerOverview } from 'shared/models/PlayerOverview';
+import { Player } from 'shared/models/Player';
+import { Division } from 'shared/models/Division';
+import { TeamView } from 'shared/models/TeamView';
+import { Year } from '../models/year';
 
 @Injectable({
   providedIn: 'root',

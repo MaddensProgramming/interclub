@@ -1,8 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { map, Observable, startWith, switchMap } from 'rxjs';
-import { TeamView } from 'src/app/models/club';
-import { Division, DivisionForm } from 'src/app/models/division';
+import { Division } from 'shared/models/Division';
+import { TeamView } from 'shared/models/TeamView';
+
 import { DataBaseService } from 'src/app/services/database.service';
 
 @Component({
@@ -66,10 +67,12 @@ export class DivisionStandingsComponent implements OnInit {
 
   round(teamHome: TeamView, teamAway: TeamView): number {
     if (this.sameTeam(teamAway, teamHome)) return null;
-    return teamHome.rounds.findIndex(
-      (round) =>
-        this.sameTeam(round.teamAway, teamAway) ||
-        this.sameTeam(round.teamHome, teamAway)
-    )+1;
+    return (
+      teamHome.rounds.findIndex(
+        (round) =>
+          this.sameTeam(round.teamAway, teamAway) ||
+          this.sameTeam(round.teamHome, teamAway)
+      ) + 1
+    );
   }
 }

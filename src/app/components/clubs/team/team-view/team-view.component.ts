@@ -22,13 +22,14 @@ import {
   takeUntil,
   tap,
 } from 'rxjs';
-import { Round, TeamView } from 'src/app/models/club';
-import { Player } from 'src/app/models/player';
-import { ResultEnum } from 'src/app/models/result.enum';
 import { DataBaseService } from 'src/app/services/database.service';
 import { TeamServiceService } from 'src/app/services/team-service.service';
 import { Location } from '@angular/common';
 import { MatTabChangeEvent } from '@angular/material/tabs';
+import { Player } from 'shared/models/Player';
+import { ResultEnum } from 'shared/models/ResultEnum';
+import { Round } from 'shared/models/Round';
+import { TeamView } from 'shared/models/TeamView';
 
 @Component({
   selector: 'app-team-view',
@@ -36,9 +37,8 @@ import { MatTabChangeEvent } from '@angular/material/tabs';
   styleUrls: ['./team-view.component.scss'],
 })
 export class TeamViewComponent implements OnInit, OnDestroy {
-
-  teamId :number;
-  clubId:number;
+  teamId: number;
+  clubId: number;
   selectedIndex: number;
   destroy$: ReplaySubject<void> = new ReplaySubject<void>();
 
@@ -70,7 +70,7 @@ export class TeamViewComponent implements OnInit, OnDestroy {
         this.clubId = club['id'];
         this.teamId = team['id'];
         this.selectedIndex = this.selectTab(team['tab']);
-    }),
+      }),
       switchMap(([team, club]) => this.db.getTeam(team['id'], club['id']))
     );
 
@@ -80,19 +80,20 @@ export class TeamViewComponent implements OnInit, OnDestroy {
     this.players$ = combineLatest([boardObs, this.team$]).pipe(
       map(([board, team]) => this.filterResultsForBoard(board, team))
     );
-
   }
 
-  changeUrl(tab: number){
-    let url:string= (tab-1).toString();
-    if(tab===0)url='results'
-    if(tab===1)url='players'
-    this.location.replaceState('/club/'+ this.clubId +'/'+ this.teamId +'/'+ url);
+  changeUrl(tab: number) {
+    let url: string = (tab - 1).toString();
+    if (tab === 0) url = 'results';
+    if (tab === 1) url = 'players';
+    this.location.replaceState(
+      '/club/' + this.clubId + '/' + this.teamId + '/' + url
+    );
   }
 
   selectTab(tab: string): number {
-    if(tab==='results') return 0;
-    if(tab==='players') return 1;
+    if (tab === 'results') return 0;
+    if (tab === 'players') return 1;
     return +tab + 1;
   }
 

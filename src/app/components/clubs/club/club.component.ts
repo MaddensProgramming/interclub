@@ -18,13 +18,10 @@ import {
   takeUntil,
   tap,
 } from 'rxjs';
-import { ClubView } from 'src/app/models/club';
-import { Game } from 'src/app/models/game';
-import { Player } from 'src/app/models/player';
-import { ResultEnum } from 'src/app/models/result.enum';
 import { DataBaseService } from 'src/app/services/database.service';
 import { TeamServiceService } from 'src/app/services/team-service.service';
 import { PlayerListComponent } from '../team/player-list/player-list.component';
+import { ClubView } from 'shared/models/ClubView';
 
 @Component({
   selector: 'app-club',

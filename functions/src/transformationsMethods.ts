@@ -1,16 +1,14 @@
 import * as fs from 'fs';
 import { getPlayers } from './frbeGatewayCalls';
-import {
-  ClubView,
-  Division,
-  DivisionRound,
-  Game,
-  Player,
-  ResultEnum,
-  Round,
-  RoundOverview,
-  TeamView,
-} from './models';
+import { DivisionRound } from 'shared/models/DivisionRound';
+import { RoundOverview } from 'shared/models/RoundOverview';
+import { ClubView } from 'shared/models/ClubView';
+import { Player } from 'shared/models/Player';
+import { Division } from 'shared/models/Division';
+import { ResultEnum } from 'shared/models/ResultEnum';
+import { Game } from 'shared/models/Game';
+import { Round } from 'shared/models/Round';
+import { TeamView } from 'shared/models/TeamView';
 import { DivisionFrbe } from './modelsFRBE';
 import {
   revertResult,
