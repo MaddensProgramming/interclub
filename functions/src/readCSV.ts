@@ -1,5 +1,5 @@
-import { Division } from 'shared/models/Division';
-import { TeamView } from 'shared/models/TeamView';
+import { Division } from './models/Division';
+import { TeamView } from './models/TeamView';
 
 export const csvToJsonObject = (csv: string): { [key: string]: TeamView[] } => {
   const lines = csv.split('\n');

@@ -43,9 +43,9 @@ import { DivisionStandingsComponent } from './components/division/division-stand
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { CommonModule } from '@angular/common';
 import { LocationOverviewComponentComponent } from './components/clubs/location-overview-component/location-overview-component.component';
-import { NewlineToBreakPipe } from './newline-to-break.pipe';
+import { NewlineToBreakPipe } from './pipes/newline-to-break.pipe';
 import { FullRoundOverviewComponent } from './components/overall/full-round-overview/full-round-overview.component';
-import { RoundResultsContainerComponent } from './round-results-container/round-results-container.component';
+import { RoundResultsContainerComponent } from './components/overall/round-results-container/round-results-container.component';
 
 @NgModule({
   declarations: [

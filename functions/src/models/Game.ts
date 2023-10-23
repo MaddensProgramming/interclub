@@ -3,10 +3,10 @@ import { Player } from './Player';
 import { ResultEnum } from './ResultEnum';
 
 export interface Game {
-  white: Player;
-  black: Player;
-  teamWhite: TeamView;
-  teamBlack: TeamView;
+  playerHome: Player;
+  playerAway: Player;
+  teamHome: TeamView;
+  teamAway: TeamView;
   board: number;
   round: number;
   result: ResultEnum;

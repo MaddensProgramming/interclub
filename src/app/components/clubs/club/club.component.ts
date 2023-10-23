@@ -21,7 +21,7 @@ import {
 import { DataBaseService } from 'src/app/services/database.service';
 import { TeamServiceService } from 'src/app/services/team-service.service';
 import { PlayerListComponent } from '../team/player-list/player-list.component';
-import { ClubView } from 'shared/models/ClubView';
+import { ClubView } from 'functions/src/models/ClubView';
 
 @Component({
   selector: 'app-club',

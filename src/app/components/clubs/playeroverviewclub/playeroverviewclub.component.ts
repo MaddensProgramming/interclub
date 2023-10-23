@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { map, Observable, switchMap, tap } from 'rxjs';
-import { Player } from 'shared/models/Player';
+import { Player } from 'functions/src/models/Player';
 import { DataBaseService } from 'src/app/services/database.service';
 import { TeamServiceService } from 'src/app/services/team-service.service';
 

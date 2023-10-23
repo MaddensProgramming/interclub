@@ -1,4 +1,4 @@
-import { ClubView } from 'shared/models/ClubView';
+import { ClubView } from 'functions/src/models/ClubView';
 
 export interface Year {
   id: string;

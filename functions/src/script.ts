@@ -16,9 +16,7 @@ export const main = async () => {
     const divisions = await readAndProcessCsv();
 
     // Fetch and process results data
-    const { allTeams, clubs, players } = await fetchAndProcessResults(
-      divisions
-    );
+    const { clubs, players } = await fetchAndProcessResults(divisions);
 
     // Generate round overviews
     const roundOverview = createRoundOverviews(divisions);
@@ -26,7 +24,7 @@ export const main = async () => {
     console.log('All info read. Starting to write to DB.');
 
     await executeEveryRound(divisions, roundOverview, players, clubs);
-    // await executeOncePerYear(divisions, clubs, players);
+    //await executeOncePerYear(divisions, clubs, players);
   } catch (error) {
     console.error('Error executing the main function:', error);
   }
@@ -50,5 +48,5 @@ const fetchAndProcessResults = async (divisions) => {
   await addPlayersToClubs(clubs);
   const players = clubs.flatMap((club) => club.players);
   fillTeamsAndPlayersWithInfoFromJson(resultsJson, allTeams, players);
-  return { allTeams, clubs, players };
+  return { clubs, players };
 };

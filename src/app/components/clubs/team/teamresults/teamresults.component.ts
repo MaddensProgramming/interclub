@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Round } from 'shared/models/Round';
-import { TeamView } from 'shared/models/TeamView';
+import { Round } from 'functions/src/models/Round';
+import { TeamView } from 'functions/src/models/TeamView';
 
 @Component({
   selector: 'app-teamresults',

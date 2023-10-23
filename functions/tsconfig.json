@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "module": "commonjs", 
-    "outDir": "lib",
+    "outDir": "lib",  
     "sourceMap": true,
     "strict": false,
     "esModuleInterop": true,
@@ -12,5 +12,5 @@
   "compileOnSave": true,
   "include": [
     "src"
-, "../shared/models/models.ts"  ]
+]
 }

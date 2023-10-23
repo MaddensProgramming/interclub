@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { map, Observable, startWith, switchMap } from 'rxjs';
-import { Division } from 'shared/models/Division';
-import { TeamView } from 'shared/models/TeamView';
+import { Division } from 'functions/src/models/Division';
+import { TeamView } from 'functions/src/models/TeamView';
 
 import { DataBaseService } from 'src/app/services/database.service';
 

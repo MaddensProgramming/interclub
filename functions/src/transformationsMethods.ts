@@ -1,14 +1,14 @@
 import * as fs from 'fs';
 import { getPlayers } from './frbeGatewayCalls';
-import { DivisionRound } from 'shared/models/DivisionRound';
-import { RoundOverview } from 'shared/models/RoundOverview';
-import { ClubView } from 'shared/models/ClubView';
-import { Player } from 'shared/models/Player';
-import { Division } from 'shared/models/Division';
-import { ResultEnum } from 'shared/models/ResultEnum';
-import { Game } from 'shared/models/Game';
-import { Round } from 'shared/models/Round';
-import { TeamView } from 'shared/models/TeamView';
+import { DivisionRound } from './models/DivisionRound';
+import { RoundOverview } from './models/RoundOverview';
+import { ClubView } from './models/ClubView';
+import { Player } from './models/Player';
+import { Division } from './models/Division';
+import { ResultEnum } from './models/ResultEnum';
+import { Game } from './models/Game';
+import { Round } from './models/Round';
+import { TeamView } from './models/TeamView';
 import { DivisionFrbe } from './modelsFRBE';
 import {
   revertResult,
@@ -145,20 +145,11 @@ export function createRoundOverviews(divisions: Division[]): RoundOverview[] {
         };
 
         newDiv.matches.forEach((match) => {
-          match.games.forEach((game) => {
-            if (game.board % 2 === 0) {
-              const white = { ...game.black };
-              const black = { ...game.white };
-              game.black = black;
-              game.white = white;
-              game.result = revertResult(game.result);
-            }
-          });
           match.averageRatingAway = 0;
           match.averageRatingHome = 0;
           match.games.forEach((game) => {
-            match.averageRatingAway += game.black.rating;
-            match.averageRatingHome += game.white.rating;
+            match.averageRatingAway += game.playerAway.rating;
+            match.averageRatingHome += game.playerHome.rating;
           });
           match.averageRatingAway = Math.round(
             match.averageRatingAway / match.games.length
@@ -203,7 +194,6 @@ export function fillTeamsAndPlayersWithInfoFromJson(
           if (teamAway && teamHome) {
             teamHome.rounds[roundIndex].games = [];
             teamAway.rounds[roundIndex].games = [];
-            let oddBoard = true;
 
             encounter.games.forEach((game, index) => {
               const playerHome = players.find(
@@ -212,10 +202,6 @@ export function fillTeamsAndPlayersWithInfoFromJson(
               const playerAway = players.find(
                 (player) => player.id === game.idnumber_visit
               );
-              const white = oddBoard ? playerHome : playerAway;
-              const black = oddBoard ? playerAway : playerHome;
-              const teamWhite = oddBoard ? teamHome : teamAway;
-              const teamBlack = oddBoard ? teamAway : teamHome;
               const result = getGameResult(game.result);
 
               switch (result) {
@@ -240,16 +226,16 @@ export function fillTeamsAndPlayersWithInfoFromJson(
               }
 
               const gameForDb: Game = {
-                white: { ...white, games: [] },
-                black: { ...black, games: [] },
-                teamBlack: { ...teamBlack, rounds: [], players: [] },
-                teamWhite: { ...teamWhite, rounds: [], players: [] },
+                playerHome: { ...playerHome, games: [] },
+                playerAway: { ...playerAway, games: [] },
+                teamAway: { ...teamAway, rounds: [], players: [] },
+                teamHome: { ...teamHome, rounds: [], players: [] },
                 board: index + 1,
-                result: oddBoard ? result : revertResult(result),
+                result: result,
                 round: roundIndex + 1,
               };
-              if (white && black && roundIndex < 3) {
-                UpdateGameForPlayers(white, gameForDb, black);
+              if (playerHome && playerAway) {
+                UpdateGameForPlayers(playerHome, gameForDb, playerAway);
               } else {
                 if (game.idnumber_home != 0 && game.idnumber_visit != 0)
                   console.log(game.idnumber_home, game.idnumber_visit);
@@ -260,9 +246,8 @@ export function fillTeamsAndPlayersWithInfoFromJson(
               teamHome.boardPoints += getScoreWhite(result);
               teamAway.boardPoints += getScoreBlack(result);
               teamAway.rounds[roundIndex].games.push(gameForDb);
-              oddBoard = !oddBoard;
             });
-            if (roundIndex < 3) {
+            if (teamAway.boardPoints + teamHome.boardPoints > 0) {
               if (
                 teamAway.rounds[roundIndex].scoreAway >
                 teamHome.rounds[roundIndex].scoreHome
@@ -289,35 +274,43 @@ export function fillTeamsAndPlayersWithInfoFromJson(
     });
   });
 }
-function UpdateGameForPlayers(white: Player, gameForDb: Game, black: Player) {
-  white.games.push(gameForDb);
-  black.games.push(gameForDb);
-  white.numberOfGames += 1;
-  black.numberOfGames += 1;
+function UpdateGameForPlayers(
+  playerHome: Player,
+  gameForDb: Game,
+  playerAway: Player
+) {
+  playerHome.games.push(gameForDb);
+  playerAway.games.push(gameForDb);
+  playerHome.numberOfGames += 1;
+  playerAway.numberOfGames += 1;
 
-  white.score += getScoreWhite(gameForDb.result);
-  black.score += getScoreBlack(gameForDb.result);
+  playerHome.score += getScoreWhite(gameForDb.result);
+  playerAway.score += getScoreBlack(gameForDb.result);
 
-  if (!white.accumulatedRatings) white.accumulatedRatings = 0;
-  if (!black.accumulatedRatings) black.accumulatedRatings = 0;
+  if (!playerHome.accumulatedRatings) playerHome.accumulatedRatings = 0;
+  if (!playerAway.accumulatedRatings) playerAway.accumulatedRatings = 0;
 
-  white.accumulatedRatings += black.rating;
-  black.accumulatedRatings += white.rating;
+  playerHome.accumulatedRatings += playerAway.rating;
+  playerAway.accumulatedRatings += playerHome.rating;
 
   const averageRatingWhite = Math.round(
-    white.accumulatedRatings / white.numberOfGames
+    playerHome.accumulatedRatings / playerHome.numberOfGames
   );
   const averageRatingBlack = Math.round(
-    black.accumulatedRatings / black.numberOfGames
+    playerAway.accumulatedRatings / playerAway.numberOfGames
   );
 
-  const percentageWhite = Math.round((white.score / white.numberOfGames) * 100);
-  const percentageBlack = Math.round((black.score / black.numberOfGames) * 100);
+  const percentageWhite = Math.round(
+    (playerHome.score / playerHome.numberOfGames) * 100
+  );
+  const percentageBlack = Math.round(
+    (playerAway.score / playerAway.numberOfGames) * 100
+  );
 
-  white.tpr = averageRatingWhite + GetTpr(percentageWhite);
-  black.tpr = averageRatingBlack + GetTpr(percentageBlack);
-  white.diff = white.tpr - white.rating;
-  black.diff = black.tpr - black.rating;
+  playerHome.tpr = averageRatingWhite + GetTpr(percentageWhite);
+  playerAway.tpr = averageRatingBlack + GetTpr(percentageBlack);
+  playerHome.diff = playerHome.tpr - playerHome.rating;
+  playerAway.diff = playerAway.tpr - playerAway.rating;
 }
 export const addPlayersToClubs = async (clubs: ClubView[]) => {
   for (const club of clubs) {

@@ -26,10 +26,10 @@ import { DataBaseService } from 'src/app/services/database.service';
 import { TeamServiceService } from 'src/app/services/team-service.service';
 import { Location } from '@angular/common';
 import { MatTabChangeEvent } from '@angular/material/tabs';
-import { Player } from 'shared/models/Player';
-import { ResultEnum } from 'shared/models/ResultEnum';
-import { Round } from 'shared/models/Round';
-import { TeamView } from 'shared/models/TeamView';
+import { Player } from 'functions/src/models/Player';
+import { ResultEnum } from 'functions/src/models/ResultEnum';
+import { Round } from 'functions/src/models/Round';
+import { TeamView } from 'functions/src/models/TeamView';
 
 @Component({
   selector: 'app-team-view',
@@ -116,10 +116,10 @@ export class TeamViewComponent implements OnInit, OnDestroy {
   averageRating(round: Round, team: TeamView): number {
     return Math.round(
       round.games.reduce((totRating, round) => {
-        if (this.sameTeam(team, round.teamWhite))
-          totRating += round.white.rating;
-        if (this.sameTeam(team, round.teamBlack))
-          totRating += round.black.rating;
+        if (this.sameTeam(team, round.teamHome))
+          totRating += round.playerHome.rating;
+        if (this.sameTeam(team, round.teamAway))
+          totRating += round.playerAway.rating;
         return totRating;
       }, 0) / round.games.length
     );
@@ -135,15 +135,15 @@ export class TeamViewComponent implements OnInit, OnDestroy {
       round.games.forEach((game) => {
         if (board === 'Alle' || board === game.board.toString()) {
           if (
-            game.teamWhite.clubId === team.clubId &&
-            game.teamWhite.id === team.id
+            game.teamHome.clubId === team.clubId &&
+            game.teamHome.id === team.id
           )
-            this.addGameAsWhite(game.white, game.result, newplayerList);
+            this.addGameAsWhite(game.playerHome, game.result, newplayerList);
           if (
-            game.teamBlack.clubId === team.clubId &&
-            game.teamBlack.id === team.id
+            game.teamAway.clubId === team.clubId &&
+            game.teamAway.id === team.id
           )
-            this.addGameAsBlack(game.black, game.result, newplayerList);
+            this.addGameAsBlack(game.playerAway, game.result, newplayerList);
         }
       })
     );

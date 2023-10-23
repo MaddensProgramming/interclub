@@ -13,7 +13,7 @@ import {
   _MatTableDataSource,
 } from '@angular/material/table';
 import { map, Observable, of, skip, tap } from 'rxjs';
-import { Player } from 'shared/models/Player';
+import { Player } from 'functions/src/models/Player';
 
 @Component({
   selector: 'app-player-list',

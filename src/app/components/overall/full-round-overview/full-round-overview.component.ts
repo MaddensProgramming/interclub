@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { BehaviorSubject, Observable, of, switchMap, tap } from 'rxjs';
-import { RoundOverview } from 'shared/models/RoundOverview';
+import { RoundOverview } from 'functions/src/models/RoundOverview';
 import { DataBaseService } from 'src/app/services/database.service';
 
 @Component({

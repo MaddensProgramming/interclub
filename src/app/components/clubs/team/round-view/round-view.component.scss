@@ -44,6 +44,18 @@
   text-align: center;
 }
 
+.black {
+  background-color: black;
+  width: 1rem;
+  height: 1rem;
+}
+
+.white {
+  border: 0.12rem solid black;
+  width: 0.76rem;
+  height: 0.76rem;
+}
+
 @media screen and (max-width: 600px) {
   .mat-cell {
     font-size: 0.8rem;

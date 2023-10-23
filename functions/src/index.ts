@@ -51,7 +51,7 @@ exports.updateRoundTimed = functions
   .timeZone('Europe/Brussels')
   .onRun(main);
 
-exports.updateRound = functions
+exports.updateRoundTest = functions
   .region('europe-west1')
   .runWith(runtimeOpts)
   .https.onRequest(main);

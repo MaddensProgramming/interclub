@@ -4,7 +4,7 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 import { DataBaseService } from 'src/app/services/database.service';
 import { Location } from '@angular/common';
-import { ClassOverview } from 'shared/models/ClassOverview';
+import { ClassOverview } from 'functions/src/models/ClassOverview';
 
 @Component({
   selector: 'app-division-overview',

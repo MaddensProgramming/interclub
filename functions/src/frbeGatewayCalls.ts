@@ -1,4 +1,4 @@
-import { PlayingHall } from 'shared/models/PlayingHall';
+import { PlayingHall } from './models/PlayingHall';
 import { PlayerFrbe } from './modelsFRBE';
 import { DivisionFrbe } from './modelsFRBE';
 

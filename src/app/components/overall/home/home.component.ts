@@ -6,9 +6,9 @@ import { Router } from '@angular/router';
 import { combineLatest, filter, map, Observable, startWith, tap } from 'rxjs';
 import { TreeNode } from 'src/app/models/tree-node';
 import { DataBaseService } from '../../../services/database.service';
-import { ClubOverviewItem } from 'shared/models/ClubOverviewItem';
-import { ClubOverview } from 'shared/models/ClubOverview';
-import { SimplePlayer } from 'shared/models/SimplePlayer';
+import { ClubOverviewItem } from 'functions/src/models/ClubOverviewItem';
+import { ClubOverview } from 'functions/src/models/ClubOverview';
+import { SimplePlayer } from 'functions/src/models/SimplePlayer';
 
 @Component({
   selector: 'app-home',

@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { ColorEnum } from 'shared/models/ColorEnum';
-import { ResultEnum } from 'shared/models/ResultEnum';
+import { ColorEnum } from 'functions/src/models/ColorEnum';
+import { ResultEnum } from 'functions/src/models/ResultEnum';
 
 @Pipe({
   name: 'result',

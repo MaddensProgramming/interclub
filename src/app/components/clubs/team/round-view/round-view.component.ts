@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { map, Observable } from 'rxjs';
-import { Round } from 'shared/models/Round';
-import { TeamView } from 'shared/models/TeamView';
+import { Round } from 'functions/src/models/Round';
+import { TeamView } from 'functions/src/models/TeamView';
 import { DataBaseService } from 'src/app/services/database.service';
 
 @Component({
@@ -15,7 +15,14 @@ export class RoundViewComponent implements OnInit {
 
   date$: Observable<Date>;
 
-  displayedColumnsRound: string[] = ['board', 'white', 'black', 'result'];
+  displayedColumnsRound: string[] = [
+    'board',
+    'colorHome',
+    'home',
+    'result',
+    'colorAway',
+    'away',
+  ];
   constructor(private database: DataBaseService) {}
 
   ngOnInit(): void {

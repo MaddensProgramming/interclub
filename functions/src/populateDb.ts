@@ -1,15 +1,15 @@
 import { setDoc, doc } from 'firebase/firestore';
-import { RoundOverview } from 'shared/models/RoundOverview';
-import { ProvinceOverview } from 'shared/models/ProvinceOverview';
-import { ClubOverview } from 'shared/models/ClubOverview';
-import { ClubView } from 'shared/models/ClubView';
-import { ClassOverview } from 'shared/models/ClassOverview';
-import { Player } from 'shared/models/Player';
-import { Division } from 'shared/models/Division';
-import { TeamView } from 'shared/models/TeamView';
+import { RoundOverview } from './models/RoundOverview';
+import { ProvinceOverview } from './models/ProvinceOverview';
+import { ClubOverview } from './models/ClubOverview';
+import { ClubView } from './models/ClubView';
+import { ClassOverview } from './models/ClassOverview';
+import { Player } from './models/Player';
+import { Division } from './models/Division';
+import { TeamView } from './models/TeamView';
 import { store } from './initiateDB';
 
-const year = '2023';
+const year = '2024';
 
 export const executeOncePerYear = (
   divisions: Division[],

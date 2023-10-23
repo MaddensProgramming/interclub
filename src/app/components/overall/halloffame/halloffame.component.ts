@@ -12,7 +12,7 @@ import {
   switchMap,
   tap,
 } from 'rxjs';
-import { Player } from 'shared/models/Player';
+import { Player } from 'functions/src/models/Player';
 
 import { DataBaseService } from 'src/app/services/database.service';
 

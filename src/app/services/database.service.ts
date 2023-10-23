@@ -21,14 +21,14 @@ import {
 import { environment } from 'src/environments/environment';
 import { Router } from '@angular/router';
 import { Dates } from '../models/dates';
-import { RoundOverview } from 'shared/models/RoundOverview';
-import { ClubOverview } from 'shared/models/ClubOverview';
-import { ClubView } from 'shared/models/ClubView';
-import { ClassOverview } from 'shared/models/ClassOverview';
-import { PlayerOverview } from 'shared/models/PlayerOverview';
-import { Player } from 'shared/models/Player';
-import { Division } from 'shared/models/Division';
-import { TeamView } from 'shared/models/TeamView';
+import { RoundOverview } from 'functions/src/models/RoundOverview';
+import { ClubOverview } from 'functions/src/models/ClubOverview';
+import { ClubView } from 'functions/src/models/ClubView';
+import { ClassOverview } from 'functions/src/models/ClassOverview';
+import { PlayerOverview } from 'functions/src/models/PlayerOverview';
+import { Player } from 'functions/src/models/Player';
+import { Division } from 'functions/src/models/Division';
+import { TeamView } from 'functions/src/models/TeamView';
 import { Year } from '../models/year';
 
 @Injectable({
@@ -36,8 +36,8 @@ import { Year } from '../models/year';
 })
 export class DataBaseService {
   public store: Firestore;
-  public year: string = '2023';
-  public year$: BehaviorSubject<string> = new BehaviorSubject<string>('2023');
+  public year: string = '2024';
+  public year$: BehaviorSubject<string> = new BehaviorSubject<string>('2024');
 
   public yearDb: Year[] = [];
 

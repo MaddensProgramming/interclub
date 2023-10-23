@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { ColorEnum } from 'shared/models/ColorEnum';
+import { ColorEnum } from 'functions/src/models/ColorEnum';
 
 @Pipe({
   name: 'color',
