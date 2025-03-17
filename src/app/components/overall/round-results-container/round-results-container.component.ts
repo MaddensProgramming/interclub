@@ -11,7 +11,7 @@ export class RoundResultsContainerComponent implements OnInit {
     new BehaviorSubject<number>(null);
   public roundNumber: number;
 
-  public roundsArray = Array.from({ length: 12 }, (_, i) => i + 1);
+  public roundsArray = Array.from({ length: 11 }, (_, i) => i + 1);
 
   constructor(private route: ActivatedRoute, private router: Router) {}
 
@@ -22,7 +22,11 @@ export class RoundResultsContainerComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
       this.roundNumber = +params['id'];
-      this.roundNumberSubject.next(+params['id']);
+      if (this.roundNumber) {
+        this.roundNumberSubject.next(+params['id']);
+      } else {
+        this.roundNumberSubject.next(11);
+      }
     });
   }
 }

@@ -36,8 +36,8 @@ import { Year } from '../models/year';
 })
 export class DataBaseService {
   public store: Firestore;
-  public year: string = '2023';
-  public year$: BehaviorSubject<string> = new BehaviorSubject<string>('2023');
+  public year: string = '2024';
+  public year$: BehaviorSubject<string> = new BehaviorSubject<string>('2024');
 
   public yearDb: Year[] = [];
 
@@ -73,12 +73,12 @@ export class DataBaseService {
 
   public getFullRoundOverview(round: string): Observable<RoundOverview> {
     return from(
-      getDoc(doc(this.store, 'years', '2023', 'roundOverview', round))
+      getDoc(doc(this.store, 'years', '2024', 'roundOverview', round))
     ).pipe(map((data) => data.data() as RoundOverview));
   }
 
   public getLastUpdate(): Observable<Date> {
-    return from(getDoc(doc(this.store, 'years', '2023'))).pipe(
+    return from(getDoc(doc(this.store, 'years', '2024'))).pipe(
       map((data) => data.data()['lastUpdate'].toDate() as Date)
     );
   }

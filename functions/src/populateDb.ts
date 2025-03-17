@@ -9,7 +9,7 @@ import { Division } from './models/Division';
 import { TeamView } from './models/TeamView';
 import { store } from './initiateDB';
 
-const year = '2023';
+const year = '2024';
 
 export const executeOncePerYear = (
   divisions: Division[],
@@ -201,17 +201,17 @@ export async function generateRoundOverviews(
 export async function generateRoundDates() {
   var dates = {
     dates: [
-      new Date(2023, 8, 24), // 24/09/2023
-      new Date(2023, 9, 15), // 15/10/2023
-      new Date(2023, 9, 22), // 22/10/2023
-      new Date(2023, 10, 19), // 19/11/2023
-      new Date(2023, 11, 3), // 3/12/2023
-      new Date(2024, 0, 28), // 28/01/2024
-      new Date(2024, 1, 4), // 4/02/2024
-      new Date(2024, 1, 18), // 18/02/2024
-      new Date(2024, 2, 10), // 10/03/2024
-      new Date(2024, 2, 24), // 24/03/2024
-      new Date(2024, 3, 21), // 21/04/2024
+      new Date(2024, 8, 29), // 24/09/2023
+      new Date(2024, 9, 6), // 15/10/2023
+      new Date(2024, 10, 3), // 22/10/2023
+      new Date(2024, 10, 17), // 19/11/2023
+      new Date(2024, 11, 1), // 3/12/2023
+      new Date(2025, 0, 26), // 28/01/2024
+      new Date(2025, 1, 2), // 4/02/2024
+      new Date(2025, 1, 16), // 18/02/2024
+      new Date(2025, 2, 16), // 10/03/2024
+      new Date(2025, 2, 30), // 24/03/2024
+      new Date(2025, 3, 27), // 21/04/2024
     ],
   };
 

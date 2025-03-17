@@ -22,9 +22,8 @@ export const main = async () => {
     const roundOverview = createRoundOverviews(divisions);
 
     console.log('All info read. Starting to write to DB.');
-
-    await executeEveryRound(divisions, roundOverview, players, clubs);
     //await executeOncePerYear(divisions, clubs, players);
+    await executeEveryRound(divisions, roundOverview, players, clubs);
   } catch (error) {
     console.error('Error executing the main function:', error);
   }
