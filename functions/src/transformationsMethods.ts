@@ -203,7 +203,7 @@ export function fillTeamsAndPlayersWithInfoFromJson(
               const playerAway = players.find(
                 (player) => player.id === game.idnumber_visit
               );
-              const result = getGameResult(game.result);
+              const result = getGameResult(game);
 
               const homeScore = getScoreWhite(result);
               const awayScore = getScoreBlack(result);

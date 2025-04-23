@@ -2,6 +2,7 @@ export interface GameFrbe {
   idnumber_home: number | null;
   idnumber_visit: number;
   result: string;
+  overruled: string;
 }
 
 export interface EncounterFrbe {
