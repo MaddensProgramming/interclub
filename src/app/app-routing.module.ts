@@ -23,7 +23,7 @@ const routes: Routes = [
   },
   {
     path: 'fullRound',
-    redirectTo: 'round/9',
+    redirectTo: 'round/10',
   },
   {
     path: 'round/:id',
