@@ -1,11 +1,9 @@
 import { ResultEnum } from './models/ResultEnum';
 import { GameFrbe } from './modelsFRBE';
 
-export function getGameResult(game: GameFrbe): ResultEnum
-{
-
-  const overruled = (game.overruled??"NOR")==='NOR';
-  switch (overruled?game.overruled:game.result) {
+export function getGameResult(game: GameFrbe): ResultEnum {
+  const overruled = (game.overruled ?? 'NOR') !== 'NOR';
+  switch (overruled ? game.overruled : game.result) {
     case '1-0':
       return ResultEnum.WhiteWins;
     case '0-1':

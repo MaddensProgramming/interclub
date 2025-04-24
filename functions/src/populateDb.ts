@@ -8,8 +8,7 @@ import { Player } from './models/Player';
 import { Division } from './models/Division';
 import { TeamView } from './models/TeamView';
 import { store } from './initiateDB';
-import isEqual from 'lodash.isequal';
-
+import { isEqual } from 'lodash';
 
 const year = '2024';
 
@@ -302,15 +301,13 @@ async function updateIfChanged(
   ref: DocumentReference,
   data: any
 ): Promise<void> {
+  try {
+    const docSnapshot = await getDoc(ref);
 
-    try {
-      const docSnapshot = await getDoc(ref);
-
-      if (!docSnapshot.exists() || !isEqual(docSnapshot.data(), data)) {
-        await setDoc(ref, data);
-      }
-    } catch (err) {
-      console.error(err.message);
+    if (!docSnapshot.exists() || !isEqual(docSnapshot.data(), data)) {
+      await setDoc(ref, data);
     }
-
+  } catch (err) {
+    console.error(err.message);
+  }
 }
