@@ -3,8 +3,6 @@ import * as admin from 'firebase-admin';
 import { main } from './script';
 
 admin.initializeApp();
-const hotmailEmail = 'interclubschaken@hotmail.com';
-const hotmailPassword = 'E4c5c3!Pf6';
 
 // exports.sendEmailNotification = functions
 //   .region('europe-west1')

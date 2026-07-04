@@ -1,33 +1,33 @@
-<ng-container *ngIf="team$ | async as team; else loading">
-  <mat-tab-group [(selectedIndex)]="selectedIndex" (selectedIndexChange)="changeUrl($event)" animationDuration="200ms">
-    <mat-tab label="Resultaten">
-      <app-teamresults [team]="team"></app-teamresults>
-    </mat-tab>
-    <mat-tab label="Spelers" class="center">
-      <div class="card">
-        <label class="m-1 lighter">Bord: </label>
-        <mat-button-toggle-group
-          class="m-1 stand-out"
-          name="board"
-          [formControl]="board"
-        >
-          <mat-button-toggle
-            *ngFor="let board of boardArray(team.class | numberOfPlayers)"
-            value="{{ board }}"
-            >{{ board }}</mat-button-toggle
-          >
-        </mat-button-toggle-group>
-      </div>
-      <app-player-list
-        [players]="players$"
-        [showTotal]="true"
-      ></app-player-list>
-    </mat-tab>
-    <mat-tab *ngFor="let round of team.rounds" label="{{ round.id }}">
-      <app-round-view [round]="round" [team]="team"></app-round-view>
-    </mat-tab>
-  </mat-tab-group>
-</ng-container>
-<ng-template #loading>
-  <mat-spinner></mat-spinner>
-</ng-template>
+@if (team$ | async; as team) {
+<mat-tab-group
+  [(selectedIndex)]="selectedIndex"
+  (selectedIndexChange)="changeUrl($event)"
+  animationDuration="200ms"
+>
+  <mat-tab label="Resultaten">
+    <app-teamresults [team]="team"></app-teamresults>
+  </mat-tab>
+  <mat-tab label="Spelers" class="center">
+    <div class="card">
+      <label class="m-1 lighter">Bord: </label>
+      <mat-button-toggle-group
+        class="m-1 stand-out"
+        name="board"
+        [formControl]="board"
+      >
+        @for (board of boardArray(team.class | numberOfPlayers); track board) {
+        <mat-button-toggle value="{{ board }}">{{ board }}</mat-button-toggle>
+        }
+      </mat-button-toggle-group>
+    </div>
+    <app-player-list [players]="players$" [showTotal]="true"></app-player-list>
+  </mat-tab>
+  @for (round of team.rounds; track round) {
+  <mat-tab label="{{ round.id }}">
+    <app-round-view [round]="round" [team]="team"></app-round-view>
+  </mat-tab>
+  }
+</mat-tab-group>
+} @else {
+<mat-spinner></mat-spinner>
+}

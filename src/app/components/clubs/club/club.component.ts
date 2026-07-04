@@ -5,8 +5,15 @@ import {
   OnDestroy,
   OnInit,
   ViewChild,
+  ChangeDetectionStrategy,
 } from '@angular/core';
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import {
+  ActivatedRoute,
+  ParamMap,
+  Router,
+  RouterLink,
+  RouterOutlet,
+} from '@angular/router';
 import {
   BehaviorSubject,
   filter,
@@ -22,11 +29,24 @@ import { DataBaseService } from 'src/app/services/database.service';
 import { TeamServiceService } from 'src/app/services/team-service.service';
 import { PlayerListComponent } from '../team/player-list/player-list.component';
 import { ClubView } from 'functions/src/models/ClubView';
+import { MatTabNav, MatTabLink, MatTabNavPanel } from '@angular/material/tabs';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-club',
   templateUrl: './club.component.html',
   styleUrls: ['./club.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  imports: [
+    MatTabNav,
+    MatTabLink,
+    RouterLink,
+    MatTabNavPanel,
+    RouterOutlet,
+    MatProgressSpinner,
+    AsyncPipe,
+  ],
 })
 export class ClubComponent implements OnInit {
   public club$: Observable<ClubView>;
@@ -36,7 +56,7 @@ export class ClubComponent implements OnInit {
     private route: ActivatedRoute,
     private databaseService: DataBaseService,
     private teamService: TeamServiceService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
@@ -46,7 +66,7 @@ export class ClubComponent implements OnInit {
     this.club$ = this.route.paramMap.pipe(
       switchMap((params: ParamMap) => {
         return this.databaseService.getClub(+params.get('id'));
-      })
+      }),
     );
   }
 }

@@ -1,11 +1,28 @@
-<h3 [routerLink]="'/division/'+team.class+'/'+ team.division" class="clickable-title">Klasse: {{team.class}}{{team.division}}</h3>
-<table mat-table [dataSource]="team.rounds" class="mat-elevation-z8 big-table" style="margin-top: 1rem;">
+<h3
+  [routerLink]="'/division/' + team.class + '/' + team.division"
+  class="clickable-title"
+>
+  Klasse: {{ team.class }}{{ team.division }}
+</h3>
+<table
+  mat-table
+  [dataSource]="team.rounds"
+  class="mat-elevation-z8 big-table"
+  style="margin-top: 1rem"
+>
   <ng-container matColumnDef="id">
     <th mat-header-cell *matHeaderCellDef>Ronde</th>
     <td
       class="clickable-title"
-      [routerLink]="'/club/' + team.clubId + '/' + team.id + '/' + getRowPosition(element.id, team)"
-          mat-cell
+      [routerLink]="
+        '/club/' +
+        team.clubId +
+        '/' +
+        team.id +
+        '/' +
+        getRowPosition(element.id, team)
+      "
+      mat-cell
       *matCellDef="let element"
     >
       {{ element.id }}
@@ -23,28 +40,38 @@
 
   <ng-container matColumnDef="ratingOwn">
     <th mat-header-cell *matHeaderCellDef>Rating</th>
-    <td mat-cell *matCellDef="let element"><ng-container *ngIf="ratingOwn(element)">{{ ratingOwn(element) }}</ng-container></td>
+    <td mat-cell *matCellDef="let element">
+      @if (ratingOwn(element)) {
+      {{ ratingOwn(element) }}
+      }
+    </td>
     <td mat-footer-cell *matFooterCellDef>{{ averageRatingOwn() }}</td>
   </ng-container>
 
   <ng-container matColumnDef="teamOpponent">
     <th mat-header-cell *matHeaderCellDef>Tegenstander</th>
-    <td
-      mat-cell
-      *matCellDef="let element"
-
-    >
-    <div *ngIf="opponent(element).id!==0"  class="clickable-title"    [routerLink]="[      '//club/' + opponent(element).clubId + '/' + opponent(element).id    ]"
-    >{{ opponent(element).clubName }} {{ opponent(element).id }}</div>
-    <ng-container *ngIf="opponent(element).id===0" >BYE</ng-container>
-
+    <td mat-cell *matCellDef="let element">
+      @if (opponent(element).id!==0) {
+      <div
+        class="clickable-title"
+        [routerLink]="[
+          '//club/' + opponent(element).clubId + '/' + opponent(element).id
+        ]"
+      >
+        {{ opponent(element).clubName }} {{ opponent(element).id }}
+      </div>
+      } @if (opponent(element).id===0) { BYE }
     </td>
     <td mat-footer-cell *matFooterCellDef></td>
   </ng-container>
 
   <ng-container matColumnDef="ratingOpponent">
     <th mat-header-cell *matHeaderCellDef>Rating</th>
-    <td mat-cell *matCellDef="let element"><ng-container *ngIf="ratingOpponent(element)">{{ ratingOpponent(element) }}</ng-container></td>
+    <td mat-cell *matCellDef="let element">
+      @if (ratingOpponent(element)) {
+      {{ ratingOpponent(element) }}
+      }
+    </td>
     <td mat-footer-cell *matFooterCellDef>{{ averageRatingOppenent() }}</td>
   </ng-container>
 

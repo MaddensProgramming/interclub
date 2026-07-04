@@ -5,8 +5,9 @@ import {
   Input,
   OnDestroy,
   OnInit,
+  ChangeDetectionStrategy,
 } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   BehaviorSubject,
@@ -24,17 +25,40 @@ import {
 } from 'rxjs';
 import { DataBaseService } from 'src/app/services/database.service';
 import { TeamServiceService } from 'src/app/services/team-service.service';
-import { Location } from '@angular/common';
-import { MatTabChangeEvent } from '@angular/material/tabs';
+import { Location, AsyncPipe } from '@angular/common';
+import { MatTabChangeEvent, MatTabGroup, MatTab } from '@angular/material/tabs';
 import { Player } from 'functions/src/models/Player';
 import { ResultEnum } from 'functions/src/models/ResultEnum';
 import { Round } from 'functions/src/models/Round';
 import { TeamView } from 'functions/src/models/TeamView';
+import { TeamresultsComponent } from '../teamresults/teamresults.component';
+import {
+  MatButtonToggleGroup,
+  MatButtonToggle,
+} from '@angular/material/button-toggle';
+import { PlayerListComponent } from '../player-list/player-list.component';
+import { RoundViewComponent } from '../round-view/round-view.component';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { NumberOfPlayersPipe } from '../../../../pipes/number-of-players.pipe';
 
 @Component({
   selector: 'app-team-view',
   templateUrl: './team-view.component.html',
   styleUrls: ['./team-view.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  imports: [
+    MatTabGroup,
+    MatTab,
+    TeamresultsComponent,
+    MatButtonToggleGroup,
+    ReactiveFormsModule,
+    MatButtonToggle,
+    PlayerListComponent,
+    RoundViewComponent,
+    MatProgressSpinner,
+    AsyncPipe,
+    NumberOfPlayersPipe,
+  ],
 })
 export class TeamViewComponent implements OnInit, OnDestroy {
   teamId: number;
@@ -45,14 +69,14 @@ export class TeamViewComponent implements OnInit, OnDestroy {
   public team$: Observable<TeamView>;
   public players$: Observable<Player[]>;
 
-  board: FormControl = new FormControl('Alle');
+  board = new FormControl('Alle', { nonNullable: true });
   totaal: Player;
 
   constructor(
     private db: DataBaseService,
     private route: ActivatedRoute,
     private teamService: TeamServiceService,
-    private location: Location
+    private location: Location,
   ) {}
   ngOnDestroy(): void {
     this.destroy$.next();
@@ -71,14 +95,14 @@ export class TeamViewComponent implements OnInit, OnDestroy {
         this.teamId = team['id'];
         this.selectedIndex = this.selectTab(team['tab']);
       }),
-      switchMap(([team, club]) => this.db.getTeam(team['id'], club['id']))
+      switchMap(([team, club]) => this.db.getTeam(team['id'], club['id'])),
     );
 
     this.team$ = teamObs.pipe(
-      map((team) => this.fillInAverageRatingForRound(team))
+      map((team) => this.fillInAverageRatingForRound(team)),
     );
     this.players$ = combineLatest([boardObs, this.team$]).pipe(
-      map(([board, team]) => this.filterResultsForBoard(board, team))
+      map(([board, team]) => this.filterResultsForBoard(board, team)),
     );
   }
 
@@ -87,7 +111,7 @@ export class TeamViewComponent implements OnInit, OnDestroy {
     if (tab === 0) url = 'results';
     if (tab === 1) url = 'players';
     this.location.replaceState(
-      '/club/' + this.clubId + '/' + this.teamId + '/' + url
+      '/club/' + this.clubId + '/' + this.teamId + '/' + url,
     );
   }
 
@@ -121,7 +145,7 @@ export class TeamViewComponent implements OnInit, OnDestroy {
         if (this.sameTeam(team, round.teamAway))
           totRating += round.playerAway.rating;
         return totRating;
-      }, 0) / round.games.length
+      }, 0) / round.games.length,
     );
   }
 
@@ -145,7 +169,7 @@ export class TeamViewComponent implements OnInit, OnDestroy {
           )
             this.addGameAsBlack(game.playerAway, game.result, newplayerList);
         }
-      })
+      }),
     );
 
     return newplayerList;
@@ -154,10 +178,10 @@ export class TeamViewComponent implements OnInit, OnDestroy {
   addGameAsWhite(
     player: Player,
     result: ResultEnum,
-    playerList: Player[]
+    playerList: Player[],
   ): void {
     let playerToAdd = playerList.find(
-      (playerArr) => playerArr.id === player.id
+      (playerArr) => playerArr.id === player.id,
     );
     if (!playerToAdd) {
       playerToAdd = { ...player, numberOfGames: 0, score: 0 };
@@ -170,10 +194,10 @@ export class TeamViewComponent implements OnInit, OnDestroy {
   addGameAsBlack(
     player: Player,
     result: ResultEnum,
-    playerList: Player[]
+    playerList: Player[],
   ): void {
     let playerToAdd = playerList.find(
-      (playerArr) => playerArr.id === player.id
+      (playerArr) => playerArr.id === player.id,
     );
     if (!playerToAdd) {
       playerToAdd = { ...player, numberOfGames: 0, score: 0 };

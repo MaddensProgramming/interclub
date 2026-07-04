@@ -1,8 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({
-  name: 'numberOfPlayers',
-})
+@Pipe({ name: 'numberOfPlayers' })
 export class NumberOfPlayersPipe implements PipeTransform {
   transform(value: number): number {
     switch (value) {

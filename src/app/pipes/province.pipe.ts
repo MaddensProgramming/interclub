@@ -1,8 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({
-  name: 'province',
-})
+@Pipe({ name: 'province' })
 export class ProvincePipe implements PipeTransform {
   transform(value: number): string {
     switch (value) {

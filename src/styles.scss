@@ -51,8 +51,37 @@ label {
 }
 
 .stand-out {
-  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px,
-    rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset !important;
+  box-shadow:
+    rgba(0, 0, 0, 0.4) 0px 2px 4px,
+    rgba(0, 0, 0, 0.3) 0px 7px 13px -3px,
+    rgba(0, 0, 0, 0.2) 0px -3px 0px inset !important;
+}
+
+.mat-button-toggle-appearance-standard .mat-button-toggle-button::before,
+.mat-button-toggle-appearance-standard .mat-button-toggle-checkbox-wrapper {
+  display: none;
+}
+
+.mat-button-toggle-appearance-standard.mat-button-toggle-checked
+  .mat-button-toggle-button {
+  padding-left: 0 !important;
+}
+
+.mat-button-toggle-appearance-standard .mat-button-toggle-label-content {
+  padding: 0 12px;
+}
+
+.toolbar-year-select .mat-mdc-select-arrow,
+.toolbar-year-select .mat-mdc-select-value {
+  color: white;
+}
+
+.toolbar-year-panel .mat-mdc-option-pseudo-checkbox {
+  display: none;
+}
+
+.toolbar-year-panel .mat-mdc-option .mdc-list-item__primary-text {
+  margin-right: 0;
 }
 
 .mat-form-field-infix {

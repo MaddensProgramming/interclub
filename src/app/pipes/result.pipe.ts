@@ -2,9 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { ColorEnum } from 'functions/src/models/ColorEnum';
 import { ResultEnum } from 'functions/src/models/ResultEnum';
 
-@Pipe({
-  name: 'result',
-})
+@Pipe({ name: 'result' })
 export class ResultPipe implements PipeTransform {
   transform(value: ResultEnum): string {
     switch (value) {
@@ -26,9 +24,7 @@ export class ResultPipe implements PipeTransform {
   }
 }
 
-@Pipe({
-  name: 'ownResult',
-})
+@Pipe({ name: 'ownResult' })
 export class OwnResultPipe implements PipeTransform {
   transform(value: ResultEnum, color: ColorEnum): string {
     switch (value) {

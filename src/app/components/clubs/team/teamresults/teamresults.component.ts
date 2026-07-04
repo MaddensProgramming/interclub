@@ -1,11 +1,51 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { Round } from 'functions/src/models/Round';
 import { TeamView } from 'functions/src/models/TeamView';
+import { RouterLink } from '@angular/router';
+import {
+  MatTable,
+  MatColumnDef,
+  MatHeaderCellDef,
+  MatHeaderCell,
+  MatCellDef,
+  MatCell,
+  MatFooterCellDef,
+  MatFooterCell,
+  MatHeaderRowDef,
+  MatHeaderRow,
+  MatRowDef,
+  MatRow,
+  MatFooterRowDef,
+  MatFooterRow,
+} from '@angular/material/table';
 
 @Component({
   selector: 'app-teamresults',
   templateUrl: './teamresults.component.html',
   styleUrls: ['./teamresults.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  imports: [
+    RouterLink,
+    MatTable,
+    MatColumnDef,
+    MatHeaderCellDef,
+    MatHeaderCell,
+    MatCellDef,
+    MatCell,
+    MatFooterCellDef,
+    MatFooterCell,
+    MatHeaderRowDef,
+    MatHeaderRow,
+    MatRowDef,
+    MatRow,
+    MatFooterRowDef,
+    MatFooterRow,
+  ],
 })
 export class TeamresultsComponent implements OnInit {
   @Input()
@@ -75,7 +115,7 @@ export class TeamresultsComponent implements OnInit {
       this.team.rounds
         .filter((round) => round.games.length !== 0)
         .reduce((total, round) => (total += this.ratingOwn(round)), 0) /
-        this.numberOfMatches()
+        this.numberOfMatches(),
     );
   }
 
@@ -84,14 +124,14 @@ export class TeamresultsComponent implements OnInit {
       this.team.rounds
         .filter((round) => round.games.length !== 0)
         .reduce((total, round) => (total += this.ratingOpponent(round)), 0) /
-        this.numberOfMatches()
+        this.numberOfMatches(),
     );
   }
 
   matchPoints() {
     return this.team.rounds.reduce(
       (total, round) => (total += this.checkResult(round)),
-      0
+      0,
     );
   }
 

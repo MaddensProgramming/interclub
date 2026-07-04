@@ -1,1 +1,5 @@
-<app-player-list [players]="players$" [showTpr]="true"></app-player-list>
+@defer {
+  <app-player-list [players]="players$" [showTpr]="true"></app-player-list>
+} @placeholder {
+  <mat-spinner></mat-spinner>
+}

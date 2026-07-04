@@ -2,8 +2,8 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "./",
     "outDir": "./dist/out-tsc",
+    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "strictNullChecks": false,
@@ -13,13 +13,16 @@
     "noFallthroughCasesInSwitch": true,
     "sourceMap": true,
     "declaration": false,
-    "downlevelIteration": true,
     "experimentalDecorators": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
+    "paths": {
+      "src/*": ["./src/*"],
+      "functions/src/models/*": ["./functions/src/models/*"],
+      "functions/src/utility": ["./functions/src/utility.ts"]
+    },
     "importHelpers": true,
-    "target": "es2019",
-    "module": "es2020",
-    "lib": ["es2020", "dom"]
+    "target": "es2022",
+    "module": "es2022"
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

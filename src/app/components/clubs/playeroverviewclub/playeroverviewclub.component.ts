@@ -1,14 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { map, Observable, switchMap, tap } from 'rxjs';
 import { Player } from 'functions/src/models/Player';
 import { DataBaseService } from 'src/app/services/database.service';
 import { TeamServiceService } from 'src/app/services/team-service.service';
+import { PlayerListComponent } from '../team/player-list/player-list.component';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-playeroverviewclub',
   templateUrl: './playeroverviewclub.component.html',
   styleUrls: ['./playeroverviewclub.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  imports: [PlayerListComponent, MatProgressSpinner],
 })
 export class PlayeroverviewclubComponent implements OnInit {
   public players$: Observable<Player[]>;
@@ -16,7 +20,7 @@ export class PlayeroverviewclubComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private db: DataBaseService,
-    private teamService: TeamServiceService
+    private teamService: TeamServiceService,
   ) {}
 
   ngOnInit(): void {
@@ -25,7 +29,7 @@ export class PlayeroverviewclubComponent implements OnInit {
       switchMap((params: ParamMap) => {
         return this.db.getClub(+params.get('id'));
       }),
-      map((club) => club.players)
+      map((club) => club.players),
     );
   }
 }

@@ -1,19 +1,29 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import {
+  Component,
+  Input,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { map, Observable, startWith, switchMap } from 'rxjs';
 import { Division } from 'functions/src/models/Division';
 import { TeamView } from 'functions/src/models/TeamView';
 
 import { DataBaseService } from 'src/app/services/database.service';
+import { RouterLink } from '@angular/router';
+import { NgClass, AsyncPipe } from '@angular/common';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { DivisionForm } from '../division-overview/division-overview.component';
 
 @Component({
   selector: 'app-division-standings',
   templateUrl: './division-standings.component.html',
   styleUrls: ['./division-standings.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  imports: [RouterLink, NgClass, MatProgressSpinner, AsyncPipe],
 })
 export class DivisionStandingsComponent implements OnInit {
-  @Input()
-  form: FormGroup;
+  @Input({ required: true })
+  form: DivisionForm;
 
   division$: Observable<Division>;
 
@@ -22,8 +32,8 @@ export class DivisionStandingsComponent implements OnInit {
   ngOnInit(): void {
     this.division$ = this.form.valueChanges.pipe(
       startWith({
-        class: this.form?.get('class')?.value ?? '1',
-        division: this.form?.get('division')?.value ?? 'A',
+        class: this.form.controls.class.value,
+        division: this.form.controls.division.value,
       }),
       switchMap((form) => this.db.getDivision(form.class + form.division)),
       map((overview) => {
@@ -31,21 +41,21 @@ export class DivisionStandingsComponent implements OnInit {
           (a, b) =>
             b.matchPoints * 100 +
             b.boardPoints -
-            (a.matchPoints * 100 + a.boardPoints)
+            (a.matchPoints * 100 + a.boardPoints),
         );
         return overview;
-      })
+      }),
     );
   }
 
   findResult(teamHome: TeamView, teamAway: TeamView): number {
     if (this.sameTeam(teamAway, teamHome)) return null;
     const roundAway = teamHome.rounds.find((round) =>
-      this.sameTeam(round.teamHome, teamAway)
+      this.sameTeam(round.teamHome, teamAway),
     );
     if (roundAway) return roundAway.scoreAway;
     const roundHome = teamHome.rounds.find((round) =>
-      this.sameTeam(round.teamAway, teamAway)
+      this.sameTeam(round.teamAway, teamAway),
     );
     if (roundHome) return roundHome.scoreHome;
     return null;
@@ -71,7 +81,7 @@ export class DivisionStandingsComponent implements OnInit {
       teamHome.rounds.findIndex(
         (round) =>
           this.sameTeam(round.teamAway, teamAway) ||
-          this.sameTeam(round.teamHome, teamAway)
+          this.sameTeam(round.teamHome, teamAway),
       ) + 1
     );
   }

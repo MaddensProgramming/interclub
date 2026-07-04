@@ -4,9 +4,7 @@ import { OwnGame } from 'functions/src/models/OwnGame';
 import { Game } from 'functions/src/models/Game';
 import { revertResult } from 'functions/src/utility';
 
-@Pipe({
-  name: 'ownGame',
-})
+@Pipe({ name: 'ownGame' })
 export class OwnGamePipe implements PipeTransform {
   transform(value: Game[], id: number): OwnGame[] {
     const result: OwnGame[] = [];

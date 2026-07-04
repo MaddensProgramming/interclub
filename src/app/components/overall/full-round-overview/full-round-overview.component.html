@@ -1,75 +1,115 @@
-<ng-container *ngIf ="fullRoundOverview$ |async as fullRoundOverview else loading">
-<ng-container *ngFor ="let division of fullRoundOverview.divisions">
-<ng-container *ngFor ="let match of division.matches">
+@if (fullRoundOverview$ |async; as fullRoundOverview) { @for (division of
+fullRoundOverview.divisions; track division) { @for (match of division.matches;
+track match) {
 <table mat-table [dataSource]="match.games" class="mat-elevation-z8 big-table">
-    <ng-container matColumnDef="board">
-      <th mat-header-cell *matHeaderCellDef class="clickable-title" [routerLink]="['/division/'+division.class+'/'+ division.division]" style="font-size: 1rem; font-weight: 700; color: rgba(0, 0, 0, 0.85); padding-right:0.4rem " >{{division.class + division.division}}</th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.board }}
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="colorHome">
-      <th mat-header-cell *matHeaderCellDef></th>
-      <td mat-cell *matCellDef="let element">
-        <div [ngClass]="element.board%2 === 1 ? 'white' : 'black'"></div>
-      </td>
-    </ng-container>
-  
-    <ng-container matColumnDef="white">
-      <th mat-header-cell *matHeaderCellDef class="clickable-title" [routerLink]="['/club/' + match.teamHome.clubId + '/'+ match.teamHome.id]"  style="font-size: 1rem; font-weight: 700; color: rgba(0, 0, 0, 0.85); ">{{match.teamHome.clubName +" " + match.teamHome.id +" ("+ match.averageRatingHome +")"}}</th>
-      <td
-        mat-cell
-        *matCellDef="let element"
-        [routerLink]="['/player/' + element.playerHome.id]"
-        class="clickable-title"
-      >
-        <div>
-          {{ element.playerHome.firstName }} {{ element.playerHome.name }} ({{
-            element.playerHome.rating
-          }})
-        </div>
-      </td>
-    </ng-container>
-  
-    <ng-container matColumnDef="black">
-      <th mat-header-cell *matHeaderCellDef class="clickable-title" [routerLink]="['/club/' + match.teamAway.clubId + '/'+ match.teamAway.id]"  style="font-size: 1rem; font-weight: 700; color: rgba(0, 0, 0, 0.85); ">{{match.teamAway.clubName +" " +  match.teamAway.id +" ("+ match.averageRatingAway +")"}}</th>
-      <td
-        mat-cell
-        *matCellDef="let element"
-        [routerLink]="['/player/' + element.playerAway.id]"
-        class="clickable-title"
-      >
-        {{ element.playerAway.firstName }} {{ element.playerAway.name }} ({{
-          element.playerAway.rating
+  <ng-container matColumnDef="board">
+    <th
+      mat-header-cell
+      *matHeaderCellDef
+      class="clickable-title"
+      [routerLink]="['/division/' + division.class + '/' + division.division]"
+      style="
+        font-size: 1rem;
+        font-weight: 700;
+        color: rgba(0, 0, 0, 0.85);
+        padding-right: 0.4rem;
+      "
+    >
+      {{ division.class + division.division }}
+    </th>
+    <td mat-cell *matCellDef="let element">
+      {{ element.board }}
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="colorHome">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let element">
+      <div [ngClass]="element.board % 2 === 1 ? 'white' : 'black'"></div>
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="white">
+    <th
+      mat-header-cell
+      *matHeaderCellDef
+      class="clickable-title"
+      [routerLink]="[
+        '/club/' + match.teamHome.clubId + '/' + match.teamHome.id
+      ]"
+      style="font-size: 1rem; font-weight: 700; color: rgba(0, 0, 0, 0.85)"
+    >
+      {{
+        match.teamHome.clubName +
+          " " +
+          match.teamHome.id +
+          " (" +
+          match.averageRatingHome +
+          ")"
+      }}
+    </th>
+    <td
+      mat-cell
+      *matCellDef="let element"
+      [routerLink]="['/player/' + element.playerHome.id]"
+      class="clickable-title"
+    >
+      <div>
+        {{ element.playerHome.firstName }} {{ element.playerHome.name }} ({{
+          element.playerHome.rating
         }})
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="colorAway">
-      <th mat-header-cell *matHeaderCellDef></th>
-      <td mat-cell *matCellDef="let element">
-        <div [ngClass]="element.board%2 === 0 ? 'white' : 'black'"></div>
-      </td>
-    </ng-container>
-  
-    <ng-container matColumnDef="result">
-      <th mat-header-cell *matHeaderCellDef  style="font-size: 1rem; font-weight: 700; color: rgba(0, 0, 0, 0.85); ">{{match.scoreHome + " - " + match.scoreAway}}</th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.result | result }}
-      </td>
-    </ng-container>
-  
-    <tr mat-header-row *matHeaderRowDef="displayedColumnsRound"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumnsRound"></tr>
-  </table>
-
-
-</ng-container>
-</ng-container>
-</ng-container>
-
-
-<ng-template #loading>
-    <mat-spinner></mat-spinner>
-  </ng-template>
+      </div>
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="black">
+    <th
+      mat-header-cell
+      *matHeaderCellDef
+      class="clickable-title"
+      [routerLink]="[
+        '/club/' + match.teamAway.clubId + '/' + match.teamAway.id
+      ]"
+      style="font-size: 1rem; font-weight: 700; color: rgba(0, 0, 0, 0.85)"
+    >
+      {{
+        match.teamAway.clubName +
+          " " +
+          match.teamAway.id +
+          " (" +
+          match.averageRatingAway +
+          ")"
+      }}
+    </th>
+    <td
+      mat-cell
+      *matCellDef="let element"
+      [routerLink]="['/player/' + element.playerAway.id]"
+      class="clickable-title"
+    >
+      {{ element.playerAway.firstName }} {{ element.playerAway.name }} ({{
+        element.playerAway.rating
+      }})
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="colorAway">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let element">
+      <div [ngClass]="element.board % 2 === 0 ? 'white' : 'black'"></div>
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="result">
+    <th
+      mat-header-cell
+      *matHeaderCellDef
+      style="font-size: 1rem; font-weight: 700; color: rgba(0, 0, 0, 0.85)"
+    >
+      {{ match.scoreHome + " - " + match.scoreAway }}
+    </th>
+    <td mat-cell *matCellDef="let element">
+      {{ element.result | result }}
+    </td>
+  </ng-container>
+  <tr mat-header-row *matHeaderRowDef="displayedColumnsRound"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumnsRound"></tr>
+</table>
+} } } @else {
+<mat-spinner></mat-spinner>
+}

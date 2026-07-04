@@ -1,53 +1,107 @@
-import { DataSource } from '@angular/cdk/collections';
 import {
-  AfterViewInit,
   Component,
-  Input,
-  OnInit,
-  ViewChild,
+  ChangeDetectionStrategy,
+  computed,
+  effect,
+  input,
+  signal,
+  viewChild,
 } from '@angular/core';
-import { MatSort, MatSortable } from '@angular/material/sort';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
 import {
   MatTable,
   MatTableDataSource,
-  _MatTableDataSource,
+  MatColumnDef,
+  MatHeaderCellDef,
+  MatHeaderCell,
+  MatCellDef,
+  MatCell,
+  MatFooterCellDef,
+  MatFooterCell,
+  MatHeaderRowDef,
+  MatHeaderRow,
+  MatRowDef,
+  MatRow,
+  MatFooterRowDef,
+  MatFooterRow,
 } from '@angular/material/table';
-import { map, Observable, of, skip, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Player } from 'functions/src/models/Player';
+import { RouterLink } from '@angular/router';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-player-list',
   templateUrl: './player-list.component.html',
   styleUrls: ['./player-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  imports: [
+    MatTable,
+    MatSort,
+    MatColumnDef,
+    MatHeaderCellDef,
+    MatHeaderCell,
+    MatSortHeader,
+    MatCellDef,
+    MatCell,
+    MatFooterCellDef,
+    MatFooterCell,
+    RouterLink,
+    MatHeaderRowDef,
+    MatHeaderRow,
+    MatRowDef,
+    MatRow,
+    MatFooterRowDef,
+    MatFooterRow,
+    MatProgressSpinner,
+  ],
 })
-export class PlayerListComponent implements OnInit, AfterViewInit {
-  @Input() public players: Observable<Player[]>;
-  @Input() public showTpr: boolean;
-  @Input() public showId: boolean;
-  @Input() public showTotal: boolean;
+export class PlayerListComponent {
+  public players = input.required<Observable<Player[]>>();
+  public showTpr = input(false);
+  public showId = input(false);
+  public showTotal = input(false);
 
-  totaal: Player;
+  totaal: Player | null;
+  dataSource = new MatTableDataSource<Player>([]);
+  loading = signal(true);
+  sort = viewChild(MatSort);
 
-  dataSource$: Observable<MatTableDataSource<Player>>;
+  displayedColumnsPlayer = computed(() => {
+    const columns = [
+      'name',
+      'score',
+      'numberOfGames',
+      'rating',
+      'ratingFide',
+      'ratingNat',
+    ];
+    if (this.showTpr()) columns.push('tpr');
+    if (this.showId()) columns.unshift('id');
+    return columns;
+  });
 
-  @ViewChild(MatSort) sort: MatSort;
+  constructor() {
+    effect((onCleanup) => {
+      this.loading.set(true);
+      const subscription = this.players().subscribe((players) => {
+        if (this.showTotal()) this.calcTotal(players);
+        this.dataSource.data = [...players];
+        this.loading.set(false);
+      });
+      onCleanup(() => subscription.unsubscribe());
+    });
 
-  displayedColumnsPlayer: string[] = [
-    'name',
-    'score',
-    'numberOfGames',
-    'rating',
-    'ratingFide',
-    'ratingNat',
-  ];
-
-  public getSource(players: Player[]): MatTableDataSource<Player> {
-    const dataSource = new MatTableDataSource(players);
-    dataSource.sort = this.sort;
-    return dataSource;
+    effect(() => {
+      const sort = this.sort();
+      if (!sort) return;
+      this.dataSource.sort = sort;
+      this.dataSource.data = [...this.dataSource.data];
+    });
   }
 
   public calcTotal(players: Player[]): void {
+    this.totaal = null;
     let totalRating = 0;
     let totalScore = 0;
     let totalGames = 0;
@@ -60,6 +114,7 @@ export class PlayerListComponent implements OnInit, AfterViewInit {
       totalFideRating += (player.ratingFide ?? 0) * player.numberOfGames;
       totalNatRating += (player.ratingNat ?? 0) * player.numberOfGames;
     });
+    if (totalGames === 0) return;
 
     this.totaal = {
       name: 'Totaal',
@@ -72,21 +127,5 @@ export class PlayerListComponent implements OnInit, AfterViewInit {
       score: totalScore,
       tpr: 0,
     };
-  }
-
-  constructor() {}
-  ngAfterViewInit(): void {
-    this.dataSource$ = this.players.pipe(
-      tap((players) => {
-        if (this.showTotal) this.calcTotal(players);
-      }),
-      map((players) => this.getSource(players))
-    );
-  }
-
-  ngOnInit(): void {
-    this.dataSource$ = of(this.getSource([]));
-    if (this.showTpr) this.displayedColumnsPlayer.push('tpr');
-    if (this.showId) this.displayedColumnsPlayer.unshift('id');
   }
 }

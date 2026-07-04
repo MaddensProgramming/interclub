@@ -1,34 +1,44 @@
-<ng-container *ngIf="division$ | async as division; else loading">
-  <table [cellSpacing]="0">
-    <tr class="titles">
-      <th>Ploeg</th>
-      <th *ngFor="let team of division.teams; let indexTeam = index">
-        {{ indexTeam + 1 }}
-      </th>
-      <th>MP</th>
-      <th>BP</th>
-    </tr>
-    <tr *ngFor="let teamHome of division.teams; let indexTeam = index">
-      <th
-        class="teams clickable-title"
-        [routerLink]="'/club/' + teamHome.clubId + '/' + teamHome.id"
-      >
-        {{ indexTeam + 1 }}. {{ teamHome.clubName }} {{ teamHome.id }}
-      </th>
-      <td
-        class="clickable-title"
-        *ngFor="let teamAway of division.teams"
-        [ngClass]="colorResult(teamAway, teamHome)"
-        [routerLink]="'/club/' + teamHome.clubId + '/' + teamHome.id+ '/' + round(teamHome, teamAway)"
-              >
-        {{ findResult(teamHome, teamAway) }}
-      </td>
-      <td class="important">{{ teamHome.matchPoints }}</td>
-      <td class="important">{{ teamHome.boardPoints }}</td>
-    </tr>
-  </table>
-</ng-container>
-
-<ng-template #loading>
-  <mat-spinner></mat-spinner>
-</ng-template>
+@if (division$ | async; as division) {
+<table [cellSpacing]="0">
+  <tr class="titles">
+    <th>Ploeg</th>
+    @for (team of division.teams; track team; let indexTeam = $index) {
+    <th>
+      {{ indexTeam + 1 }}
+    </th>
+    }
+    <th>MP</th>
+    <th>BP</th>
+  </tr>
+  @for (teamHome of division.teams; track teamHome; let indexTeam = $index) {
+  <tr>
+    <th
+      class="teams clickable-title"
+      [routerLink]="'/club/' + teamHome.clubId + '/' + teamHome.id"
+    >
+      {{ indexTeam + 1 }}. {{ teamHome.clubName }} {{ teamHome.id }}
+    </th>
+    @for (teamAway of division.teams; track teamAway) {
+    <td
+      class="clickable-title"
+      [ngClass]="colorResult(teamAway, teamHome)"
+      [routerLink]="
+        '/club/' +
+        teamHome.clubId +
+        '/' +
+        teamHome.id +
+        '/' +
+        round(teamHome, teamAway)
+      "
+    >
+      {{ findResult(teamHome, teamAway) }}
+    </td>
+    }
+    <td class="important">{{ teamHome.matchPoints }}</td>
+    <td class="important">{{ teamHome.boardPoints }}</td>
+  </tr>
+  }
+</table>
+} @else {
+<mat-spinner></mat-spinner>
+}

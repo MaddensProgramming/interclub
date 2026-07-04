@@ -1,27 +1,53 @@
 <div class="result-card">
-  <ng-container *ngIf="date$|async as date ">
-    <span class="date">{{date.toLocaleDateString('nl-BE')}}</span>
-  </ng-container>
+  @if (date$|async; as date ) {
+  <span class="date">{{ date.toLocaleDateString("nl-BE") }}</span>
+  }
 
   <div class="score-line">
-  <div class="team">
-    <span *ngIf="round.teamHome"  class="team-name clickable-title" [routerLink]="['//club/' +round.teamHome.clubId + '/' + round.teamHome.id + '/results']">
-      {{ round.teamHome.clubName }}
-      {{ round.teamHome.id }}
-    </span>
-    <span *ngIf="!round.teamHome" class="team-name"> BYE </span>
-    <span class="rating" *ngIf="round?.averageRatingHome">{{ round.averageRatingHome }}</span>
+    <div class="team">
+      @if (round.teamHome) {
+      <span
+        class="team-name clickable-title"
+        [routerLink]="[
+          '//club/' +
+            round.teamHome.clubId +
+            '/' +
+            round.teamHome.id +
+            '/results'
+        ]"
+      >
+        {{ round.teamHome.clubName }}
+        {{ round.teamHome.id }}
+      </span>
+      } @if (!round.teamHome) {
+      <span class="team-name"> BYE </span>
+      } @if (round?.averageRatingHome) {
+      <span class="rating">{{ round.averageRatingHome }}</span>
+      }
+    </div>
+    <span class="result"> {{ round.scoreHome }} - {{ round.scoreAway }} </span>
+    <div class="team">
+      @if (round.teamAway) {
+      <span
+        class="team-name clickable-title"
+        [routerLink]="[
+          '//club/' +
+            round.teamAway.clubId +
+            '/' +
+            round.teamAway.id +
+            '/results'
+        ]"
+      >
+        {{ round.teamAway.clubName }}
+        {{ round.teamAway.id }}</span
+      >
+      } @if (!round.teamAway) {
+      <span class="team-name"> BYE </span>
+      } @if (round?.averageRatingAway) {
+      <span class="rating">{{ round.averageRatingAway }}</span>
+      }
+    </div>
   </div>
-  <span class="result"> {{ round.scoreHome }} - {{ round.scoreAway }} </span>
-  <div class="team">
-    <span *ngIf="round.teamAway"  class="team-name clickable-title" [routerLink]="['//club/' +round.teamAway.clubId + '/' + round.teamAway.id + '/results']">
-      {{ round.teamAway.clubName }}
-      {{ round.teamAway.id }}</span>
-    <span *ngIf="!round.teamAway" class="team-name"> BYE </span>
-    <span class="rating" *ngIf="round?.averageRatingAway">{{ round.averageRatingAway }}</span>
-  </div>
-</div>
-
 </div>
 
 <table mat-table [dataSource]="round.games" class="mat-elevation-z8 big-table">
@@ -35,7 +61,7 @@
   <ng-container matColumnDef="colorHome">
     <th mat-header-cell *matHeaderCellDef></th>
     <td mat-cell *matCellDef="let element">
-      <div [ngClass]="element.board%2 === 1 ? 'white' : 'black'"></div>
+      <div [ngClass]="element.board % 2 === 1 ? 'white' : 'black'"></div>
     </td>
   </ng-container>
 
@@ -45,7 +71,8 @@
       mat-cell
       *matCellDef="let element"
       [routerLink]="['/player/' + element.playerHome.id]"
-      class="clickable-title"    >
+      class="clickable-title"
+    >
       <div>
         {{ element.playerHome.firstName }} {{ element.playerHome.name }} ({{
           element.playerHome.rating
@@ -60,11 +87,11 @@
       {{ element.result | result }}
     </td>
   </ng-container>
-  
+
   <ng-container matColumnDef="colorAway">
     <th mat-header-cell *matHeaderCellDef></th>
     <td mat-cell *matCellDef="let element">
-      <div [ngClass]="element.board%2 === 0 ? 'white' : 'black'"></div>
+      <div [ngClass]="element.board % 2 === 0 ? 'white' : 'black'"></div>
     </td>
   </ng-container>
 
@@ -81,7 +108,6 @@
       }})
     </td>
   </ng-container>
-
 
   <tr mat-header-row *matHeaderRowDef="displayedColumnsRound"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumnsRound"></tr>

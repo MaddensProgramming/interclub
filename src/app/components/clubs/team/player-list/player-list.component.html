@@ -1,83 +1,81 @@
-<ng-container *ngrxLet="dataSource$  as dataSource">
-<table
-  mat-table
-  [dataSource]="dataSource"
-  class="mat-elevation-z8 big-table"
-  matSort
-  [matSortActive]="'numberOfGames'"
-  [matSortDirection]="'desc'"
->
-  <ng-container matColumnDef="id">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Stamnummer</th>
-    <td mat-cell *matCellDef="let element">{{ element.id }}</td>
-    <td mat-footer-cell *matFooterCellDef></td>
-  </ng-container>
-
-  <ng-container matColumnDef="name">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Naam</th>
-    <td
-      mat-cell
-      *matCellDef="let element"
-      [routerLink]="['/player/' + element.id]"
-      class="clickable-title"
-    >
-      {{ element.firstName }} {{ element.name }}
-    </td>
-    <td mat-footer-cell *matFooterCellDef>Totaal</td>
-  </ng-container>
-
-  <ng-container matColumnDef="score">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Score</th>
-    <td mat-cell *matCellDef="let element">
-      {{ element.score }}
-    </td>
-    <td mat-footer-cell *matFooterCellDef>
-      {{ totaal?.score }}
-    </td></ng-container
+@if (!loading()) {
+  <table
+    mat-table
+    [dataSource]="dataSource"
+    class="mat-elevation-z8 big-table"
+    matSort
+    [matSortActive]="'numberOfGames'"
+    [matSortDirection]="'desc'"
   >
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Stamnummer</th>
+      <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+      <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
 
-  <ng-container matColumnDef="numberOfGames">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Partijen</th>
-    <td mat-cell *matCellDef="let element">{{ element.numberOfGames }}</td>
-    <td mat-footer-cell *matFooterCellDef>{{ totaal?.numberOfGames }}</td>
-  </ng-container>
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Naam</th>
+      <td
+        mat-cell
+        *matCellDef="let element"
+        [routerLink]="['/player/' + element.id]"
+        class="clickable-title"
+      >
+        {{ element.firstName }} {{ element.name }}
+      </td>
+      <td mat-footer-cell *matFooterCellDef>Totaal</td>
+    </ng-container>
 
-  <ng-container matColumnDef="rating">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Rating IC</th>
-    <td mat-cell *matCellDef="let element">{{ element.rating }}</td>
-    <td mat-footer-cell *matFooterCellDef>{{ totaal?.rating }}</td>
-  </ng-container>
+    <ng-container matColumnDef="score">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Score</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.score }}
+      </td>
+      <td mat-footer-cell *matFooterCellDef>
+        {{ totaal?.score }}
+      </td></ng-container
+    >
 
-  <ng-container matColumnDef="ratingFide">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Fide rating</th>
-    <td mat-cell *matCellDef="let element">{{ element.ratingFide }}</td>
-    <td mat-footer-cell *matFooterCellDef>{{ totaal?.ratingFide }}</td>
-  </ng-container>
+    <ng-container matColumnDef="numberOfGames">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Partijen</th>
+      <td mat-cell *matCellDef="let element">{{ element.numberOfGames }}</td>
+      <td mat-footer-cell *matFooterCellDef>{{ totaal?.numberOfGames }}</td>
+    </ng-container>
 
-  <ng-container matColumnDef="ratingNat">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Nat. rating</th>
-    <td mat-cell *matCellDef="let element">{{ element.ratingNat }}</td>
-    <td mat-footer-cell *matFooterCellDef>{{ totaal?.ratingNat }}</td>
+    <ng-container matColumnDef="rating">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Rating IC</th>
+      <td mat-cell *matCellDef="let element">{{ element.rating }}</td>
+      <td mat-footer-cell *matFooterCellDef>{{ totaal?.rating }}</td>
+    </ng-container>
 
-  </ng-container>
+    <ng-container matColumnDef="ratingFide">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Fide rating</th>
+      <td mat-cell *matCellDef="let element">{{ element.ratingFide }}</td>
+      <td mat-footer-cell *matFooterCellDef>{{ totaal?.ratingFide }}</td>
+    </ng-container>
 
-  <ng-container matColumnDef="tpr">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>TPR</th>
-    <td mat-cell *matCellDef="let element">{{ element.tpr }}</td>
-    <td mat-footer-cell *matFooterCellDef></td>
-  </ng-container>
+    <ng-container matColumnDef="ratingNat">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Nat. rating</th>
+      <td mat-cell *matCellDef="let element">{{ element.ratingNat }}</td>
+      <td mat-footer-cell *matFooterCellDef>{{ totaal?.ratingNat }}</td>
+    </ng-container>
 
-  <tr mat-header-row *matHeaderRowDef="displayedColumnsPlayer"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumnsPlayer"></tr>
-  <ng-container *ngIf="showTotal">
-    <tr
-      mat-footer-row
-      class="fat"
-      *matFooterRowDef="displayedColumnsPlayer"
-    ></tr>
-  </ng-container>
-</table>
+    <ng-container matColumnDef="tpr">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>TPR</th>
+      <td mat-cell *matCellDef="let element">{{ element.tpr }}</td>
+      <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
 
-<ng-template #loading>
+    <tr mat-header-row *matHeaderRowDef="displayedColumnsPlayer()"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumnsPlayer()"></tr>
+    @if (showTotal()) {
+      <tr
+        mat-footer-row
+        class="fat"
+        *matFooterRowDef="displayedColumnsPlayer()"
+      ></tr>
+    }
+  </table>
+} @else {
   <mat-spinner></mat-spinner>
-</ng-template>
+}

@@ -35,7 +35,7 @@ button {
  * Leaf nodes need to have padding so as to align with other non-leaf nodes
  * under the same parent.
  */
-.tree div[role="group"] > .mat-tree-node {
+.tree div[role="group"] > mat-nested-tree-node > .mat-tree-node {
   font-weight: 500;
   white-space: nowrap;
   padding: 0.3rem;
@@ -45,7 +45,7 @@ button {
   background-color: #dddddd;
 }
 
-.tree div[role="group"] > .mat-tree-node:hover {
+.tree div[role="group"] > mat-nested-tree-node > .mat-tree-node:hover {
   background-color: rgba(0, 0, 0, 0.4);
 }
 
@@ -75,5 +75,3 @@ button {
   font-weight: 600;
   background-color: rgba(0, 0, 0, 0.04);
 }
-
-
