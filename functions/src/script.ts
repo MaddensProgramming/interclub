@@ -29,7 +29,7 @@ export const main = async () => {
   }
 };
 
-const readAndProcessCsv = async () => {
+export const readAndProcessCsv = async () => {
   const csvData = await readCsvFile('./division.csv');
   const jsonData = csvToJsonObject(csvData);
   const divisions = convertToDivisions(jsonData);
