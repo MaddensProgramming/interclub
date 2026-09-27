@@ -9,6 +9,9 @@
     }
   </mat-button-toggle-group>
 </div>
+@if (showDivisionSixNote) {
+  <p>Afdeling 6 speelt niet op speeldagen 5 en 6. Rondes 5–9 van afdeling 6 staan bij speeldagen 7–11.</p>
+}
 
 <app-full-round-overview
   [roundNumberSubject]="roundNumberSubject"

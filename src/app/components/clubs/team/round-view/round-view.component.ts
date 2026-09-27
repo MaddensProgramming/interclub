@@ -65,7 +65,7 @@ export class RoundViewComponent implements OnInit {
   ngOnInit(): void {
     this.date$ = this.database
       .getDates()
-      .pipe(map((dates) => dates.dates[this.round.id - 1].toDate()));
+      .pipe(map((dates) => (dates.datesByDivision?.[this.team.class] ?? dates.dates)[this.round.id - 1]?.toDate()));
   }
 
   sameTeam(teamA: TeamView, teamB: TeamView): boolean {

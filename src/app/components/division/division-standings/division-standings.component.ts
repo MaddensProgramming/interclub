@@ -7,6 +7,7 @@ import {
 import { map, Observable, startWith, switchMap } from 'rxjs';
 import { Division } from 'functions/src/models/Division';
 import { TeamView } from 'functions/src/models/TeamView';
+import { Round } from 'functions/src/models/Round';
 
 import { DataBaseService } from 'src/app/services/database.service';
 import { RouterLink } from '@angular/router';
@@ -48,41 +49,30 @@ export class DivisionStandingsComponent implements OnInit {
     );
   }
 
-  findResult(teamHome: TeamView, teamAway: TeamView): number {
-    if (this.sameTeam(teamAway, teamHome)) return null;
-    const roundAway = teamHome.rounds.find((round) =>
-      this.sameTeam(round.teamHome, teamAway),
+  matches(team: TeamView, opponent: TeamView): Round[] {
+    if (this.sameTeam(team, opponent)) return [];
+    return team.rounds.filter((round) =>
+      this.sameTeam(round.teamHome, opponent) || this.sameTeam(round.teamAway, opponent)
     );
-    if (roundAway) return roundAway.scoreAway;
-    const roundHome = teamHome.rounds.find((round) =>
-      this.sameTeam(round.teamAway, teamAway),
-    );
-    if (roundHome) return roundHome.scoreHome;
-    return null;
+  }
+
+  score(round: Round, team: TeamView): number | string {
+    if (round.played === false) return '-';
+    return this.sameTeam(round.teamHome, team) ? round.scoreHome : round.scoreAway;
+  }
+
+  roundTab(team: TeamView, round: Round): number {
+    return team.rounds.findIndex((item) => item.id === round.id) + 1;
   }
 
   sameTeam(teamA: TeamView, teamB: TeamView): boolean {
     return teamA.clubId === teamB.clubId && teamA.id === teamB.id;
   }
 
-  colorResult(teamHome: TeamView, teamAway: TeamView): string {
-    if (this.sameTeam(teamAway, teamHome)) return 'black';
-
-    const pointsHome = this.findResult(teamHome, teamAway);
-    const pointsAway = this.findResult(teamAway, teamHome);
-    if (!pointsAway && !pointsHome) return '';
-    if (pointsAway === pointsHome) return 'yellow';
-    return pointsHome < pointsAway ? 'green' : 'red';
-  }
-
-  round(teamHome: TeamView, teamAway: TeamView): number {
-    if (this.sameTeam(teamAway, teamHome)) return null;
-    return (
-      teamHome.rounds.findIndex(
-        (round) =>
-          this.sameTeam(round.teamAway, teamAway) ||
-          this.sameTeam(round.teamHome, teamAway),
-      ) + 1
-    );
+  colorResult(round: Round, team: TeamView): string {
+    if (round.played === false || (!round.scoreHome && !round.scoreAway)) return '';
+    const own = this.score(round, team) as number;
+    const other = this.sameTeam(round.teamHome, team) ? round.scoreAway : round.scoreHome;
+    return own === other ? 'yellow' : own > other ? 'green' : 'red';
   }
 }

@@ -30,14 +30,15 @@ import { Player } from 'functions/src/models/Player';
 import { Division } from 'functions/src/models/Division';
 import { TeamView } from 'functions/src/models/TeamView';
 import { Year } from '../models/year';
+import { ACTIVE_SEASON } from 'functions/src/season';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DataBaseService {
   public store: Firestore;
-  public year: string = '2025';
-  public year$: BehaviorSubject<string> = new BehaviorSubject<string>('2025');
+  public year: string = ACTIVE_SEASON;
+  public year$: BehaviorSubject<string> = new BehaviorSubject<string>(ACTIVE_SEASON);
 
   public yearDb: Year[] = [];
 
@@ -72,15 +73,21 @@ export class DataBaseService {
   }
 
   public getFullRoundOverview(round: string): Observable<RoundOverview> {
-    return from(
-      getDoc(doc(this.store, 'years', '2025', 'roundOverview', round))
-    ).pipe(map((data) => data.data() as RoundOverview));
+    return this.year$.pipe(
+      switchMap((year) => from(this.getSeasonDocument(year, 'roundOverview', round))),
+      map((data) => data.data() as RoundOverview)
+    );
   }
 
   public getLastUpdate(): Observable<Date> {
-    return from(getDoc(doc(this.store, 'years', '2025'))).pipe(
-      map((data) => data.data()['lastUpdate'].toDate() as Date)
+    return this.year$.pipe(
+      switchMap((year) => from(this.getSeasonDocument(year))),
+      map((data) => data.data()?.['lastUpdate']?.toDate() as Date)
     );
+  }
+
+  private getSeasonDocument(year: string, ...path: string[]) {
+    return getDoc(doc(this.store, 'years', year, ...path));
   }
 
   public getClassOverview(): Observable<ClassOverview> {
@@ -89,12 +96,12 @@ export class DataBaseService {
         if (this.cacheClassOverview[year])
           return of(this.cacheClassOverview[year]);
         return from(
-          getDoc(doc(this.store, 'years', this.year, 'overviews', 'divisions'))
+          getDoc(doc(this.store, 'years', year, 'overviews', 'divisions'))
         ).pipe(
           map((data) => data.data() as ClassOverview),
           tap(
             (classoverview) =>
-              (this.cacheClassOverview[this.year] = classoverview)
+              (this.cacheClassOverview[year] = classoverview)
           ),
           filter((data) => {
             if (!data) this.router.navigate(['404']);
@@ -140,7 +147,7 @@ export class DataBaseService {
             doc(
               this.store,
               'years',
-              this.year,
+              year,
               'club',
               clubId.toString(),
               'team',
@@ -185,7 +192,7 @@ export class DataBaseService {
           return of(this.cacheClubOverview[this.year]);
         return from(
           getDoc(
-            doc(this.store, 'years', this.year, 'clubOverview', 'overview')
+            doc(this.store, 'years', year, 'clubOverview', 'overview')
           )
         ).pipe(
           map((data) => data.data() as ClubOverview),

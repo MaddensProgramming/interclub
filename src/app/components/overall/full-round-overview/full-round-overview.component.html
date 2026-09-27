@@ -15,7 +15,7 @@ track match) {
         padding-right: 0.4rem;
       "
     >
-      {{ division.class + division.division }}
+      {{ division.class + division.division }} · R{{ match.id }}
     </th>
     <td mat-cell *matCellDef="let element">
       {{ element.board }}
@@ -101,7 +101,7 @@ track match) {
       *matHeaderCellDef
       style="font-size: 1rem; font-weight: 700; color: rgba(0, 0, 0, 0.85)"
     >
-      {{ match.scoreHome + " - " + match.scoreAway }}
+      {{ match.played === false ? '-' : match.scoreHome + " - " + match.scoreAway }}
     </th>
     <td mat-cell *matCellDef="let element">
       {{ element.result | result }}

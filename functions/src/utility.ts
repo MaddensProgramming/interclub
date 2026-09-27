@@ -2,7 +2,7 @@ import { ResultEnum } from './models/ResultEnum';
 import { GameFrbe } from './modelsFRBE';
 
 export function getGameResult(game: GameFrbe): ResultEnum {
-  const overruled = (game.overruled ?? 'NOR') !== 'NOR';
+  const overruled = !!game.overruled && game.overruled !== 'NOR';
   switch (overruled ? game.overruled : game.result) {
     case '1-0':
       return ResultEnum.WhiteWins;
@@ -14,12 +14,26 @@ export function getGameResult(game: GameFrbe): ResultEnum {
       return ResultEnum.WhiteFF;
     case '0-1 FF':
       return ResultEnum.BlackFF;
-    default:
+    case '0-0 FF':
       return ResultEnum.BothFF;
+    case '½-0':
+      return ResultEnum.WhiteHalf;
+    case '0-½':
+      return ResultEnum.BlackHalf;
+    case 'Team FF':
+      return ResultEnum.TeamFF;
+    default:
+      throw new Error(`Unknown FRBE game result: ${overruled ? game.overruled : game.result}`);
   }
 }
 export function revertResult(result: ResultEnum): ResultEnum {
   switch (result) {
+    case ResultEnum.WhiteHalf:
+      return ResultEnum.BlackHalf;
+    case ResultEnum.BlackHalf:
+      return ResultEnum.WhiteHalf;
+    case ResultEnum.TeamFF:
+      return ResultEnum.TeamFF;
     case ResultEnum.WhiteFF:
       return ResultEnum.BlackFF;
     case ResultEnum.BlackFF:
@@ -36,6 +50,11 @@ export function revertResult(result: ResultEnum): ResultEnum {
 }
 export function getScoreWhite(result: ResultEnum): number {
   switch (result) {
+    case ResultEnum.TeamFF:
+    case ResultEnum.BlackHalf:
+      return 0;
+    case ResultEnum.WhiteHalf:
+      return 0.5;
     case ResultEnum.WhiteFF:
     case ResultEnum.WhiteWins:
       return 1;
@@ -49,6 +68,11 @@ export function getScoreWhite(result: ResultEnum): number {
 }
 export function getScoreBlack(result: ResultEnum): number {
   switch (result) {
+    case ResultEnum.TeamFF:
+    case ResultEnum.WhiteHalf:
+      return 0;
+    case ResultEnum.BlackHalf:
+      return 0.5;
     case ResultEnum.WhiteFF:
     case ResultEnum.WhiteWins:
     case ResultEnum.BothFF:
@@ -65,6 +89,9 @@ export function isForfeit(result: ResultEnum): boolean {
   return (
     result === ResultEnum.WhiteFF ||
     result === ResultEnum.BlackFF ||
+    result === ResultEnum.WhiteHalf ||
+    result === ResultEnum.BlackHalf ||
+    result === ResultEnum.TeamFF ||
     result === ResultEnum.BothFF
   );
 }

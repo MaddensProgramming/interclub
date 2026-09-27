@@ -25,7 +25,13 @@
       <span class="rating">{{ round.averageRatingHome }}</span>
       }
     </div>
-    <span class="result"> {{ round.scoreHome }} - {{ round.scoreAway }} </span>
+    <span class="result">
+      @if (round.played === false) {
+      -
+      } @else {
+      {{ round.scoreHome }} - {{ round.scoreAway }}
+      }
+    </span>
     <div class="team">
       @if (round.teamAway) {
       <span

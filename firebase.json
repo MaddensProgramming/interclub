@@ -2,7 +2,7 @@
   "hosting": [
     {
       "target": "test",
-      "public": "dist/interclub",
+      "public": "dist/interclub/browser",
       "ignore": [
         "**/.*"
       ],
@@ -35,7 +35,7 @@
     },
     {
       "target": "prod",
-      "public": "dist/interclub",
+      "public": "dist/interclub/browser",
       "ignore": [
         "**/.*"
       ],

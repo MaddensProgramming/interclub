@@ -19,7 +19,10 @@ export const routes: Routes = [
   },
   {
     path: 'fullRound',
-    redirectTo: 'round/11',
+    loadComponent: () =>
+      import('./components/overall/round-results-container/round-results-container.component').then(
+        (m) => m.RoundResultsContainerComponent,
+      ),
   },
   {
     path: 'round/:id',

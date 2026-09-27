@@ -6,6 +6,12 @@ import { ResultEnum } from 'functions/src/models/ResultEnum';
 export class ResultPipe implements PipeTransform {
   transform(value: ResultEnum): string {
     switch (value) {
+      case ResultEnum.WhiteHalf:
+        return '½-0';
+      case ResultEnum.BlackHalf:
+        return '0-½';
+      case ResultEnum.TeamFF:
+        return 'Team FF';
       case ResultEnum.WhiteWins:
         return '1-0';
       case ResultEnum.Draw:
@@ -28,6 +34,12 @@ export class ResultPipe implements PipeTransform {
 export class OwnResultPipe implements PipeTransform {
   transform(value: ResultEnum, color: ColorEnum): string {
     switch (value) {
+      case ResultEnum.WhiteHalf:
+        return color === ColorEnum.Wit ? '½' : '0';
+      case ResultEnum.BlackHalf:
+        return color === ColorEnum.Wit ? '0' : '½';
+      case ResultEnum.TeamFF:
+        return 'Team FF';
       case ResultEnum.WhiteWins:
         return color === ColorEnum.Wit ? '1' : '0';
       case ResultEnum.Draw:

@@ -76,7 +76,8 @@ export class TeamresultsComponent implements OnInit {
     return team.rounds.findIndex((round) => round.id === id) + 1;
   }
 
-  score(round: Round): number {
+  score(round: Round): number | string {
+    if (round.played === false) return '-';
     if (this.sameTeam(this.team, round.teamHome)) return round.scoreHome;
     return round.scoreAway;
   }
@@ -111,6 +112,7 @@ export class TeamresultsComponent implements OnInit {
   }
 
   averageRatingOwn() {
+    if (!this.numberOfMatches()) return 0;
     return Math.round(
       this.team.rounds
         .filter((round) => round.games.length !== 0)
@@ -120,6 +122,7 @@ export class TeamresultsComponent implements OnInit {
   }
 
   averageRatingOppenent() {
+    if (!this.numberOfMatches()) return 0;
     return Math.round(
       this.team.rounds
         .filter((round) => round.games.length !== 0)

@@ -9,12 +9,21 @@ fetches live interclub data from the FRBE/KBSB APIs, enriches the raw results
 with player and team statistics, and writes the documents consumed by the
 Angular frontend.
 
+## Season 2026–2027
+
+The new season was deployed and initialized on 27 September 2026. See [the season report](docs/season-2026-2027.md)
+for official sources, the D6/6J calendar, validation and activation requirements.
+FRBE opens each round after 14:00 Brussels time. The function initializes a
+missing season before round one, then waits safely for published results.
+6J currently has calendar support only. Follow the
+[deployment runbook](docs/deploy-2026-2027.md) for restarting the scheduler.
+
 ## Tech stack
 
 - Angular 22 with standalone components and lazy-loaded routes
 - Angular Material, RxJS, and ngx-toastr
 - Firebase Hosting and Firestore
-- Firebase Functions on Node.js 20
+- Firebase Functions on Node.js 22
 - TypeScript for both frontend and Functions code
 
 ## Repository layout
@@ -37,7 +46,8 @@ Angular frontend.
 |   |   |-- transformationsMethods.ts
 |   |   |-- frbeGatewayCalls.ts  FRBE/KBSB API calls
 |   |   `-- readCSV.ts           Division CSV parser
-|   |-- division.csv             Active season division input
+|   |-- division_2026.csv        Active season division input
+|   |-- division.csv             Previous season input
 |   |-- division_2023.csv        Historical input, not used by current script
 |   `-- division_2024.csv        Historical input, not used by current script
 |-- firebase.json                Hosting, Firestore, and Functions config
@@ -60,7 +70,7 @@ Routes are defined in `src/app/app.routes.ts`:
 | `/feedback` | Feedback form |
 | `/reviews` | Public feedback list |
 | `/round/:id` | Full results for one round |
-| `/fullRound` | Redirect to `/round/11` |
+| `/fullRound` | Latest scheduled match day; round 11 for archived seasons |
 | `/division/:id/:class` | Division standings |
 | `/division` | Redirect to `/division/1/A` |
 | `/club/:id` | Club page shell |
@@ -103,9 +113,9 @@ years/{year}/roundOverview/{roundNumber}
 messages/{messageId}
 ```
 
-At the time of writing, several code paths are hard-coded to the `2025` season,
-notably the Functions writers in `functions/src/populateDb.ts` and some frontend
-round/last-update reads in `DataBaseService`.
+`functions/src/season.ts` selects the active season (`2026`, the starting year).
+Frontend reads follow the selected year, including round results and last update.
+Season dates are stored in `dates`, with optional `datesByDivision` overrides.
 
 ## Data import pipeline
 
@@ -115,15 +125,16 @@ The scheduled Function is exported from `functions/src/index.ts` as
 - Region: `europe-west1`
 - Schedule: every 15 minutes
 - Time zone: `Europe/Brussels`
-- Runtime: Node.js 20
-- Function options: 540 second timeout and 8 GB memory
+- Runtime: Node.js 22
+- Function options: 540 second timeout, 8 GB memory, maximum one instance
+- Import window: 20 September 2026 through 2 May 2027; idle outside this season
 
 The pipeline in `functions/src/script.ts` works as follows:
 
-1. Read `functions/division.csv`.
+1. Read the season CSV selected in `functions/src/season.ts`.
 2. Parse division headers and team rows in `readCSV.ts`.
-3. Generate the 11-round pairing schedule in `transformationsMethods.ts`.
-4. Fetch results, club players, and playing halls from FRBE/KBSB.
+3. Generate eleven rounds for D1–5, nine for D6 and the special 6J encounters.
+4. Verify the source season and results, then fetch club players and venues from FRBE/KBSB.
 5. Calculate team standings, player scores, TPR, round overviews, and club data.
 6. Write changed documents to Firestore through `populateDb.ts`.
 
@@ -135,24 +146,38 @@ https://www.frbe-kbsb-ksb.be/api/v1/interclubs/anon/icclub/{clubId}
 https://www.frbe-kbsb-ksb.be/api/v1/interclubs/anon/venue/{clubId}
 ```
 
-`executeEveryRound(...)` is currently called by the scheduled pipeline.
-`executeOncePerYear(...)` exists for annual setup data such as division
-overviews, club overview, round dates, and the simple player search index, but
-it is currently commented out in `script.ts`.
+Every successful import awaits `publishSeason(...)`, which builds one final
+value per document for overviews, calendars, clubs, teams, players and results.
+An unchanged completed import uses one root read and zero writes. Changed
+imports compare each document and write only differences; `Date` and Firestore
+`Timestamp` values are compared at stored precision. Duplicate player IDs are
+written once. The last-update timestamp advances only when data changes or an
+interrupted import completes. See the deployment guide for recovery details.
+Refreshing the search index also admits players added later in the season.
+`preview:season` checks the calendar offline; `check:source` checks live results
+without importing or initializing Firebase.
+Use `npm --prefix functions run check:source -- --full` for a full read-only
+preparation. `npm --prefix functions run check:published` checks the completed
+season marker and representative documents using public frontend permissions.
 
 ## Local development
+
+Use Node 22.23.3 (see `.nvmrc`). Install Firebase CLI separately with
+`npm install -g firebase-tools@15.31.0` for emulator/deployment commands.
+The project's `.npmrc` preserves compatibility with ngx-toastr's current peer
+metadata; see the season report for that existing dependency limitation.
 
 Install frontend dependencies:
 
 ```bash
-npm install
+npm ci
 ```
 
 Install Functions dependencies:
 
 ```bash
 cd functions
-npm install
+npm ci
 cd ..
 ```
 
@@ -205,6 +230,20 @@ npm run deploy-prod
 npm run deploy
 ```
 
+For the new season, prefer these explicitly scoped commands in order:
+
+```bash
+npm run deploy-season:function
+# Verify/resume the scheduler and wait for successful initialization first.
+npm run deploy-season:test
+npm run deploy-season:prod
+```
+
+The season hosting commands build the frontend and first refuse deployment if
+the new season has no completed-import marker or its representative documents
+are not publicly readable. Both hosting targets share the same Firestore
+database. These commands do not deploy database rules or other functions.
+
 `npm run deploy` builds the Angular app and deploys both hosting targets. It
 does not deploy Functions.
 
@@ -220,17 +259,15 @@ npm run deploy
 - `firestore.rules` currently denies all reads and writes. The frontend expects
   to read Firestore directly, so deployed rules must match the intended public
   read and feedback-write behavior.
-- The Functions import code initializes Firestore with the Firebase client SDK
-  in `functions/src/initiateDB.ts` instead of using the Admin SDK for writes.
-- `functions/division.csv` is format-sensitive. Division headers must match the
-  parser's expected `Division {number}{letter}` pattern, and team rows must look
-  like `NNN Club Name TeamNumber`.
-- `functions/src/populateDb.ts` uses a hard-coded season value. Update it before
-  importing a new season.
-- `executeOncePerYear(...)` currently launches async writers without awaiting
-  them if it is re-enabled.
-- `generateTeamDocs(...)` calls `updateIfChanged(...)` without awaiting each
-  team write.
+- Functions use the Admin SDK and the runtime service account; local writes
+  would require Application Default Credentials, separately from Firebase CLI login.
+- Season CSVs are format-sensitive: headers use `Division {number}{letter}`;
+  team rows use `NNN Club Name TeamNumber` or `Bye N`. Preserve pairing slots.
+- Active season, dates and pairing tables are configured in `functions/src/season.ts`.
+- The public API is unversioned. Imports validate its calendar, opened rounds
+  and encounters. Empty results wait without overwriting existing data.
+- The import is not atomic across all documents. Use a test environment and a
+  backup before production initialization.
 - `overviews/simplelayers` appears to be the player search index path used by
   the frontend. The name is likely a typo but is part of the current data
   contract.

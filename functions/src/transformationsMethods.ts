@@ -1,4 +1,5 @@
 import * as fs from 'fs';
+import { PAIRINGS_12, PAIRINGS_10, PAIRINGS_6J, ROUND_DATES, calendarRound } from './season';
 import { getPlayers } from './frbeGatewayCalls';
 import { DivisionRound } from './models/DivisionRound';
 import { RoundOverview } from './models/RoundOverview';
@@ -20,19 +21,20 @@ import {
 } from './utility';
 
 export function populateRounds(division: Division) {
-  const matchups = [
-    ['1-12', '2-11', '3-10', '4-9', '5-8', '6-7'],
-    ['12-7', '8-6', '9-5', '10-4', '11-3', '1-2'],
-    ['2-12', '3-1', '4-11', '5-10', '6-9', '7-8'],
-    ['12-8', '9-7', '10-6', '11-5', '1-4', '2-3'],
-    ['3-12', '4-2', '5-1', '6-11', '7-10', '8-9'],
-    ['12-9', '10-8', '11-7', '1-6', '2-5', '3-4'],
-    ['4-12', '5-3', '6-2', '7-1', '8-11', '9-10'],
-    ['12-10', '11-9', '1-8', '2-7', '3-6', '4-5'],
-    ['5-12', '6-4', '7-3', '8-2', '9-1', '10-11'],
-    ['12-11', '1-10', '2-9', '3-8', '4-7', '5-6'],
-    ['6-12', '7-5', '8-4', '9-3', '10-2', '11-1'],
-  ];
+  const matchups = division.class === 6
+    ? (division.division === 'J' ? PAIRINGS_6J : PAIRINGS_10)
+    : PAIRINGS_12;
+  const expectedSlots = division.class === 6 ? 10 : 12;
+  const slots = new Set(division.teams.map((team) => team.pairingsNumber));
+  if (division.teams.length !== expectedSlots || slots.size !== expectedSlots ||
+      [...slots].some((slot) => !Number.isInteger(slot) || slot < 1 || slot > expectedSlots)) {
+    throw new Error(`Invalid pairing slots in ${division.class}${division.division}`);
+  }
+  division.teams.forEach((team) => { team.rounds = []; });
+  if (division.class === 6 && division.division === 'J') {
+    division.resultsNote = 'Voor 6J toont deze site de kalender. FRBE verwerkt de uitslagen per e-mail; ze worden hier nog niet automatisch bijgewerkt.';
+    division.teams.forEach((team) => { team.resultsNote = division.resultsNote; });
+  }
 
   matchups.forEach((roundMatchups, index) => {
     const roundId = index + 1;
@@ -50,11 +52,14 @@ export function populateRounds(division: Division) {
         (team) => team.pairingsNumber === awayPairingNumber
       )!;
 
+      if (!teamHome || !teamAway) throw new Error(`Missing team for ${matchup}`);
       const { rounds: _, ...simpleTeamHome } = teamHome;
       const { rounds: __, ...simpleTeamAway } = teamAway;
 
       const round: Round = {
         id: roundId,
+        calendarRound: calendarRound(division.class, roundId),
+        played: false,
         teamHome: simpleTeamHome,
         scoreHome: 0,
         teamAway: simpleTeamAway,
@@ -62,8 +67,8 @@ export function populateRounds(division: Division) {
         games: [],
       };
 
-      teamHome.rounds.push({ ...round });
-      teamAway.rounds.push({ ...round });
+      teamHome.rounds.push({ ...round, games: [] });
+      teamAway.rounds.push({ ...round, games: [] });
     });
   });
 }
@@ -71,6 +76,7 @@ export const groupTeamsByClub = (teams: TeamView[]): ClubView[] => {
   const clubMap: { [key: number]: ClubView } = {};
 
   for (const team of teams) {
+    if (team.clubId === 0) continue;
     if (!clubMap[team.clubId]) {
       clubMap[team.clubId] = {
         id: team.clubId,
@@ -93,8 +99,8 @@ export const updateClubWithPlayers = async (club: any) => {
       return {
         id: player.idnumber,
         rating: player.assignedrating,
-        ratingNat: player.natrating,
-        ratingFide: player.fiderating,
+        ratingNat: player.natrating ?? 0,
+        ratingFide: player.fiderating ?? 0,
         firstName: player.first_name,
         name: player.last_name,
         clubId: club.id,
@@ -123,12 +129,14 @@ export function createRoundOverviews(divisions: Division[]): RoundOverview[] {
   // Deep copy the input parameter using JSON serialization/deserialization
   const copiedDivisions: Division[] = JSON.parse(JSON.stringify(divisions));
 
-  const numRounds = copiedDivisions[0]?.teams[0]?.rounds?.length || 0;
+  const numRounds = ROUND_DATES.length;
 
   for (let i = 0; i < numRounds; i++) {
     let roundOverview: RoundOverview = {
       divisions: copiedDivisions.map((div) => {
-        const matches: Round[] = div.teams.map((teams) => teams.rounds[i]);
+        const matches: Round[] = div.teams.flatMap((team) =>
+          team.rounds.filter((round) => (round.calendarRound ?? round.id) === i + 1)
+        ).filter((round) => round.teamHome.clubId !== 0 && round.teamAway.clubId !== 0);
         const idsSeen = new Set();
         const uniqueMatches: Round[] = [];
 
@@ -153,15 +161,15 @@ export function createRoundOverviews(divisions: Division[]): RoundOverview[] {
             match.averageRatingHome += game.playerHome.rating;
           });
           match.averageRatingAway = Math.round(
-            match.averageRatingAway / match.games.length
+            match.averageRatingAway / (match.games.length || 1)
           );
           match.averageRatingHome = Math.round(
-            match.averageRatingHome / match.games.length
+            match.averageRatingHome / (match.games.length || 1)
           );
         });
 
         return newDiv;
-      }),
+      }).filter((division) => division.matches.length > 0),
     };
     allRoundOverviews.push(roundOverview);
   }
@@ -174,9 +182,13 @@ export function fillTeamsAndPlayersWithInfoFromJson(
   players: Player[]
 ) {
   json.forEach((div) => {
-    div.rounds.forEach((round, roundIndex) => {
+    div.rounds.forEach((round) => {
       round.encounters.forEach((encounter) => {
-        if (encounter.games?.length > 0) {
+        if (encounter.played === true) {
+          if (![encounter.boardpoint2_home, encounter.boardpoint2_visit, encounter.matchpoint_home, encounter.matchpoint_visit]
+            .every(value => Number.isFinite(value) && value >= 0) || !Array.isArray(encounter.games)) {
+            throw new Error(`Invalid FRBE score in ${div.division}${div.index}, round ${round.round}`);
+          }
           const teamHome = allTeams.find(
             (team) =>
               team.clubId === encounter.icclub_home &&
@@ -192,9 +204,27 @@ export function fillTeamsAndPlayersWithInfoFromJson(
               team.division === (div.index === '' ? 'A' : div.index)
           );
 
-          if (teamAway && teamHome) {
-            teamHome.rounds[roundIndex].games = [];
-            teamAway.rounds[roundIndex].games = [];
+          if (!teamAway || !teamHome) {
+            throw new Error(`Unknown result teams in ${div.division}${div.index}, round ${round.round}`);
+          }
+          const homeRound = teamHome.rounds.find((item) => item.id === round.round);
+          const awayRound = teamAway.rounds.find((item) => item.id === round.round);
+          if (!homeRound || !awayRound ||
+              homeRound.teamAway.pairingsNumber !== teamAway.pairingsNumber ||
+              homeRound.teamHome.pairingsNumber !== teamHome.pairingsNumber) {
+            throw new Error(`Result does not match calendar in ${div.division}${div.index}, round ${round.round}`);
+          }
+          {
+            homeRound.games = [];
+            awayRound.games = [];
+            homeRound.played = true;
+            awayRound.played = true;
+            homeRound.scoreHome = awayRound.scoreHome = encounter.boardpoint2_home / 2;
+            homeRound.scoreAway = awayRound.scoreAway = encounter.boardpoint2_visit / 2;
+            teamHome.boardPoints += homeRound.scoreHome;
+            teamAway.boardPoints += homeRound.scoreAway;
+            teamHome.matchPoints += encounter.matchpoint_home;
+            teamAway.matchPoints += encounter.matchpoint_visit;
 
             encounter.games.forEach((game, index) => {
               const playerHome = players.find(
@@ -205,15 +235,6 @@ export function fillTeamsAndPlayersWithInfoFromJson(
               );
               const result = getGameResult(game);
 
-              const homeScore = getScoreWhite(result);
-              const awayScore = getScoreBlack(result);
-
-              teamHome.rounds[roundIndex].scoreHome += homeScore;
-              teamAway.rounds[roundIndex].scoreHome += homeScore;
-
-              teamHome.rounds[roundIndex].scoreAway += awayScore;
-              teamAway.rounds[roundIndex].scoreAway += awayScore;
-
               const gameForDb: Game = {
                 playerHome: { ...playerHome, games: [] },
                 playerAway: { ...playerAway, games: [] },
@@ -221,7 +242,7 @@ export function fillTeamsAndPlayersWithInfoFromJson(
                 teamHome: { ...teamHome, rounds: [], players: [] },
                 board: index + 1,
                 result: result,
-                round: roundIndex + 1,
+                round: round.round,
               };
               if (playerHome && playerAway) {
                 UpdateGameForPlayers(playerHome, gameForDb, playerAway);
@@ -230,33 +251,10 @@ export function fillTeamsAndPlayersWithInfoFromJson(
                   console.log(game.idnumber_home, game.idnumber_visit);
               }
 
-              teamHome.rounds[roundIndex].games.push(gameForDb);
+              homeRound.games.push(gameForDb);
 
-              teamHome.boardPoints += getScoreWhite(result);
-              teamAway.boardPoints += getScoreBlack(result);
-              teamAway.rounds[roundIndex].games.push(gameForDb);
+              awayRound.games.push(gameForDb);
             });
-            if (teamAway.boardPoints + teamHome.boardPoints > 0) {
-              if (
-                teamAway.rounds[roundIndex].scoreAway >
-                teamHome.rounds[roundIndex].scoreHome
-              ) {
-                teamAway.matchPoints += 2;
-              }
-              if (
-                teamAway.rounds[roundIndex].scoreAway ===
-                teamHome.rounds[roundIndex].scoreHome
-              ) {
-                teamAway.matchPoints += 1;
-                teamHome.matchPoints += 1;
-              }
-              if (
-                teamAway.rounds[roundIndex].scoreAway <
-                teamHome.rounds[roundIndex].scoreHome
-              ) {
-                teamHome.matchPoints += 2;
-              }
-            }
           }
         }
       });

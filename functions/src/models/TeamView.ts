@@ -12,4 +12,5 @@ export interface TeamView {
   players?: Player[];
   boardPoints?: number;
   matchPoints?: number;
+  resultsNote?: string;
 }

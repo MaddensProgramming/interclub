@@ -138,6 +138,7 @@ export class TeamViewComponent implements OnInit, OnDestroy {
   }
 
   averageRating(round: Round, team: TeamView): number {
+    if (!round.games.length) return 0;
     return Math.round(
       round.games.reduce((totRating, round) => {
         if (this.sameTeam(team, round.teamHome))
@@ -209,6 +210,8 @@ export class TeamViewComponent implements OnInit, OnDestroy {
 
   checkBlackScore(result: ResultEnum): number {
     switch (result) {
+      case ResultEnum.BlackHalf:
+        return 0.5;
       case ResultEnum.BlackWins:
       case ResultEnum.BlackFF:
         return 1;
@@ -224,6 +227,8 @@ export class TeamViewComponent implements OnInit, OnDestroy {
 
   checkWhiteScore(result: ResultEnum): number {
     switch (result) {
+      case ResultEnum.WhiteHalf:
+        return 0.5;
       case ResultEnum.WhiteWins:
       case ResultEnum.WhiteFF:
         return 1;
