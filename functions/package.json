@@ -6,11 +6,15 @@
     "serve": "npm run build && firebase emulators:start --only functions",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
-    "deploy": "firebase deploy --only functions",
-    "logs": "firebase functions:log"
+    "deploy": "firebase deploy --project interclub-668f3 --only functions:updateRoundTimed",
+    "logs": "firebase functions:log",
+    "test": "npm run build && node --test test/*.test.cjs",
+    "preview:season": "npm run build && node lib/previewSeason.js",
+    "check:source": "npm run build && node lib/checkSource.js",
+    "check:published": "npm run build && node lib/checkPublishedSeason.js"
   },
   "engines": {
-    "node": "20"
+    "node": "22"
   },
   "main": "lib/index.js",
   "dependencies": {

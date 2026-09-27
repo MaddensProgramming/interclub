@@ -7,7 +7,9 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, combineLatest } from 'rxjs';
+import { DataBaseService } from '../../../services/database.service';
+import { ACTIVE_SEASON, defaultRound } from 'functions/src/season';
 import {
   MatButtonToggleGroup,
   MatButtonToggle,
@@ -24,6 +26,7 @@ export class RoundResultsContainerComponent implements OnInit {
   public roundNumberSubject: BehaviorSubject<number> =
     new BehaviorSubject<number>(null);
   public roundNumber: number;
+  public showDivisionSixNote = false;
   private destroyRef = inject(DestroyRef);
 
   public roundsArray = Array.from({ length: 11 }, (_, i) => i + 1);
@@ -31,6 +34,7 @@ export class RoundResultsContainerComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
+    private database: DataBaseService,
   ) {}
 
   onRoundChange(event: any): void {
@@ -38,15 +42,13 @@ export class RoundResultsContainerComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.route.params
+    combineLatest([this.route.params, this.database.year$])
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((params) => {
-        this.roundNumber = +params['id'];
-        if (this.roundNumber) {
-          this.roundNumberSubject.next(+params['id']);
-        } else {
-          this.roundNumberSubject.next(11);
-        }
+      .subscribe(([params, year]) => {
+        const requested = +params['id'];
+        this.roundNumber = this.roundsArray.includes(requested) ? requested : defaultRound(year);
+        this.showDivisionSixNote = year === ACTIVE_SEASON;
+        this.roundNumberSubject.next(this.roundNumber);
       });
   }
 }

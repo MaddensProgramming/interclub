@@ -1,4 +1,5 @@
 @if (division$ | async; as division) {
+@if (division.resultsNote) { <p>{{ division.resultsNote }}</p> }
 <table [cellSpacing]="0">
   <tr class="titles">
     <th>Ploeg</th>
@@ -19,19 +20,16 @@
       {{ indexTeam + 1 }}. {{ teamHome.clubName }} {{ teamHome.id }}
     </th>
     @for (teamAway of division.teams; track teamAway) {
-    <td
-      class="clickable-title"
-      [ngClass]="colorResult(teamAway, teamHome)"
-      [routerLink]="
-        '/club/' +
-        teamHome.clubId +
-        '/' +
-        teamHome.id +
-        '/' +
-        round(teamHome, teamAway)
-      "
-    >
-      {{ findResult(teamHome, teamAway) }}
+    <td class="result-cell" [class.black]="sameTeam(teamHome, teamAway)">
+      <div class="match-scores">
+      @for (match of matches(teamHome, teamAway); track match.id) {
+        <a class="score-link" [ngClass]="colorResult(match, teamHome)"
+          [routerLink]="['/club', teamHome.clubId, teamHome.id, roundTab(teamHome, match)]"
+          [title]="'Ronde ' + match.id">
+          {{ score(match, teamHome) }}
+        </a>
+      }
+      </div>
     </td>
     }
     <td class="important">{{ teamHome.matchPoints }}</td>

@@ -11,6 +11,7 @@ export class NumberOfPlayersPipe implements PipeTransform {
         return 6;
       case 4:
       case 5:
+      case 6:
         return 4;
       default:
         return 0;

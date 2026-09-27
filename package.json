@@ -9,7 +9,13 @@
     "test": "ng test",
     "deploy": "npm run build && npm run deploy-test && npm run deploy-prod  ",
     "deploy-test": "firebase deploy --only hosting:test",
-    "deploy-prod": "firebase deploy --only hosting:prod"
+    "deploy-prod": "firebase deploy --only hosting:prod",
+    "build:all": "npm run build && npm --prefix functions run build",
+    "deploy-season:function": "npm --prefix functions run deploy",
+    "predeploy-season:test": "npm --prefix functions run check:published && npm run build",
+    "deploy-season:test": "firebase deploy --project interclub-668f3 --only hosting:test",
+    "predeploy-season:prod": "npm --prefix functions run check:published && npm run build",
+    "deploy-season:prod": "firebase deploy --project interclub-668f3 --only hosting:prod"
   },
   "private": true,
   "dependencies": {
@@ -48,5 +54,8 @@
   "overrides": {
     "@babel/core": "7.29.7",
     "esbuild": "0.28.1"
+  },
+  "engines": {
+    "node": "^22.22.3 || ^24.15.0 || >=26.0.0"
   }
 }

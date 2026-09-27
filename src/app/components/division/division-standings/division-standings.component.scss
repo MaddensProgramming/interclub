@@ -12,6 +12,31 @@ td {
   text-align: center;
 }
 
+.result-cell {
+  position: relative;
+  padding: 0;
+}
+
+.match-scores {
+  position: absolute;
+  inset: 0;
+  display: flex;
+}
+
+.score-link {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+  text-decoration: none;
+  min-width: 0;
+
+  &:visited { color: inherit; }
+  & + & { border-left: 1px solid #777; }
+  &:focus-visible { outline: 2px solid #673ab7; outline-offset: -2px; }
+}
+
 .titles {
   background-color: rgba(104, 58, 183, 0.822);
   color: #fff;

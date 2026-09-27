@@ -1,3 +1,5 @@
+// Standalone web SDK example. Do not name this firebase.js: on Windows that
+// shadows the Firebase CLI when invoked from this directory through npm/cmd.
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";

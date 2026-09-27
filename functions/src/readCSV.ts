@@ -11,7 +11,7 @@ export const csvToJsonObject = (csv: string): { [key: string]: TeamView[] } => {
   lines.forEach((line) => {
     const row = line.split(',');
 
-    if (row.some((item) => item.includes('Afdeling'))) {
+    if (row.some((item) => /^Division \d+[A-Z]?(?:\s|$)/.test(item.trim()))) {
       // This row contains division names
       pairingsNumber = 0;
       currentDivisionNames = row.map((item) => item.trim());
@@ -29,6 +29,7 @@ export const csvToJsonObject = (csv: string): { [key: string]: TeamView[] } => {
           const trimmedTeam = team.trim();
           if (trimmedTeam) {
             const division = extractMiddleValues(divisionName);
+            if (!division) throw new Error(`Invalid division header: ${divisionName}`);
             divisions[divisionName].push(
               convertStringToTeam(
                 trimmedTeam,
@@ -52,11 +53,12 @@ function convertStringToTeam(
   pairingsNumber: number
 ): TeamView | null {
   // Use a regular expression to match the input string
-  const match = /^(\d{3})\s+(.+)\s+(\d{1,2})$/.exec(club);
+  const bye = /^Bye(?:\s+\d+)?$/i.test(club);
+  const match = /^(\d{3})\s+(.+)\s+(\d{1,2})$/.exec(bye ? '000 Bye 0' : club);
 
   // Validate the match
   if (!match) {
-    return null;
+    throw new Error(`Invalid team in ${classs}${division}: ${club}`);
   }
 
   // Extract the components from the regular expression match
@@ -84,12 +86,12 @@ function convertStringToTeam(
 function extractMiddleValues(
   inputString: string
 ): { classs: number; division: string } | null {
-  const regex = /Division (\d+)([A-Z])\s/;
+  const regex = /^Division (\d+)([A-Z])?(?:\s|$)/;
   const match = inputString.match(regex);
 
   if (match && match.length === 3) {
     const number = +match[1];
-    const letter = match[2];
+    const letter = match[2] || 'A';
     return { classs: number, division: letter };
   }
 

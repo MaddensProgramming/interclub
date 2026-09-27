@@ -1,4 +1,5 @@
 @if (team$ | async; as team) {
+@if (team.resultsNote) { <p>{{ team.resultsNote }}</p> }
 <mat-tab-group
   [(selectedIndex)]="selectedIndex"
   (selectedIndexChange)="changeUrl($event)"

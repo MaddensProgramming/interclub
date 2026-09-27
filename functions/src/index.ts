@@ -31,6 +31,7 @@ admin.initializeApp();
 const runtimeOpts = {
   timeoutSeconds: 540,
   memory: '8GB' as const,
+  maxInstances: 1,
 };
 
 exports.updateRoundTimed = functions
@@ -38,7 +39,7 @@ exports.updateRoundTimed = functions
   .runWith(runtimeOpts)
   .pubsub.schedule('every 15 minutes')
   .timeZone('Europe/Brussels')
-  .onRun(main);
+  .onRun(() => main());
 
 // exports.updateOncePerYear = functions
 //   .region('europe-west1')

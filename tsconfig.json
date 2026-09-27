@@ -18,6 +18,7 @@
     "paths": {
       "src/*": ["./src/*"],
       "functions/src/models/*": ["./functions/src/models/*"],
+      "functions/src/season": ["./functions/src/season.ts"],
       "functions/src/utility": ["./functions/src/utility.ts"]
     },
     "importHelpers": true,
